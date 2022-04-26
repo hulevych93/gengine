@@ -15,4 +15,6 @@ else()
      message(FATAL_ERROR "Please, define BUILD_FILES_ROOT env variable.")
 endif()
 
+
 include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
+include(${GENGINE_CMAKE_DIR}/generate.cmake)

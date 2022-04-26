@@ -1,0 +1,31 @@
+[Dir(entries)]
+namespace Gengine
+{
+    interface ICmdProcessor
+    {
+        Register([in]Ptr options);
+        SetEntry([in]Ptr entry);
+        GetCommandKey([out]WString key);
+        Process([in]Ptr args, [out]bool success);
+    };
+
+    interface IExecutor
+    {
+        Execute([in]Ptr args);
+        GetCode([out]int32 exitCode);
+        CreateProcessors([out][V][UP]ICmdProcessor processors);
+    };
+    
+    interface IEntry
+    {
+        GetAppName([out]WString name);
+        Initialize();
+        Execute([in]Ptr args);
+        Exit([out]int32 exitCode);
+        Finalize();
+        EmergencyCleanUp();
+        CreateExecutor([out][P]IExecutor executor);
+        CreateProcessors([out][V][UP]ICmdProcessor processors);
+        GetConfig([out]Ptr config);
+    };
+};
