@@ -11,13 +11,62 @@ gengine_export_var(GENGINE_CMAKE_DIR ${GENGINE_CMAKE_DIR})
 gengine_export_var(GENGINE_RDLS_DIR ${PROJECT_SOURCE_DIR}/../rdls)
 gengine_export_var(GENGINE_PERL_DIR ${PROJECT_SOURCE_DIR}/../perl)
 
+# installation
+gengine_export_var(GENGINE_INSTALL_DIR ${GENGINE_ROOT_DIR}/../install)
+gengine_export_var(GENGINE_INCLUDE_DIR ${GENGINE_INSTALL_DIR}/include)
+gengine_export_var(GENGINE_LIB_DIR ${GENGINE_INSTALL_DIR}/lib)
+gengine_export_var(GENGINE_BIN_DIR ${GENGINE_INSTALL_DIR}/bin)
+
 include(${GENGINE_CMAKE_DIR}/main.cmake)
 include(ExternalProject)
+
+if(UNIX)
+    FIND_PACKAGE(X11 REQUIRED)
+
+    set(AdditionalOS_LIBRARIES
+        iconv
+        pthread
+        ${X11_LIBRARIES}
+    )
+endif()
 
 include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(thirdparty/boost)
+add_subdirectory(thirdparty/gtest)
+add_subdirectory(thirdparty/log4cplus)
 
 include_directories(".")
 
+# libs
 add_subdirectory(api)
+add_subdirectory(appconfig)
+add_subdirectory(brokers)
+add_subdirectory(core)
+add_subdirectory(filesystem)
+add_subdirectory(multithreading)
+add_subdirectory(diagnostic)
+add_subdirectory(interprocess-syncronization)
+add_subdirectory(interprocess-communication)
+add_subdirectory(entries)
+add_subdirectory(json)
+add_subdirectory(serialization)
+add_subdirectory(services)
+
+#binaries
+add_subdirectory(service-broker)
+add_subdirectory(executor-broker)
+add_subdirectory(worker-broker)
+add_subdirectory(process-broker)
+add_subdirectory(patcher)
+add_subdirectory(logger-proxy)
+add_subdirectory(plugin-broker)
+add_subdirectory(persistency-broker)
+add_subdirectory(log4cplus-logger)
+
+if(wxWidgets_FOUND)
+    add_subdirectory(wx-logger)
+endif()
+
+add_subdirectory(console-logger)
+

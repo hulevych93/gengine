@@ -172,7 +172,7 @@ sub output_client_dummy_implementation
     
     my $class_name=get_stub_dummy_class_name($interface_name);
     #header
-    printf($hFile "#include <core/ConcreteCreator.h>\n");
+    printf($hFile "#include <core/AbstractFactory.h>\n");
     printf($hFile "#include <brokers/ServiceBroker.h>\n");
     printf($hFile "#include <core/Logger.h>\n\n");
     printf($hFile "#include \"${decl_file_name}\"\n");
@@ -227,7 +227,7 @@ sub output_client_implementation
     
     my $class_name=get_stub_class_name($interface_name);
     #header
-    printf($hFile "#include <core/ConcreteCreator.h>\n");
+    printf($hFile "#include <core/AbstractFactory.h>\n");
     printf($hFile "#include <brokers/ServiceBroker.h>\n");
     printf($hFile "#include <interprocess-communication/InputParameters.h>\n");
     printf($hFile "#include <interprocess-communication/OutputParameters.h>\n");

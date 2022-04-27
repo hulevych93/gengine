@@ -1,0 +1,61 @@
+[Dir(appconfig)]
+namespace Gengine
+{
+    [J]
+    struct ThreadConfig 
+    { 
+        uint32 id;
+        String name;
+    };
+
+    [J]
+    struct ProcessConfig 
+    { 
+        uint32 id;
+        String name;
+        String params;
+        String service;
+        String lifetimeRef;
+    };
+
+    [J]
+    struct ServiceConfig 
+    { 
+        String id;
+        String key;
+        ServiceType type;[Dir(services)]
+        service_connection connection;[namespace(Services)][InlineInclude(services/ServicesCommon)]
+        String serviceRefs;[HS]
+        uint32 processRef;[O]
+        uint32 threadRef;[O]
+        bool required;[O]
+    };
+
+    [J]
+    struct PluginConfig 
+    { 
+        String name;[O]
+        String description;[O]
+        ServiceConfig inServices;[HM(String)]
+        ServiceConfig outServices;[HM(String)]
+        ThreadConfig workers;[S]
+    };
+
+    [J]
+    struct EntryConfig 
+    { 
+        String name;[O]
+        bool consoleLogger;[O]
+        uint32 watchdogTime;[O]
+        String pluginsDir;[O]
+        String persistencyDir;[O]
+        String singleObjectName;[O]
+        String aliveObjectName;[O]
+        String lifetimeServiceId;[O]
+        uint32 processRefs;[HS]
+        ServiceConfig inServices;[HM(String)]
+        ServiceConfig outServices;[HM(String)]
+        ProcessConfig processes;[S]
+        ThreadConfig workers;[S]
+    };
+};

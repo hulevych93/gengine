@@ -1,0 +1,28 @@
+[Dir(plugins)]
+namespace Gengine
+{
+    struct PluginInfo
+    {
+        String path;
+        WString name;
+        WString description;
+    };
+
+    interface IPluginBroker
+    {
+        Load([in]WString path);
+        Unload();
+        InitPlugins();
+        DeinitPlugins();
+        GetCount([out]uint32 count);
+    };
+
+    interface IPlugin
+    {
+        Initialize();
+        Handshake([out][B]PluginInfo info);
+        GetConfig([out]Ptr config);
+        Enable([in]bool enable);
+        Finalize();
+    };
+};

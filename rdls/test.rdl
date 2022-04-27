@@ -1,0 +1,99 @@
+[Dir(testing)]
+namespace Testing
+{
+    enum TestingTypes
+    {
+        testingOne;
+        testingTwo;
+        testingThree;
+    };
+
+    enum TestStructType
+    {
+        Extended;
+    };
+
+    [Comment(test_one_word_comment_todo_fix)]
+    [Dispatch(TestStructType)]
+    struct TestStruct
+    {
+        bool field2;
+        int32 field1;
+        TestingTypes testingTypes;
+    };
+
+    [Extends(TestStruct)]
+    [DispatchCase(Extended)]
+    struct TestStructEx
+    {
+        String field5;
+    };
+
+    struct TestData1
+    {
+        uint32 data1;
+        String data2;
+    };
+
+    struct TestData2 
+    {
+        bool data1;
+        String data2; 
+    };
+
+    [J]
+    struct TestData3 
+    { 
+        uint32 data1;
+        String data2;
+    };
+
+    interface ITest1
+    {
+        Test([in]WString in);
+        Test([in]WString in, [out]WString out);
+        Test([in]String in, [out]String out);
+        Test([in]int8 in, [out]int8 out);
+        Test([in]int16 in, [out]int16 out);
+        Test([in]int32 in, [out]int32 out);
+        Test([in]int64 in, [out]int64 out);
+        Test([in]uint8 in, [out]uint8 out);
+        Test([in]uint16 in, [out]uint16 out);
+        Test([in]uint32 in, [out]uint32 out);
+        Test([in]uint64 in, [out]uint64 out);
+        Test([in]BLOBOBJ in, [out]BLOBOBJ out);
+        Test([in]Ptr in, [out]Ptr out);
+        Test([in]bool in, [out]bool out);
+        Test([in][B]TestData1 in, [out][B]TestData1 out);
+        Test([in][B]TestData2 in, [out][B]TestData2 out);
+        Test([in][B]TestData1 in1, [in][B]TestData2 in2);
+        Test([in][J]TestData3 in, [out][J]TestData3 out);
+        Test([in][V]uint32 in, [out][V]uint32 out);
+        Test([in][L]uint32 in, [out][L]uint32 out);
+        Test([in][D]uint32 in, [out][D]uint32 out);
+        Test([in][S]uint32 in, [out][S]uint32 out);
+        Test([in][HS]uint32 in, [out][HS]uint32 out);
+        Test([in][V][P]uint32 in, [out][V][P]uint32 out);
+        Test([in][L][P]uint32 in, [out][L][P]uint32 out);
+        Test([in][D][P]uint32 in, [out][D][P]uint32 out);
+        Test([in][S][P]uint32 in, [out][S][P]uint32 out);
+        Test([in][HS][P]uint32 in, [out][HS][P]uint32 out);
+        Test([in][M(uint8)]uint32 in, [out][M(uint8)]uint32 out);
+        Test([in][HM(uint8)]uint32 in, [out][HM(uint8)]uint32 out);
+        Test([in][M(uint8)][P]uint32 in, [out][M(uint8)][P]uint32 out);
+        Test([in][HM(uint8)][P]uint32 in, [out][HM(uint8)][P]uint32 out);
+        Test([in][P][B]TestData1 in, [out][P][B]TestData1 out);
+        Test([in][B][P]TestStructEx in, [out][B][P]TestStructEx out);
+        Test([in][B][UP]TestData1 in, [out][B][UP]TestData1 out);
+    };
+
+    interface ITest2
+    {
+        Test([in]uint32 in, [out]uint32 out);
+    };
+
+    interface IHello
+    {
+        Test([in]String hello);
+    };
+};

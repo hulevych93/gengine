@@ -1,0 +1,39 @@
+[Dir(services)]
+namespace Gengine
+{
+    enum ServiceType
+    {
+        Local;
+        Remote;
+        Shared;
+        Composite;
+        Null;
+    };
+
+    struct ServiceInfo 
+    { 
+        String id;
+        String key;
+        ServiceType type;
+        WString pipe;
+        String ip;
+        uint16 port;
+        String dllPath;
+        String dllSymbol;
+        WString exePath;
+        WString exeParams;
+    };
+
+    struct Version
+    { 
+        uint8 major;
+        uint8 minor;
+    };
+
+    interface IServiceRouter
+    {
+        RegisterService([in]WString key, [in][B]ServiceInfo info);
+        GetService([in]WString key, [out][B]ServiceInfo info);
+        IsServiceAvailable([in]WString key, [out]bool available);
+    };
+};

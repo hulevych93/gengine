@@ -1,0 +1,21 @@
+[Dir(core)]
+namespace Gengine
+{
+    struct SessionId
+    {
+        uint32 wtsId;
+        String display;
+    };
+
+    interface IServiceControlListener
+    {
+        OnHardwareProfileChange();
+        OnPowerEvent();
+        OnSessionChange([in]uint32 event, [in]uint32 sessionId);
+    };
+
+    interface ISessionQuery
+    {
+        QueryActiveSessionsIDs([out][B][V]SessionId ids);
+    };
+};

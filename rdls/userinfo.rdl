@@ -1,0 +1,11 @@
+namespace Gengine
+{
+    interface IUserInfo
+    {
+        GetSystemName([out]WString name);
+        GetOsName([out]WString name);
+        GetBitType([out]WString type);
+        GetSystemSerialNumber([out]WString number);
+        GetPhysicalDriveSerialNumber([out]WString number);
+    };
+};

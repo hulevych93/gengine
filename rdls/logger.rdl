@@ -1,0 +1,13 @@
+[Dir(core)]
+namespace Gengine
+{
+    interface ILogger
+    {
+        Init([in]WString alias, [in]bool console);
+        LogTrace([in]WString message);
+        LogError([in]WString message);
+        LogWarning([in]WString message);
+        LogInfo([in]WString message);
+        LogDebug([in]WString message);
+    };
+};

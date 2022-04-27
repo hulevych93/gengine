@@ -1,0 +1,51 @@
+{
+  "name": "ConsoleLogger",
+  "consoleLogger": true,
+  "workers": [
+    {
+      "id": 0,
+      "name": "MainThread"
+    },
+    {
+      "id": 193,
+      "name": "ILoggerIPCThread"
+    }
+  ],
+  "inServices": [
+    {
+      "key": "CFC1399D",
+      "value": {
+        "id": "CFC1399D",
+        "key": "ILogger",
+        "type": 2,
+        "connection": {
+          "which": 3,
+          "data": {
+            "path": "log4cplus-logger",
+            "symbol": "Log4cPlusLogger_service"
+          }
+        }
+      }
+    }
+  ],
+  "outServices": [
+    {
+      "key": "CFC1399D",
+      "value": {
+        "id": "CFC1399D",
+        "key": "ILogger",
+        "type": 1,
+        "connection": {
+          "which": 2,
+          "data": {
+            "which": 0,
+            "data": {
+              "pipe": "Logger_NcsQvskFsQ9qweI8aweq2A"
+            }
+          }
+        },
+        "threadRef": 193
+      }
+    }
+  ]
+}

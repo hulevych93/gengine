@@ -1,0 +1,10 @@
+[Dir(core)]
+namespace Gengine
+{
+    interface IRunnable
+    {
+        Start();
+		IsRunning([out]bool running);
+        Stop();
+    };
+};

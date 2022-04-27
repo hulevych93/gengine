@@ -1,0 +1,9 @@
+[Dir(core)]
+namespace Core
+{
+    interface IEncoding
+    {
+        WCharToUtf8([in]WString in, [out]String out);
+        Utf8ToWChar([in]String in, [out]WString out);
+    };
+};

@@ -3,9 +3,7 @@ project(api)
 gengine_export_var(GENGINE_TARGETS_COMMON_DEPENDENCIES "api")
 gengine_export_var(API_FOLDER "api")
 
-set(RDLS
-    ${GENGINE_RDLS_DIR}/entries.rdl
-)
+gengine_collect_rdls(RDLS)
 
 foreach(RDL ${RDLS})
     gengine_gen_api(${RDL} ${GENGINE_BINARY_DIR} GENERATED_FILES)

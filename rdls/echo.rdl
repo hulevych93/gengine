@@ -1,0 +1,9 @@
+[Dir(echo)]
+namespace Echo
+{
+    interface IEcho
+    {
+        echo([in]WString hello);
+    };
+};
+

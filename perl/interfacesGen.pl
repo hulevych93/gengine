@@ -87,8 +87,7 @@ sub output_interface_declaration
     printf($hFile "#include <string>\n");
     printf($hFile "#include <core/Blob.h>\n");
     printf($hFile "#include <core/Export.h>\n");
-    printf($hFile "#include <services/IMicroService.h>\n");
-    printf($hFile "#include <interprocess-communication/InterprocessCommonDefs.h>\n");
+    printf($hFile "#include <core/IMicroService.h>\n");
     print_custom_types_forwards($hFile,$interface->{"methods"}, $namespace);
     printf($hFile "\nnamespace ".$namespace."{\n");
     printf($hFile "class GENGINE_API $interface_name: virtual public Gengine::Services::IMicroService\n");

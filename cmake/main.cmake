@@ -18,3 +18,5 @@ endif()
 
 include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
 include(${GENGINE_CMAKE_DIR}/generate.cmake)
+include(${GENGINE_CMAKE_DIR}/sources.cmake)
+include(${GENGINE_CMAKE_DIR}/targets.cmake)
