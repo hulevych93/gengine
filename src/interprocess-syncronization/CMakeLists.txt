@@ -1,4 +1,4 @@
-project(interprocess-synchronization)
+gengine_project(interprocess-synchronization)
 
 gengine_collect_src(SRC)
 

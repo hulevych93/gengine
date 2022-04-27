@@ -1,4 +1,4 @@
-project(gtest)
+gengine_project(gtest)
 
 set(TMP_DIR         ${GENGINE_3RD_PARTY_BUILD_DIR})
 set(SRC_DIR         ${GENGINE_GTEST_BUILD_DIR})

@@ -1,4 +1,4 @@
-project(console-logger)
+gengine_project(console-logger)
 
 gengine_collect_src(SRC)
 

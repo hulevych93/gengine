@@ -15,6 +15,10 @@ else()
      message(FATAL_ERROR "Please, define BUILD_FILES_ROOT env variable.")
 endif()
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "")
+    message(WARNING "CMAKE_BUILD_TYPE is empty, setting it to DEBUG")
+    set(CMAKE_BUILD_TYPE DEBUG)
+endif()
 
 include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
 include(${GENGINE_CMAKE_DIR}/generate.cmake)

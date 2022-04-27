@@ -1,4 +1,4 @@
-project(process-broker)
+gengine_project(process-broker)
 
 gengine_collect_src(SRC)
 

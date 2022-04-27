@@ -1,4 +1,4 @@
-project(interprocess-communication)
+gengine_project(interprocess-communication)
 
 gengine_collect_src(SRC ssl)
 

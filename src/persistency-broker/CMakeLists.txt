@@ -1,4 +1,4 @@
-project(persistency-broker)
+gengine_project(persistency-broker)
 
 gengine_collect_src(SRC)
 

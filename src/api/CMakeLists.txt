@@ -1,4 +1,4 @@
-project(api)
+gengine_project(api)
 
 gengine_export_var(GENGINE_TARGETS_COMMON_DEPENDENCIES "api")
 gengine_export_var(API_FOLDER "api")

@@ -1,4 +1,4 @@
-project(brokers)
+gengine_project(brokers)
 
 gengine_collect_src(SRC)
 

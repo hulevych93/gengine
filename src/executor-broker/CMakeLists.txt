@@ -1,4 +1,4 @@
-project(executor-broker)
+gengine_project(executor-broker)
 
 gengine_collect_src(SRC)
 

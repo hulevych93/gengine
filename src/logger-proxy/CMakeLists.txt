@@ -1,4 +1,4 @@
-project(logger-proxy)
+gengine_project(logger-proxy)
 
 gengine_collect_src(SRC)
 

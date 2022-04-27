@@ -1,4 +1,4 @@
-project(patcher)
+gengine_project(patcher)
 
 gengine_collect_src(SRC)
 

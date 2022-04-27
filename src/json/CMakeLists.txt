@@ -1,4 +1,4 @@
-project(json)
+gengine_project(json)
 
 gengine_collect_src(SRC)
 

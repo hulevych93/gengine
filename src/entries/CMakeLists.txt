@@ -1,4 +1,4 @@
-project(entries)
+gengine_project(entries)
 
 gengine_collect_src(SRC wxWidgets)
 

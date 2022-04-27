@@ -1,4 +1,4 @@
-project(boost)
+gengine_project(boost)
 
 set(TMP_DIR         ${GENGINE_3RD_PARTY_BUILD_DIR})
 set(SRC_DIR         ${GENGINE_BOOST_BUILD_DIR})

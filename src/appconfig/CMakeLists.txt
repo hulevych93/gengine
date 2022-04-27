@@ -1,4 +1,4 @@
-project(appconfig)
+gengine_project(appconfig)
 
 gengine_collect_src(SRC)
 

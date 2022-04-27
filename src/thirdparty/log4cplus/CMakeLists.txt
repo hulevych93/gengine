@@ -1,4 +1,4 @@
-project(log4cplus)
+gengine_project(log4cplus)
 
 set(TMP_DIR         ${GENGINE_3RD_PARTY_BUILD_DIR})
 set(SRC_DIR         ${GENGINE_LOG4CPLUS_BUILD_DIR})

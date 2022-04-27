@@ -1,4 +1,4 @@
-project(log4cplus-logger)
+gengine_project(log4cplus-logger)
 
 gengine_collect_src(SRC)
 

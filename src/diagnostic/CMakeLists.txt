@@ -1,4 +1,4 @@
-project(diagnostic)
+gengine_project(diagnostic)
 
 gengine_collect_src(SRC)
 

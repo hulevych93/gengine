@@ -36,3 +36,8 @@ function(gengine_join_list LIST SEPARATOR OUTPUT)
 
     set("${OUTPUT}" "${join_list_RESULT}" PARENT_SCOPE)
 endfunction()
+
+function(gengine_project NAME)
+    project(NAME)
+    message(STATUS "Processing ${NAME}")
+endfunction()

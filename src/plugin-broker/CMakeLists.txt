@@ -1,4 +1,4 @@
-project(plugin-broker)
+gengine_project(plugin-broker)
 
 gengine_collect_src(SRC)
 

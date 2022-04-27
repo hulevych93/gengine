@@ -1,4 +1,4 @@
-project(serialization)
+gengine_project(serialization)
 
 gengine_collect_src(SRC)
 
