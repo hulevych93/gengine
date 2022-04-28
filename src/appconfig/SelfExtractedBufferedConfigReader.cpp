@@ -1,4 +1,4 @@
-#include "SelfExtractedFileConfigReader.h"
+#include "SelfExtractedBufferedConfigReader.h"
 
 #include "ConfigExtractor.h"
 
@@ -10,25 +10,22 @@ extern void* g_module_instance;
 namespace Gengine {
 namespace AppConfig {
 
-SelfExtractedFileConfigReader::SelfExtractedFileConfigReader(const config& conf)
-    : FileConfigReader(FilePath, conf)
+SelfExtractedBufferedConfigReader::SelfExtractedBufferedConfigReader(const config& conf)
+    : BufferConfigReader(conf)
 {}
 
-bool SelfExtractedFileConfigReader::Load()
+bool SelfExtractedBufferedConfigReader::Load()
 {
     const auto moduleFilePath = Filesystem::GetModuleFilePath(g_module_instance);
     const auto moduleName = Filesystem::GetFileNameWithoutExtension(moduleFilePath);
 
     auto extractor = ConfigExtractor::makeExtractor(toUtf8(moduleFilePath), toUtf8(moduleName));
-    if (extractor.Extract(toUtf8(FilePath)))
+    if (extractor.Extract(m_buffer))
     {
-        return FileConfigReader::Load();
+        return BufferConfigReader::Load();
     }
     return false;
 }
-
-const std::wstring SelfExtractedFileConfigReader::FilePath = Filesystem::CombinePath(Filesystem::GetTempDirPath(), Filesystem::GetRandomFileName(L"config_%d"));
-
 
 }
 }

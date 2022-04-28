@@ -2,7 +2,7 @@
 
 #include <boost/dll/import.hpp>
 #include <boost/function.hpp>
-#include <core/IAbstractCreator.h>
+#include <core/AbstractFactory.h>
 #include <filesystem/Filesystem.h>
 #include <core/Encoding.h>
 

@@ -3,7 +3,7 @@
 #include <api/plugins/PluginInfo.h>
 
 #include <appconfig/AppConfig.h>
-#include <appconfig/SelExtractedBufferedConfigReader.h>
+#include <appconfig/SelfExtractedBufferedConfigReader.h>
 
 #include <filesystem/Filesystem.h>
 #include <core/Encoding.h>
@@ -23,7 +23,7 @@ bool PluginBase::GetConfig(void** config)
     if (!m_config)
     {
         m_config = std::make_unique<PluginConfig>();
-        if (!SelExtractedBufferedConfigReader(*m_config).Load())
+        if (!SelfExtractedBufferedConfigReader(*m_config).Load())
             throw std::runtime_error("no service config loaded...");
     }
 

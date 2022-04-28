@@ -4,14 +4,14 @@
 #include <api/services/ServiceType.h>
 #include <appconfig/AppConfig.h>
 #include <appconfig/BufferConfigReader.h>
-#include <appconfig/SelExtractedBufferedConfigReader.h>
+#include <appconfig/SelfExtractedBufferedConfigReader.h>
 #include <appconfig/SelfExtractedFileConfigReader.h>
 
 using namespace Gengine;
 using namespace AppConfig;
 using namespace JSON;
 
-TEST_F(GTest, AppConfig)
+EntryConfig makeEntryConfig()
 {
     EntryConfig config;
     config.name = "test1";
@@ -53,29 +53,18 @@ TEST_F(GTest, AppConfig)
         config.outServices.emplace(std::make_pair("2", out));
     }
 
-    auto testEngine = [config](EntryConfig& test, IConfigReader& reader) {
-        EXPECT_TRUE(reader.Load());
-        EXPECT_TRUE(config == test);
-    };
+    return config;
+}
 
-    {
-        BufferConfigReader engine(config);
-        engine.Save();
+TEST_F(GTest, bufferConfigReader)
+{
+    auto config = makeEntryConfig();
 
-        EntryConfig test;
-        BufferConfigReader engine2(engine.GetBuffer(), test);
-        testEngine(test, engine2);
-    }
+    BufferConfigReader engine(config);
+    engine.Save();
 
-    //{
-    //    EntryConfig test;
-    //    SelfExtractedFileConfigReader engine(test);
-    //    testEngine(test, engine);
-    //}
-
-    //{
-    //    EntryConfig test;
-    //    SelExtractedBufferedConfigReader engine(test);
-    //    testEngine(test, engine);
-    //}
+    EntryConfig test;
+    BufferConfigReader engine2(engine.GetBuffer(), test);
+    EXPECT_TRUE(engine2.Load());
+    EXPECT_TRUE(config == test);
 }

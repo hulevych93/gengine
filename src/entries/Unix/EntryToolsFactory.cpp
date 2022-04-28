@@ -1,4 +1,4 @@
-#include "LinuxEntryToolsFactory.h"
+#include "EntryToolsFactory.h"
 
 #include <boost/format.hpp>
 #include <diagnostic/Unix/LinuxErrorsDumper.h>
@@ -14,7 +14,7 @@ using namespace Diagnostic;
 using namespace InterprocessSynchronization;
 
 namespace Entries {
-std::vector<std::unique_ptr<IDumper>> LinuxEntryToolsFactory::CreateDumpers(const std::wstring& module)
+std::vector<std::unique_ptr<IDumper>> EntryToolsFactory::CreateDumpers(const std::wstring& module)
 {
     std::vector<std::unique_ptr<Diagnostic::IDumper>> dumpers;
     dumpers.emplace_back(std::make_unique<LinuxCallstackDumper>());
@@ -22,12 +22,12 @@ std::vector<std::unique_ptr<IDumper>> LinuxEntryToolsFactory::CreateDumpers(cons
     return dumpers;
 }
 
-std::unique_ptr<IAliveObject> LinuxEntryToolsFactory::CreateAliveObject(const std::wstring& module)
+std::unique_ptr<IAliveObject> EntryToolsFactory::CreateAliveObject(const std::wstring& module)
 {
     return std::make_unique<DaemonAliveObject>(module.c_str());
 }
 
-std::unique_ptr<InstanceRegistratorInterface> LinuxEntryToolsFactory::CreateInstanceRegistrator(const std::wstring& module, InstanceType type)
+std::unique_ptr<InstanceRegistratorInterface> EntryToolsFactory::CreateInstanceRegistrator(const std::wstring& module, InstanceType type)
 {
     std::wstring objName;
 #if __WIN32
@@ -54,7 +54,7 @@ std::unique_ptr<InstanceRegistratorInterface> LinuxEntryToolsFactory::CreateInst
     return std::unique_ptr<InstanceRegistratorInterface>();
 }
 
-std::unique_ptr<ServiceTracker> LinuxEntryToolsFactory::CreateModuleTracker(const std::wstring& module, InterprocessSynchronization::ServiceTrackerImpl& serviceTrackerImpl)
+std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std::wstring& module, InterprocessSynchronization::ServiceTrackerImpl& serviceTrackerImpl)
 {
     return std::make_unique<LinuxDaemonTracker>(toUtf8(module), serviceTrackerImpl);
 }

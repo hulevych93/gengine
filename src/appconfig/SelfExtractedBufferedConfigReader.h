@@ -5,10 +5,10 @@
 namespace Gengine {
 namespace AppConfig {
 
-class SelExtractedBufferedConfigReader : public BufferConfigReader
+class SelfExtractedBufferedConfigReader : public BufferConfigReader
 {
 public:
-    SelExtractedBufferedConfigReader(const config& conf);
+    SelfExtractedBufferedConfigReader(const config& conf);
 
     bool Load() override;
 };

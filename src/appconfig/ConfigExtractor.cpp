@@ -6,31 +6,34 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <core/Encoding.h>
-#include <filesystem/Filesystem.h>
-
-extern void* g_module_instance;
 
 namespace fs = boost::filesystem;
 
 namespace Gengine {
 namespace AppConfig {
 
-ConfigExtractor::ConfigExtractor()
-    : m_pos(0)
+ConfigExtractor::ConfigExtractor(std::ifstream&& stream, const std::string& module)
+    : m_stream(std::move(stream))
+    , m_module(module)
+    , m_pos(0)
+{}
+
+ConfigExtractor ConfigExtractor::makeExtractor(const std::string& file, const std::string& module)
 {
-    m_stream = fs::ifstream(Filesystem::GetModuleFilePath(g_module_instance), std::ios::in | std::ios::binary);
-    if (!m_stream)
+    auto stream = std::ifstream(file, std::ios::in | std::ios::binary);
+    if (!stream)
     {
-        throw std::exception();
+        throw std::runtime_error("can't create file stream");
     }
+    return ConfigExtractor{std::move(stream), module};
 }
 
-bool ConfigExtractor::Extract(const std::wstring& to)
+bool ConfigExtractor::Extract(const std::string& filePath)
 {
     auto config = FindConfig();
     if (config.first != 0 && config.second != 0)
     {
-        return Save(config.first, config.second, to);
+        return Save(config.first, config.second, filePath);
     }
     return false;
 }
@@ -46,7 +49,7 @@ bool ConfigExtractor::Extract(std::string& to)
     return false;
 }
 
-bool ConfigExtractor::Save(size_t offset, size_t size, const std::wstring& path) const
+bool ConfigExtractor::Save(size_t offset, size_t size, const std::string& path) const
 {
     fs::ofstream output(path, std::ios::out | std::ios::binary);
     auto buffer = Read(offset, size);
@@ -89,13 +92,12 @@ std::string ConfigExtractor::Read(size_t offset, size_t size) const
 
 std::pair<size_t, size_t> ConfigExtractor::FindConfig() const
 {
-    auto moduleName = toUtf8(Filesystem::GetModuleName(g_module_instance));
-    auto marker = boost::str(boost::format(ConfigDelemiterStart) % moduleName);
+    auto marker = boost::str(boost::format(ConfigDelemiterStart) % m_module);
     auto startPos = Find(marker);
     if (startPos != std::string::npos)
     {
         startPos += marker.size();
-        auto configSize = Find(boost::str(boost::format(ConfigDelemiterEnd) % moduleName));
+        auto configSize = Find(boost::str(boost::format(ConfigDelemiterEnd) % m_module));
         if (configSize != std::string::npos)
         {
             configSize -= startPos;
