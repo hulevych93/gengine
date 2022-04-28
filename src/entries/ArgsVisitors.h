@@ -11,7 +11,7 @@ class EmptyVisitor : public boost::static_visitor<bool>
 public:
     bool operator () (const wargv_type& args) const;
     bool operator () (const argv_type& args) const;
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
     bool operator () (const WinArgs& args) const;
 #endif
 };
@@ -23,7 +23,7 @@ public:
 
     void operator () (const wargv_type& args) const;
     void operator () (const argv_type& args) const;
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
     void operator () (const WinArgs& args) const;
 #endif
 private:

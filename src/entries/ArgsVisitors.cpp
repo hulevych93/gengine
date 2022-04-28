@@ -1,6 +1,6 @@
 #include "ArgsVisitors.h"
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 #include <Windows.h>
 #endif
 
@@ -19,7 +19,7 @@ bool EmptyVisitor::operator()(const wargv_type& args) const
     return args.argc <= 1;
 }
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 bool EmptyVisitor::operator()(const WinArgs& args) const
 {
     auto argc = 0;
@@ -49,7 +49,7 @@ void ParseVisitor::operator()(const argv_type& args) const
     bpo::store(options, m_map);
 }
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 void ParseVisitor::operator()(const WinArgs& args) const
 {
     auto argc = 0;

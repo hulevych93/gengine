@@ -5,7 +5,7 @@
 #include <boost/variant.hpp>
 #include <entries/BaseArgs.h>
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 #include "Windows/WindowsEntryToolsFactory.h"
 #elif __linux__ || __APPLE__
 #include "Unix/LinuxEntryToolsFactory.h"
@@ -14,7 +14,7 @@
 namespace Gengine {
 namespace Entries {
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 
 using args_type = boost::variant<wargv_type, argv_type, WinArgs>;
 

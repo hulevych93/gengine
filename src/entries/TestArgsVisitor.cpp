@@ -19,7 +19,7 @@ void gtestArgsVisitor::operator () (const argv_type& args) const
     ::testing::InitGoogleTest(&argc, args.argv);
 }
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
 void gtestArgsVisitor::operator () (const WinArgs& args) const
 {}
 #endif

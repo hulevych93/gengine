@@ -27,7 +27,7 @@
 #include <boost/format.hpp>
 #include <boost/program_options.hpp>
 
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
     #include <Windows.h>
 #endif
 

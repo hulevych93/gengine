@@ -17,7 +17,7 @@ else()
 endif()
 
 set(USER_CONFIG_JAM ${GENGINE_TMP_DIR}/boost-user-config.jam)
-file(WRITE ${USER_CONFIG_JAM} "using ${BUILD_TOOLSET} : ${BUILD_TOOLSET_VERSION}\n")
+file(WRITE ${USER_CONFIG_JAM} "using ${BUILD_TOOLSET} : ${BUILD_TOOLSET_VERSION}\n\n")
 
 gengine_map_list(Boost_COMPONENTS "(.+)" "--with-\\1" LIB_OPTS)
 
@@ -118,6 +118,8 @@ ExternalProject_Add(
                         ${BCP_NATIVE_BUILD_COMMAND}
     BUILD_IN_SOURCE     1
     BUILD_BYPRODUCTS    ${Boost_LIBRARIES}
+        # Install
+    INSTALL_COMMAND     ""
 
     # Logging
     LOG_CONFIGURE       1

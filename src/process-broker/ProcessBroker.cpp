@@ -10,7 +10,7 @@
 
 #include <interprocess-syncronization/ExecutableLauncher.h>
 
-#if BUILD_WINDOWS
+#if _WIN32
 #include <interprocess-syncronization/Windows/WindowsServiceLauncher.h>
 #endif
 
@@ -92,7 +92,7 @@ public:
                 }
                 else if (!procConfig.service.empty())
                 {
-#if BUILD_WINDOWS
+#if _WIN32
                     processContext->launcher = std::make_unique<WindowsServiceLauncher>(utf8toWchar(procConfig.service));
 #endif
                 }

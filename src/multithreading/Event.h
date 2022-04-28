@@ -1,5 +1,5 @@
 #pragma once
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
 #include "Windows/Event.h"
 #elif __linux__ || __APPLE__
 #include "Unix/Event.h"

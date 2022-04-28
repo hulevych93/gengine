@@ -14,7 +14,7 @@
 #include <entries/Main.h>
 #include <entries/EntryRegistry.h>
 
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
 #include <Windows.h>
 #endif
 

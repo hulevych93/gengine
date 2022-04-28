@@ -18,7 +18,7 @@ void Executable::Launch(SessionId key)
 #if 0
         process_handle_t info(nullptr);
         auto path = Filesystem::CombinePath(Filesystem::GetAppFolder(), m_params.path);
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
         if (ProcessHelper::LaunchProcessInSession(path, m_params.params, true, key.wtsId, info))
 #elif __linux__ || __APPLE__
         if (ProcessHelper::LaunchProcessInSession(path, m_params.params, true, key.display, info))

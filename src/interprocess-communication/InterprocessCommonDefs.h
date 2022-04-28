@@ -25,7 +25,7 @@ namespace InterprocessCommunication {
 //handle of local socket on Linux os
 typedef int RPC_FILE_HANDLE;
 #define PIPE_PREFIX L"/tmp/com.gengine."
-#elif defined(BUILD_WINDOWS)
+#elif defined(_WIN32)
 //HANDLE of named pipe
 typedef void* RPC_FILE_HANDLE;
 #define PIPE_PREFIX L"\\\\.\\Pipe\\"

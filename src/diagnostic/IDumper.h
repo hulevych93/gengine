@@ -6,7 +6,7 @@ class IDumper
 {
 public:
     virtual ~IDumper() = default;
-    virtual void WriteDump() = 0;
+    virtual void WriteDump() {}
 };
 }
 }

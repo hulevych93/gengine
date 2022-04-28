@@ -16,7 +16,7 @@
 
 #include <filesystem/FileSearcher.h>
 
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
     #include <Windows.h>
 #endif
 

@@ -19,7 +19,7 @@
 #define LOG4CPLUS_STATIC
 #define LOGS_DIR L"Logs"
 
-#ifdef BUILD_WINDOWS
+#ifdef _WIN32
 #define CONVERT_MESSAGE(MSG) MSG
 #else
 #define CONVERT_MESSAGE(MSG) toUtf8(MSG)
@@ -42,7 +42,7 @@ public:
         log4cplus::initialize(); // init log4cplus
 
         auto root = log4cplus::Logger::getRoot();
-#ifdef BUILD_WINDOWS
+#ifdef _WIN32
         {
             log4cplus::SharedAppenderPtr win32debugAppender(new log4cplus::Win32DebugAppender);
             win32debugAppender->setName(LOG4CPLUS_C_STR_TO_TSTRING(Win32Debug));

@@ -1,6 +1,6 @@
 #include <interprocess-communication/ChannelConnector.h>
 
-#if BUILD_WINDOWS
+#if _WIN32
 #include <interprocess-communication/pipes/Windows/NamedPipeChannel.h>
 #else
 #include <interprocess-communication/pipes/Unix/UnixDomainChannel.h>
@@ -21,7 +21,7 @@ bool ChannelConnector::operator()(const PipeConnection& data) const
 {
 #if __linux__ || __APPLE__
     auto channel = std::make_unique<UnixDomainChannel>();
-#elif BUILD_WINDOWS
+#elif _WIN32
     auto channel = std::make_unique<NamedPipeChannel>();
 #endif
     auto connected = channel->Connect(PIPE_PREFIX + data.pipe);

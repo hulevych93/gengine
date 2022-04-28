@@ -11,7 +11,7 @@
 #include <brokers/ExecutorBroker.h>
 #include <shared-services/SharedServiceExport.h>
 
-#if defined(BUILD_WINDOWS)
+#if defined(_WIN32)
 #include <Windows.h>
 #endif
 
