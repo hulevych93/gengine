@@ -1,7 +1,5 @@
 # targets.cmake
 
-set(GENGINE_TARGETS_COMMON_DEPENDENCIES)
-
 if(MSVC)
     gengine_export_var(GENGINE_LIB_NAME_PREFIX)
 else()
@@ -69,15 +67,6 @@ function(gengine_parse_arguments PREFIX OPTIONS ONE_VAL_KEYWORDS MULTI_VAL_KEYWO
     endforeach()
 endfunction()
 
-macro(gengine_setup_build_files_dir)
-    if(DEFINED ENV{BUILD_FILES_ROOT})
-        set(BUILD_FILES_DIR $ENV{BUILD_FILES_ROOT})
-    else()
-         message(FATAL_ERROR "Build files root is undefined.")
-    endif()
-endmacro()
-gengine_setup_build_files_dir()
-
 # Causes our CMake scripts to depend on the passed files - when one of them is changed, CMake is re-run.
 function(prv_add_cmake_deps)
     foreach(FILE ${ARGN})
@@ -94,23 +83,6 @@ endfunction()
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES .*Clang.*)
     set(GENGINE_COMPILER_IS_CLANG TRUE)
 endif()
-
-macro (gengine_dump_symbols)
-    #write all binaries and .pdb locations to file to store them on the symbol server
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/filelist.txt "")
-
-    foreach(var ${ALL_BINRAIES})
-        set(CUR_FILE ${EXECUTABLE_OUTPUT_PATH}/relwithdebinfo/${var})
-        string(REGEX REPLACE "/" "\\\\" CUR_FILE "${CUR_FILE}" )
-        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/filelist.txt "${CUR_FILE}\n")
-    endforeach()
-
-    foreach(var ${MD_BINARIES})
-        set(CUR_FILE ${PROJECT_SOURCE_DIR}/../${var})
-        string(REGEX REPLACE "/" "\\\\" CUR_FILE "${CUR_FILE}")
-        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/filelist.txt "${CUR_FILE}\n")
-    endforeach()
-endmacro()
 
 macro (gengine_set_static_build)
     FOREACH(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
@@ -140,46 +112,7 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
 #some macroses to preserve list of all binary files, whiuch should be stored on symbol server
 
-function (gengine_add_test TEST_NAME)
-    set(FULL_TEST_NAME "${TEST_NAME}-test")
-
-    add_executable(${FULL_TEST_NAME} ${ADD_TEST_SOURCES})
-    add_dependencies(${FULL_TEST_NAME} boost gtest ${TEST_NAME} ${ADD_TEST_LIBS})
-
-    target_link_libraries(${FULL_TEST_NAME}
-        ${GENGINE_LIBRARIES}
-        ${Boost_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${AdditionalOS_LIBRARIES}
-        ${ADD_TEST_LIBS}
-    )
-endfunction()
-
-macro (gengine_add_executable)
-    unset(ADD_EXECUTABLE_COMMAND)
-    set(ALL_BINRAIES ${ALL_BINRAIES} "${ARGV0}.exe;${ARGV0}.pdb" PARENT_SCOPE)
-    set(ADD_EXECUTABLE_COMMAND "${ARGV}" "./${ARGV0}.json")
-    add_executable(${ADD_EXECUTABLE_COMMAND})
-    add_dependencies(${ARGV0} boost patcher ${GENGINE_TARGETS_COMMON_DEPENDENCIES})
-    gengine_patch(${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
-endmacro()
-
-#used for .dlls only
-function(gengine_add_shared_library)
-    unset(ADD_SHARED_LIBRARY_COMMAND)
-    set(ALL_BINRAIES ${ALL_BINRAIES} "${ARGV0}.dll;${ARGV0}.pdb" PARENT_SCOPE)
-    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED")
-    foreach(argmnt RANGE 1 ${ARGC})
-        set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND} ${ARGV${argmnt}})
-    endforeach()
-    set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND})
-    add_library(${ADD_SHARED_LIBRARY_COMMAND})
-    add_dependencies(${ARGV0} boost patcher ${GENGINE_TARGETS_COMMON_DEPENDENCIES})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
-endfunction(gengine_add_shared_library)
-
-macro (gengine_add_library)
+function (prv_gengine_add_includes)
     include_directories(
         .
         ${Boost_INCLUDE_DIRS}
@@ -187,39 +120,71 @@ macro (gengine_add_library)
         ${GENGINE_BINARY_DIR}
         ${GTest_INCLUDE_DIRS}
     )
+endfunction()
 
-    set(GENGINE_LIBRARIES ${GENGINE_LIBRARIES} ${ARGV0} PARENT_SCOPE)
+function (gengine_add_executable)
+    prv_gengine_add_includes()
+
+    add_executable(${ARGV})
+    add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
+    add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
+    gengine_patch(${ARGV0})
+    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
+endfunction()
+
+function(gengine_add_shared_library)
+    prv_gengine_add_includes()
+
+    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED")
+    foreach(argmnt RANGE 1 ${ARGC})
+        set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND} ${ARGV${argmnt}})
+    endforeach()
+
+    add_library(${ADD_SHARED_LIBRARY_COMMAND})
+    add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
+    add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
+    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
+endfunction(gengine_add_shared_library)
+
+macro (gengine_add_library)
+    prv_gengine_add_includes()
+
+    gengine_export_var(GENGINE_LIBRARIES ${GENGINE_LIBRARIES} ${ARGV0})
+
     add_library(${ARGV})
-    add_dependencies(${ARGV0} boost ${GENGINE_TARGETS_COMMON_DEPENDENCIES})
+    add_dependencies(${ARGV0} ${GENGINE_THIRDPARTY_TARGET_NAME})
+    add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
     gengine_export(${ARGV0} ${GENGINE_LIB_DIR})
 endmacro()
 
 function (gengine_add_shared_entry)
-    unset(ADD_SHARED_LIBRARY_COMMAND)
-    set(ALL_BINRAIES ${ALL_BINRAIES} "${ARGV0}.dll;${ARGV0}.pdb" PARENT_SCOPE)
-    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED" "./${ARGV0}.json")
+    prv_gengine_add_includes()
+
+    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED")
     foreach(argmnt RANGE 1 ${ARGC})
         set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND} ${ARGV${argmnt}})
     endforeach()
-    set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND})
+
     add_library(${ADD_SHARED_LIBRARY_COMMAND})
-    add_dependencies(${ARGV0} boost patcher ${GENGINE_TARGETS_COMMON_DEPENDENCIES})
+    add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
+    add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
     gengine_patch(${ARGV0})
     gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
 endfunction(gengine_add_shared_entry)
 
 function (gengine_add_plugin_entry)
-    unset(ADD_SHARED_LIBRARY_COMMAND)
-    set(ALL_BINRAIES ${ALL_BINRAIES} "${ARGV0}.dll;${ARGV0}.pdb" PARENT_SCOPE)
-    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED" "./${ARGV0}.json")
+    prv_gengine_add_includes()
+
+    set(ADD_SHARED_LIBRARY_COMMAND "${ARGV0}" "SHARED")
     foreach(argmnt RANGE 1 ${ARGC})
         set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND} ${ARGV${argmnt}})
     endforeach()
-    set(ADD_SHARED_LIBRARY_COMMAND ${ADD_SHARED_LIBRARY_COMMAND})
+
     add_library(${ADD_SHARED_LIBRARY_COMMAND})
     gengine_patch_plugin(${ARGV0})
     gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
-    add_dependencies("${ARGV0}" patcher ${GENGINE_TARGETS_COMMON_DEPENDENCIES})
+    add_dependencies("${ARGV0}" patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
+    add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
 endfunction(gengine_add_plugin_entry)
 
 macro (gengine_dump_variables)
@@ -253,46 +218,26 @@ macro (gengine_export)
     )
 endmacro()
 
-macro (gengine_patch)
+function (prv_gengine_patch TARGET_NAME ARGUMENT)
     if(WIN32)
         set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher.exe)
     else()
         set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher)
     endif()
-    add_custom_command(TARGET ${ARGV0}
+    add_custom_command(TARGET ${TARGET_NAME}
         POST_BUILD
-        COMMAND ${PATCHER_UTILITY} --entry=default --executable --file=$<TARGET_FILE:${ARGV0}> --config=${CMAKE_CURRENT_SOURCE_DIR}/${ARGV0}.json
-        COMMENT "Patching $<TARGET_FILE:${ARGV0}> with ${ARGV0}.json"
+        COMMAND ${PATCHER_UTILITY} --entry=default ${ARGUMENT} --file=$<TARGET_FILE:${TARGET_NAME}> --config=${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}.json
+        COMMENT "Patching $<TARGET_FILE:${TARGET_NAME}> with ${TARGET_NAME}.json"
     )
-endmacro()
+endfunction()
 
-macro (gengine_patch_plugin)
-    if(WIN32)
-        set(PATCHER_UTILITY ${GENGINE_BINARY_DIR}/bin/patcher.exe)
-    else()
-        set(PATCHER_UTILITY ${GENGINE_BINARY_DIR}/bin/patcher)
-    endif()
-    add_custom_command(TARGET ${ARGV0}
-        POST_BUILD
-        COMMAND ${PATCHER_UTILITY} --entry=default --plugin --file=$<TARGET_FILE:${ARGV0}> --config=${CMAKE_CURRENT_SOURCE_DIR}/${ARGV0}.json
-        COMMENT "Patching $<TARGET_FILE:${ARGV0}> with ${ARGV0}.json"
-    )
-endmacro()
+function (gengine_patch TARGET_NAME)
+    prv_gengine_patch(${TARGET_NAME} "--executable")
+endfunction()
 
-macro (gengine_display_aware)
-IF (MSVC)
-    IF (CMAKE_MAJOR_VERSION LESS 3)
-        MESSAGE(WARNING "CMake version 3.0 or newer is required use build variable TARGET_FILE")
-    ELSE()
-        ADD_CUSTOM_COMMAND(
-           TARGET labtracker
-            POST_BUILD
-            COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiawarescaleing.manifest\" -inputresource:\"$<TARGET_FILE:labtracker>\"\;\#1 -outputresource:\"$<TARGET_FILE:labtracker>\"\;\#1
-            COMMENT "Adding display aware manifest..."
-        )
-    ENDIF()
-ENDIF(MSVC)
-endmacro()
+function (gengine_patch_plugin TARGET_NAME)
+    prv_gengine_patch(${TARGET_NAME} "--plugin")
+endfunction()
 
 function(gengine_export_includes)
     file(GLOB_RECURSE include_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/" "*.h" "*.hpp")
@@ -305,7 +250,6 @@ endfunction(gengine_export_includes)
 function (gengine_import_binaries)
     file(GLOB shared_files RELATIVE "${GENGINE_BIN_DIR}/" "${GENGINE_BIN_DIR}/*.exe" "${GENGINE_BIN_DIR}/*.dll" "${GENGINE_BIN_DIR}/*.so")
     foreach(dll_file ${shared_files})
-        #message("SharedLib ${dll_file}")
         add_custom_command(TARGET ${ARGV0}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy \"${GENGINE_BIN_DIR}/${dll_file}\" \"$<TARGET_FILE_DIR:${ARGV0}>\"

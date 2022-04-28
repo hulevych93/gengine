@@ -1,0 +1,179 @@
+
+{
+  "appName": "TestEcho",
+  "consoleLogger": true,
+  "workers": [
+    {
+      "id": 0,
+      "name": "MainTestThread"
+    },
+    {
+      "id": 194,
+      "name": "PipeThread1"
+    },
+    {
+      "id": 195,
+      "name": "PipeThread2"
+    },
+    {
+      "id": 196,
+      "name": "TCPIPThread1"
+    },
+    {
+      "id": 197,
+      "name": "TCPIPThread2"
+    },
+    {
+      "id": 200,
+      "name": "EchoWorker"
+    }
+  ],
+  "inServices": [
+    {
+      "key": "3E0474C1",
+      "value": {
+        "id": "3E0474C1",
+        "key": "IEcho",
+        "type": 1,
+        "connection": {
+          "which": 2,
+          "data": {
+            "which": 0,
+            "data": {
+              "pipe": "D7C9AA6F49D5"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "83F52161",
+      "value": {
+        "id": "83F52161",
+        "key": "IEcho",
+        "type": 1,
+        "connection": {
+          "which": 2,
+          "data": {
+            "which": 0,
+            "data": {
+              "pipe": "Wrf5G34sQ9qghI6mweq2A"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "A2H11HJK",
+      "value": {
+        "id": "A2H11HJK",
+        "key": "IEcho",
+        "type": 1,
+        "connection": {
+          "which": 2,
+          "data": {
+            "which": 1,
+            "data": {
+              "ip": "127.0.0.1",
+              "port": 35009
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "SF345RHJ",
+      "value": {
+        "id": "SF345RHJ",
+        "key": "IEcho",
+        "type": 1,
+        "connection": {
+          "which": 2,
+          "data": {
+            "which": 1,
+            "data": {
+              "ip": "127.0.0.1",
+              "port": 35010
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outServices": [
+  {
+    "key": "3E0474C1",
+    "value": {
+      "id": "3E0474C1",
+      "key": "IEcho",
+      "type": 1,
+      "connection": {
+        "which": 2,
+        "data": {
+          "which": 0,
+          "data": {
+            "pipe": "D7C9AA6F49D5"
+          }
+        }
+      },
+      "threadRef": 195
+    }
+  },
+  {
+    "key": "83F52161",
+    "value": {
+      "id": "83F52161",
+      "key": "IEcho",
+      "type": 1,
+      "connection": {
+        "which": 2,
+        "data": {
+          "which": 0,
+          "data": {
+            "pipe": "Wrf5G34sQ9qghI6mweq2A"
+          }
+        }
+      },
+      "threadRef": 194
+    }
+  },
+  {
+    "key": "A2H11HJK",
+    "value": {
+      "id": "A2H11HJK",
+      "key": "IEcho",
+      "type": 1,
+      "connection": {
+        "which": 2,
+        "data": {
+          "which": 1,
+          "data": {
+            "ip": "127.0.0.1",
+            "port": 35009
+          }
+        }
+      },
+      "threadRef": 196
+    }
+  },
+  {
+    "key": "SF345RHJ",
+    "value": {
+      "id": "SF345RHJ",
+      "key": "IEcho",
+      "type": 1,
+      "connection": {
+        "which": 2,
+        "data": {
+          "which": 1,
+          "data": {
+            "ip": "127.0.0.1",
+            "port": 35010
+          }
+        }
+      },
+      "threadRef": 197
+    }
+  }
+  ]
+}

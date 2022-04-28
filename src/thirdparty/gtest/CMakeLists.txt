@@ -36,3 +36,5 @@ ExternalProject_Add(
     LOG_BUILD               1
     LOG_INSTALL             1
 )
+
+add_dependencies(${GENGINE_THIRDPARTY_TARGET_NAME} gtest)

@@ -127,3 +127,5 @@ ExternalProject_Add(
     LOG_INSTALL         1
     LOG_TEST            1
 )
+
+add_dependencies(${GENGINE_THIRDPARTY_TARGET_NAME} boost)
