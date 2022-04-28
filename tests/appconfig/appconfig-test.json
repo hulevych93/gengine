@@ -1,0 +1,8 @@
+
+{
+  "appName": "Appconfig",
+  "consoleLogger": true,
+  "workers": [],
+  "inServices": [],
+  "outServices": []
+}

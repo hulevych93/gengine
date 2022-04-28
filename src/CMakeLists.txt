@@ -24,6 +24,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # examples
 gengine_export_var(GENGINE_EXAMPLES_DIR ${PROJECT_SOURCE_DIR}/../examples)
+gengine_export_var(GENGINE_TESTS_DIR ${PROJECT_SOURCE_DIR}/../tests)
 
 include(${GENGINE_CMAKE_DIR}/main.cmake)
 include(ExternalProject)
