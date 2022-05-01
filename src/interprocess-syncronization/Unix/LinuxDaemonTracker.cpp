@@ -11,8 +11,8 @@
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-LinuxDaemonTracker::LinuxDaemonTracker(const std::string& fileName, ServiceTrackerImpl& serviceTrackerImpl)
-: ServiceTracker(serviceTrackerImpl)
+LinuxDaemonTracker::LinuxDaemonTracker(const std::string& fileName, terminate_handler handler)
+: ServiceTracker(handler)
 , m_canRun(false)
 , m_mappingFileName(fileName)
 , m_file(-1)

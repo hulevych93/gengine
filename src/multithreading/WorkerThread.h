@@ -76,5 +76,6 @@ private:
 public:
     static const std::int32_t INVALID_TIMER_ID = -1;
 };
+
 }
 }

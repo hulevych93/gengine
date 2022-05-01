@@ -10,7 +10,7 @@ namespace InterprocessSynchronization {
 class LinuxDaemonTracker: public ServiceTracker
 {
 public:
-    LinuxDaemonTracker(const std::string& fileName, ServiceTrackerImpl& serviceTrackerImpl);
+    LinuxDaemonTracker(const std::string& fileName, terminate_handler handler);
     ~LinuxDaemonTracker();
 
 protected:

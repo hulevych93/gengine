@@ -54,9 +54,9 @@ std::unique_ptr<InstanceRegistratorInterface> EntryToolsFactory::CreateInstanceR
     return std::unique_ptr<InstanceRegistratorInterface>();
 }
 
-std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std::wstring& module, InterprocessSynchronization::ServiceTrackerImpl& serviceTrackerImpl)
+std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std::wstring& module,InterprocessSynchronization::ServiceTracker::terminate_handler handler)
 {
-    return std::make_unique<LinuxDaemonTracker>(toUtf8(module), serviceTrackerImpl);
+    return std::make_unique<LinuxDaemonTracker>(toUtf8(module), handler);
 }
 
 }

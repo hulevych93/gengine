@@ -57,7 +57,7 @@ function(gengine_collect_src LIST_OUT)
     if(WIN32)
         list(APPEND IGNORED_LIST "Linux/")
         list(APPEND IGNORED_LIST "MacOS/")
-		list(APPEND IGNORED_LIST "Unix/")
+        list(APPEND IGNORED_LIST "Unix/")
     endif()
 
     prv_collect_sources(${PROJECT_SOURCE_DIR} TMP_SRC_LIST ${IGNORED_LIST})

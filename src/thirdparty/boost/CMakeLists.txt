@@ -36,14 +36,6 @@ if(WIN32)
     set(RUNTIME_LINK shared)
 endif()
 
-set(ZLIB_SOURCE_FLAGS)
-if(GENGINE_BUILD_CUSTOM_ZLIB)
-    set(ZLIB_SOURCE_FLAGS
-        -sZLIB_INCLUDE=${GENGINE_ZLIB_PREFIX}/include
-        -sZLIB_LIBPATH=${GENGINE_ZLIB_LIB_DIR}
-        -sZLIB_BINARY=${GENGINE_ZLIB_LIB_NAME})
-endif()
-
 set(ADDRESS_MODEL 64)
 if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
     set(ADDRESS_MODEL 32)
@@ -117,7 +109,6 @@ ExternalProject_Add(
     # Build
     BUILD_COMMAND       ${BUILD_COMMAND_BASE} --prefix=${GENGINE_BOOST_INSTALL_PREFIX} -j8 -d2 ${LIB_OPTS} install
                         ${BCP_NATIVE_BUILD_COMMAND}
-    DOWNLOAD_NO_EXTRACT 1
         # Install
     INSTALL_COMMAND     ""
     BUILD_IN_SOURCE     1

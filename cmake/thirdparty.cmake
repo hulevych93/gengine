@@ -2,6 +2,12 @@
 
 include(ExternalProject)
 
+if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
+    set(GENGINE_ARCH x86_64)
+elseif("${CMAKE_SIZEOF_VOID_P}" EQUAL 4)
+    set(GENGINE_ARCH x86)
+endif()
+
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES .*Clang.*)
     set(GENGINE_COMPILER_IS_CLANG TRUE)
 endif()
@@ -40,14 +46,39 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
     gengine_export_var(GENGINE_LIB_NAME_DEBUG_SUFFIX_WITH_MINUS -d)
 endif()
 
+unset(GENGINE_3RD_PARTY_LIB_DIR_SUFFIX CACHE)
+
+macro(prv_add_3rd_party_lib_dir_suffix SUFFIX)
+    if(GENGINE_3RD_PARTY_LIB_DIR_SUFFIX)
+        set(GENGINE_3RD_PARTY_LIB_DIR_SUFFIX "${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX}-${SUFFIX}")
+    else()
+        set(GENGINE_3RD_PARTY_LIB_DIR_SUFFIX "${SUFFIX}")
+    endif()
+endmacro()
+
+if(BUILD_SHARED_LIBS)
+    set(TMP_LINK_TYPE "shared")
+else()
+    set(TMP_LINK_TYPE "static")
+endif()
+
+string(REPLACE " " "" TMP_GENERATOR_DESC "${CMAKE_GENERATOR}")
+
+prv_add_3rd_party_lib_dir_suffix("${CMAKE_BUILD_TYPE}")
+prv_add_3rd_party_lib_dir_suffix("${GENGINE_ARCH}")
+prv_add_3rd_party_lib_dir_suffix("${TMP_LINK_TYPE}")
+prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_ID}")
+prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_VERSION}")
+prv_add_3rd_party_lib_dir_suffix("${TMP_GENERATOR_DESC}")
+
 # The `prv_def_3rd_party_lib_name` contructs a full static lib name
 # with respect to platform-dependent suffix/prefix.
 function(prv_def_3rd_party_lib_name COMPONENT_NAME BASE_NAME FULL_LIB_NAME_OUT)
     if(DEFINED ARGV4)
         set(SUFFIX "${ARGV4}")
     endif()
-	
-	if(BUILD_AS_SHARED)
+
+    if(BUILD_AS_SHARED)
         set(SUFFIX "${SUFFIX}${GENGINE_SHARED_LIB_NAME_SUFFIX}")
     else()
         set(SUFFIX "${SUFFIX}${GENGINE_STATIC_LIB_NAME_SUFFIX}")
@@ -142,22 +173,26 @@ set(GENGINE_3RD_PARTY_CMAKE_INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --confi
 
 # Setting up Boost ...
 set(GENGINE_BOOST_VERSION 1.70.0)
-set(GENGINE_BOOST_ROOT_DIR "boost-${GENGINE_BOOST_VERSION}")
+set(GENGINE_BOOST_ROOT_DIR boost-${GENGINE_BOOST_VERSION}-${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX})
 set(GENGINE_BOOST_BUILD_DIR ${GENGINE_3RD_PARTY_BUILD_DIR}/${GENGINE_BOOST_ROOT_DIR})
 set(GENGINE_BOOST_INSTALL_PREFIX ${GENGINE_3RD_PARTY_INSTALL_DIR}/${GENGINE_BOOST_ROOT_DIR})
-set(Boost_INCLUDE_DIRS ${GENGINE_BOOST_INSTALL_PREFIX}/include/boost-1_70)
+set(Boost_INCLUDE_DIRS ${GENGINE_BOOST_INSTALL_PREFIX}/include)
 set(Boost_LIB_DIR ${GENGINE_BOOST_INSTALL_PREFIX}/lib)
-set(Boost_Lib_suffix "-vc141-mt-gd-x32-1_70")
 set(Boost_COMPONENTS thread timer date_time filesystem locale regex system chrono program_options)
 set(Boost_LIBRARIES)
+
+if(WIN32)
+    set(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} "/boost-1_70")
+    set(Boost_Lib_suffix "-vc141-mt-gd-x32-1_70")
+endif()
 
 foreach(TMP_BOOST_LIB_BASE IN LISTS Boost_COMPONENTS)
     string(TOUPPER "${TMP_BOOST_LIB_BASE}" TMP_BOOST_LIB_BASE_UPPER)
     prv_def_3rd_party_lib_name("Boost"
                                "boost_${TMP_BOOST_LIB_BASE}"
                                GENGINE_BOOST_${TMP_BOOST_LIB_BASE_UPPER}_LIB
-							   "lib"
-							   ${Boost_Lib_suffix})
+                               "lib"
+                               ${Boost_Lib_suffix})
 
     list(APPEND Boost_LIBRARIES "${GENGINE_BOOST_${TMP_BOOST_LIB_BASE_UPPER}_LIB}")
 endforeach()
@@ -168,12 +203,12 @@ gengine_export_var(Boost_LIBRARIES ${Boost_LIBRARIES})
 
 # Settings up gTest
 set(GENGINE_GTEST_VERSION                1.10.0)
-set(GENGINE_GTEST_UNIQUE_DIR_NAME        gtest-${GENGINE_GTEST_VERSION})
+set(GENGINE_GTEST_UNIQUE_DIR_NAME        gtest-${GENGINE_GTEST_VERSION}-${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX})
 set(GENGINE_GTEST_PREFIX                 ${GENGINE_3RD_PARTY_INSTALL_DIR}/${GENGINE_GTEST_UNIQUE_DIR_NAME})
 set(GENGINE_GTEST_BUILD_DIR              ${GENGINE_3RD_PARTY_BUILD_DIR}/${GENGINE_GTEST_UNIQUE_DIR_NAME})
 set(GTest_INCLUDE_DIRS                   ${GENGINE_GTEST_PREFIX}/include)
 set(GTest_LIB_DIR                        ${GENGINE_GTEST_PREFIX}/lib)
-set(GTest_COMPONENTS                     gtestd gmockd)
+set(GTest_COMPONENTS                     gtest${GENGINE_LIB_NAME_DEBUG_SUFFIX} gmock${GENGINE_LIB_NAME_DEBUG_SUFFIX})
 set(GTest_LIBRARIES)
 
 foreach(TMP_GTEST_LIB_BASE IN LISTS GTest_COMPONENTS)
@@ -190,13 +225,17 @@ gengine_export_var(GTest_LIBRARIES ${GTest_LIBRARIES})
 
 # Settings up Log4cplus
 set(GENGINE_LOG4CPLUS_VERSION            1.2.1)
-set(GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME    log4cplus-${GENGINE_LOG4CPLUS_VERSION})
+set(GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME    log4cplus-${GENGINE_LOG4CPLUS_VERSION}-${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX})
 set(GENGINE_LOG4CPLUS_PREFIX             ${GENGINE_3RD_PARTY_INSTALL_DIR}/${GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME})
 set(GENGINE_LOG4CPLUS_BUILD_DIR          ${GENGINE_3RD_PARTY_BUILD_DIR}/${GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME})
 set(Log4cplus_INCLUDE_DIRS               ${GENGINE_LOG4CPLUS_PREFIX}/include)
 set(Log4cplus_LIB_DIR                    ${GENGINE_LOG4CPLUS_PREFIX}/lib)
-set(Log4cplus_COMPONENTS                 log4cplusUD)
+set(Log4cplus_COMPONENTS                 log4cplus)
 set(Log4cplus_LIBRARIES)
+
+if(WIN32)
+    set(Log4cplus_COMPONENTS ${Log4cplus_COMPONENTS} "U" ${GENGINE_LIB_NAME_DEBUG_SUFFIX})
+endif()
 
 foreach(TMP_LOG4CPLUS_LIB_BASE IN LISTS Log4cplus_COMPONENTS)
     string(TOUPPER "${TMP_LOG4CPLUS_LIB_BASE}" TMP_LOG4CPLUS_LIB_BASE_UPPER)

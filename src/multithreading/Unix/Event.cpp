@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include "Event.h"
+#include "ThreadUtils.h"
 
 #include <assert.h>
 #include <vector>
@@ -253,5 +254,11 @@ void Event::RemoveMutexCond(mutex_cond_t* pMutexCond)
     std::lock_guard<std::mutex> csMutexContidions(m_csMutexConditions);
     m_MutexConditions.remove(pMutexCond);
 }
+
+bool ThreadUtils::SetThreadName(std::thread&, const std::wstring&)
+{
+    return false;
+}
+
 }
 }

@@ -140,7 +140,7 @@ protected:
 protected:
     bool Serialize(Serializer& serializer) const override
     {
-        serializer << m_plugins.size();
+        serializer << (std::uint32_t)m_plugins.size();
         for (const auto& pluginIter : m_plugins)
         {
             serializer << pluginIter.first;
@@ -150,7 +150,7 @@ protected:
 
     bool Deserialize(const Deserializer& deserializer) override
     {
-        std::size_t size;
+        std::uint32_t size;
         PluginInfo info;
         deserializer >> size;
         while (size > 0)
