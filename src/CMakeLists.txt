@@ -1,59 +1,7 @@
 cmake_minimum_required (VERSION 3.0)
 project (gengine)
 
-set(GENGINE_CMAKE_DIR ${PROJECT_SOURCE_DIR}/../cmake)
-include(${GENGINE_CMAKE_DIR}/common.cmake)
-
-gengine_export_var(GENGINE_ROOT_DIR ${PROJECT_SOURCE_DIR})
-gengine_export_var(GENGINE_BINARY_DIR ${PROJECT_BINARY_DIR})
-gengine_export_var(GENGINE_CMAKE_DIR ${GENGINE_CMAKE_DIR})
-
-# code generation
-gengine_export_var(GENGINE_RDLS_DIR ${PROJECT_SOURCE_DIR}/../rdls)
-gengine_export_var(GENGINE_PERL_DIR ${PROJECT_SOURCE_DIR}/../perl)
-
-# installation
-gengine_export_var(GENGINE_INSTALL_DIR ${GENGINE_ROOT_DIR}/../install)
-gengine_export_var(GENGINE_INCLUDE_DIR ${GENGINE_INSTALL_DIR}/include)
-gengine_export_var(GENGINE_LIB_DIR ${GENGINE_INSTALL_DIR}/lib)
-gengine_export_var(GENGINE_BIN_DIR ${GENGINE_INSTALL_DIR}/bin)
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# examples
-gengine_export_var(GENGINE_EXAMPLES_DIR ${PROJECT_SOURCE_DIR}/../examples)
-gengine_export_var(GENGINE_TESTS_DIR ${PROJECT_SOURCE_DIR}/../tests)
-
-include(${GENGINE_CMAKE_DIR}/main.cmake)
-include(ExternalProject)
-
-if(WIN32)
-    set(AdditionalOS_LIBRARIES
-        Psapi.lib
-        Version.lib
-        Wtsapi32.lib
-        wbemuuid.lib
-        odbc32.lib
-        Oleacc.lib
-        ws2_32.lib)
-
-    set(EXECUTABLE_TYPE WIN32)
-
-    ADD_DEFINITIONS(-DUNICODE)
-    ADD_DEFINITIONS(-D_UNICODE)
-elseif(UNIX)
-    FIND_PACKAGE(X11 REQUIRED)
-
-    set(AdditionalOS_LIBRARIES
-        iconv
-        pthread
-        ${X11_LIBRARIES}
-    )
-endif()
-
-add_definitions(-DEXPORT_SYMBOLS)
+include(${PROJECT_SOURCE_DIR}/../cmake/main.cmake)
 
 include_directories(${PROJECT_SOURCE_DIR})
 

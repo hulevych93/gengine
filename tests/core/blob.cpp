@@ -1,4 +1,14 @@
-#include <tests/gtest-common/gtest.h>
+#include <gtest/gtest.h>
+
+#include <entries/TestEntry.h>
+#include <entries/Main.h>
+#include <entries/EntryRegistry.h>
+
+#include <core/Logger.h>
+
+#if defined(BUILD_WINDOWS)
+#include <Windows.h>
+#endif
 
 #include <string>
 
@@ -9,9 +19,23 @@
 
 #include <core/Blob.h>
 
+class GTest : public testing::Test
+{
+protected:
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+
+    }
+};
+
 constexpr const char* Data = "data";
 
 using namespace Gengine;
+using namespace Entries;
 
 TEST_F(GTest, defaultContructedBlob)
 {
@@ -132,3 +156,7 @@ TEST_F(GTest, addDataBlob)
     EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
                             strlen(Data) + data2.size()) == std::string{Data} + data2);
 }
+
+
+REGISTER_TESTS_ENTRY(GTestModule)
+IMPLEMENT_CONSOLE_ENTRY

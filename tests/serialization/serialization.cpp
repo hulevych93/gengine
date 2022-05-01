@@ -1,9 +1,34 @@
-#include <tests/gtest-common/gtest.h>
+#include <gtest/gtest.h>
+
+#include <entries/TestEntry.h>
+#include <entries/Main.h>
+#include <entries/EntryRegistry.h>
+
+#include <core/Logger.h>
+
+#if defined(BUILD_WINDOWS)
+#include <Windows.h>
+#endif
+
+class GTest : public testing::Test
+{
+protected:
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+
+    }
+};
+
 
 #include <serialization/ISerializable.h>
 #include <core/Logger.h>
 
 using namespace Gengine;
+using namespace Entries;
 using namespace Serialization;
 
 TEST_F(GTest, NumbersSerialization)
@@ -294,3 +319,6 @@ TEST_F(GTest, VariantSerialization)
         EXPECT_TRUE(inVariant == outVariant);
     }
 }
+
+REGISTER_TESTS_ENTRY(GTestModule)
+IMPLEMENT_CONSOLE_ENTRY

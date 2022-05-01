@@ -1,6 +1,9 @@
-# tests
+project(tests)
 
-add_subdirectory(gtest-common)
+include(${PROJECT_SOURCE_DIR}/../cmake/main.cmake)
+
+include_directories(${PROJECT_SOURCE_DIR})
+
 add_subdirectory(appconfig)
 add_subdirectory(core)
 add_subdirectory(serialization)

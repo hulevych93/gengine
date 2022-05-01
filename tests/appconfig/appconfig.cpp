@@ -1,15 +1,39 @@
-#include <tests/gtest-common/gtest.h>
+#include <gtest/gtest.h>
+
+#include <entries/TestEntry.h>
+#include <entries/Main.h>
+#include <entries/EntryRegistry.h>
 
 #include <core/Logger.h>
+
+#if defined(BUILD_WINDOWS)
+#include <Windows.h>
+#endif
+
 #include <api/services/ServiceType.h>
+
 #include <appconfig/AppConfig.h>
 #include <appconfig/BufferConfigReader.h>
 #include <appconfig/SelfExtractedBufferedConfigReader.h>
 #include <appconfig/SelfExtractedFileConfigReader.h>
 
 using namespace Gengine;
+using namespace Entries;
 using namespace AppConfig;
 using namespace JSON;
+
+class GTest : public testing::Test
+{
+protected:
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+
+    }
+};
 
 EntryConfig makeEntryConfig()
 {
@@ -68,3 +92,6 @@ TEST_F(GTest, bufferConfigReader)
     EXPECT_TRUE(engine2.Load());
     EXPECT_TRUE(config == test);
 }
+
+REGISTER_TESTS_ENTRY(GTestModule)
+IMPLEMENT_CONSOLE_ENTRY

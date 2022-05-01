@@ -14,7 +14,7 @@ include_directories(
     ${GENGINE_BINARY_DIR}
 )
 
-gengine_add_executable(echo ${EXECUTABLE_TYPE} ${SRC} ${GEN_SRC})
+gengine_add_test(echo ${SRC} ${GEN_SRC})
 
 target_link_libraries(echo
     ${GENGINE_LIBRARIES}

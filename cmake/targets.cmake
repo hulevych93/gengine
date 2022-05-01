@@ -134,6 +134,14 @@ function (prv_gengine_add_includes)
     )
 endfunction()
 
+function (gengine_add_test)
+    prv_gengine_add_includes()
+
+    add_executable(${ARGV})
+    add_dependencies(${ARGV0} patcher ${GENGINE_TARGET_NAME})
+    gengine_patch(${ARGV0})
+endfunction()
+
 function (gengine_add_executable)
     prv_gengine_add_includes()
 

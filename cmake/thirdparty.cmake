@@ -1,5 +1,7 @@
 # thirdparties.cmake
 
+include(ExternalProject)
+
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES .*Clang.*)
     set(GENGINE_COMPILER_IS_CLANG TRUE)
 endif()

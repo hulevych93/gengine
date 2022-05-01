@@ -66,7 +66,7 @@ class TestEcho : public Entries::EntryBase,
 public:
     TestEcho(std::unique_ptr<Entries::IEntryToolsFactory>&& factory)
         : EntryBase(std::move(factory))
-#if 0
+#if 1
         , m_echoClient("83F52161")
         , m_echoServer("3E0474C1", *this)
         , m_echo("3E0474C1", "83F52161")
@@ -153,4 +153,4 @@ private:
 };
 
 REGISTER_MAIN_ENTRY(TestEcho)
-IMPLEMENT_ENTRY
+IMPLEMENT_CONSOLE_ENTRY

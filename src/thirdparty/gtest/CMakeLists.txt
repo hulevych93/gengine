@@ -8,11 +8,8 @@ gengine_3rd_party_common_cmake_options(CMAKE_OPTS)
 list(APPEND CMAKE_OPTS
     -DTHREADS_PTHREAD_ARG=0
     -DCMAKE_INSTALL_PREFIX=${GENGINE_GTEST_PREFIX}
+    -Dgtest_force_shared_crt=ON
 )
-
-if(GENGINE_WIN_GCC OR EMSCRIPTEN)
-    list(APPEND CMAKE_OPTS -Dgtest_disable_pthreads=TRUE)
-endif()
 
 ExternalProject_Add(
     gtest

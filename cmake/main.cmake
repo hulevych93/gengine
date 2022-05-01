@@ -24,32 +24,27 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE DEBUG)
 endif()
 
+set(GENGINE_CMAKE_DIR ${PROJECT_SOURCE_DIR}/../cmake)
+
+include(${GENGINE_CMAKE_DIR}/common.cmake)
+
 # This is the first target which we execute before building our code.
 # Note: third-parties are built before this target.
-gengine_export_var(GENGINE_THIRDPARTY_TARGET_NAME build_thirdparty)
-add_custom_target(${GENGINE_THIRDPARTY_TARGET_NAME})
+if(NOT DEFINED GENGINE_THIRDPARTY_TARGET_NAME)
+    gengine_export_var(GENGINE_THIRDPARTY_TARGET_NAME build_thirdparty)
+    add_custom_target(${GENGINE_THIRDPARTY_TARGET_NAME})
+endif()
 
 # Full core part target
-gengine_export_var(GENGINE_TARGET_NAME build_gengine)
-add_custom_target(${GENGINE_TARGET_NAME})
+if(NOT DEFINED GENGINE_TARGET_NAME)
+    gengine_export_var(GENGINE_TARGET_NAME build_gengine)
+    add_custom_target(${GENGINE_TARGET_NAME})
+endif()
 
-# includes
-include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
+include(${GENGINE_CMAKE_DIR}/vars.cmake)
 include(${GENGINE_CMAKE_DIR}/generate.cmake)
 include(${GENGINE_CMAKE_DIR}/sources.cmake)
 include(${GENGINE_CMAKE_DIR}/targets.cmake)
-
-if(WIN32)
-    gengine_set_runtime()
-elseif(UNIX)
-    FIND_PACKAGE(X11 REQUIRED)
-
-    set(AdditionalOS_LIBRARIES
-        iconv
-        pthread
-        ${X11_LIBRARIES}
-    )
-endif()
-
+include(${GENGINE_CMAKE_DIR}/platform.cmake)
 include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
 

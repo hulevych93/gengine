@@ -11,14 +11,13 @@ include_directories(
     ${GENGINE_BINARY_DIR}
 )
 
-gengine_add_executable(serialization-test ${SRC})
+gengine_add_test(serialization-test ${SRC})
 
 target_link_libraries(serialization-test
     ${Boost_LIBRARIES}
     ${GENGINE_LIBRARIES}
     ${AdditionalOS_LIBRARIES}
     ${GTest_LIBRARIES}
-    gtest-common
 )
 
 gengine_import_binaries(serialization-test)
