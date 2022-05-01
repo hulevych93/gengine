@@ -2,7 +2,7 @@
 
 #include <diagnostic/IDumper.h>
 #include <appconfig/AppConfig.h>
-#include <appconfig/SelExtractedBufferedConfigReader.h>
+#include <appconfig/SelfExtractedBufferedConfigReader.h>
 #include <interprocess-syncronization/IAliveObject.h>
 #include <interprocess-syncronization/InstanceRegistratorInterface.h>
 
@@ -85,7 +85,7 @@ bool EntryBase::GetConfig(void** config)
     if (!m_config)
     {
         m_config = std::make_unique<EntryConfig>();
-        if (!SelExtractedBufferedConfigReader(*m_config).Load())
+        if (!SelfExtractedBufferedConfigReader(*m_config).Load())
             throw std::runtime_error("no service config loaded...");
     }
 

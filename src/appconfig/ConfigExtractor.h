@@ -6,21 +6,25 @@
 namespace Gengine {
 namespace AppConfig {
 
-class ConfigExtractor
+class ConfigExtractor final
 {
 public:
-    ConfigExtractor();
+    static ConfigExtractor makeExtractor(const std::string& file, const std::string& module);
 
-    bool Extract(const std::wstring& to);
+    bool Extract(const std::string& filePath);
+
     bool Extract(std::string& to);
 
 private:
-    bool Save(size_t offset, size_t size, const std::wstring& path) const;
+    explicit ConfigExtractor(std::ifstream&& stream, const std::string& module);
+
+    bool Save(size_t offset, size_t size, const std::string& path) const;
     std::string Read(size_t offset, size_t size) const;
     std::pair<size_t, size_t> FindConfig() const;
     size_t Find(const std::string& pattern) const;
 
 private:
+    const std::string m_module;
     mutable std::ifstream m_stream;
     mutable std::string m_buffer;
     mutable std::int32_t m_pos;

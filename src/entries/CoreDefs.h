@@ -8,7 +8,7 @@
 #if defined (_WIN32)
 #include "Windows/EntryToolsFactory.h"
 #elif __linux__ || __APPLE__
-#include "Unix/LinuxEntryToolsFactory.h"
+#include "Unix/EntryToolsFactory.h"
 #endif
 
 namespace Gengine {
@@ -71,7 +71,7 @@ int main(int argc, char** argv) \
 
 using args_type = boost::variant<wargv_type, argv_type>;
 
-#define FACTORY std::make_unique<LinuxEntryToolsFactory>()
+#define FACTORY std::make_unique<EntryToolsFactory>()
 
 #define IMPLEMENT_ENTRY \
 void* g_module_instance = nullptr;\

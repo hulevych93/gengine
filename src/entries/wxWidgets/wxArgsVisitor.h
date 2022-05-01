@@ -12,7 +12,7 @@ public:
     void operator () (const wargv_type& args) const;
     void operator () (const argv_type& args) const;
 
-#if defined (BUILD_WINDOWS)
+#if defined (_WIN32)
     void operator () (const WinArgs& args) const;
 #endif
 };

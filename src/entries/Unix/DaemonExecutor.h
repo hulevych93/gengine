@@ -10,12 +10,12 @@
 
 namespace Gengine {
 namespace Entries {
-class LinuxDaemonExecutor: public SimpleExecutor
+class DaemonExecutor: public SimpleExecutor
 {
 public:
-    LinuxDaemonExecutor(const LinuxDaemonExecutor&) = delete;
-    LinuxDaemonExecutor(IEntry& entry);
-    ~LinuxDaemonExecutor() = default;
+    DaemonExecutor(const DaemonExecutor&) = delete;
+    DaemonExecutor(IEntry& entry);
+    ~DaemonExecutor() = default;
 
     bool Execute(void* args) override;
     bool CreateProcessors(std::vector<std::unique_ptr<ICmdProcessor>>* processors) override;
@@ -40,7 +40,7 @@ protected:
     Multithreading::Event m_stopEvent;
 
 private:
-    static LinuxDaemonExecutor* m_instance;
+    static DaemonExecutor* m_instance;
 
 private:
     sem_t m_signalSemaphore;

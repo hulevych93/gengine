@@ -4,7 +4,7 @@
 
 namespace Gengine {
 namespace Entries {
-class LinuxEntryToolsFactory: public IEntryToolsFactory
+class EntryToolsFactory: public IEntryToolsFactory
 {
 public:
     std::vector<std::unique_ptr<Diagnostic::IDumper>> CreateDumpers(const std::wstring& module) override;

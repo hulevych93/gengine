@@ -1,4 +1,4 @@
-#include <entries/Unix/LinuxDaemonExecutor.h>
+#include <entries/Unix/DaemonExecutor.h>
 
 #include <iostream>
 #include <signal.h>
@@ -20,11 +20,11 @@
 namespace Gengine {
 namespace Entries {
 
-volatile sig_atomic_t LinuxDaemonExecutor::m_terminationInProgress = 0;
-LinuxDaemonExecutor* LinuxDaemonExecutor::m_instance = nullptr;
-volatile sig_atomic_t LinuxDaemonExecutor::m_handlingSignal = 0;
+volatile sig_atomic_t DaemonExecutor::m_terminationInProgress = 0;
+DaemonExecutor* DaemonExecutor::m_instance = nullptr;
+volatile sig_atomic_t DaemonExecutor::m_handlingSignal = 0;
 
-LinuxDaemonExecutor::LinuxDaemonExecutor(IEntry& entry)
+DaemonExecutor::DaemonExecutor(IEntry& entry)
 : SimpleExecutor(entry)
 , m_canHandleSignals(false)
 , m_lastSigNum(0)
@@ -35,17 +35,17 @@ LinuxDaemonExecutor::LinuxDaemonExecutor(IEntry& entry)
     m_stopEvent.Create(true, false);
 }
 
-void LinuxDaemonExecutor::StartSignalThread()
+void DaemonExecutor::StartSignalThread()
 {
     if(!m_signalHandlerThread.joinable())
     {
         sem_init(&m_signalSemaphore,0,0);
         m_canHandleSignals.store(true);
-        m_signalHandlerThread = std::thread(std::bind(&LinuxDaemonExecutor::SignalHandlingRoutine,this));
+        m_signalHandlerThread = std::thread(std::bind(&DaemonExecutor::SignalHandlingRoutine,this));
     }
 }
 
-void LinuxDaemonExecutor::StopSignalThread()
+void DaemonExecutor::StopSignalThread()
 {
     if (m_signalHandlerThread.joinable())
     {
@@ -55,7 +55,7 @@ void LinuxDaemonExecutor::StopSignalThread()
     }
 }
 
-void LinuxDaemonExecutor::SignalHandlingRoutine()
+void DaemonExecutor::SignalHandlingRoutine()
 {
     while (m_canHandleSignals.load())
     {
@@ -79,7 +79,7 @@ void LinuxDaemonExecutor::SignalHandlingRoutine()
     }
 }
 
-void LinuxDaemonExecutor::SignalHandler(int signum)
+void DaemonExecutor::SignalHandler(int signum)
 {
     if (m_instance)
     {
@@ -87,7 +87,7 @@ void LinuxDaemonExecutor::SignalHandler(int signum)
     }
 }
 
-void LinuxDaemonExecutor::OnSignal(int signum)
+void DaemonExecutor::OnSignal(int signum)
 {
     if (m_terminationInProgress)
     {
@@ -128,13 +128,13 @@ void LinuxDaemonExecutor::OnSignal(int signum)
     }
 }
 
-void LinuxDaemonExecutor::OnTerm()
+void DaemonExecutor::OnTerm()
 {
     m_stopEvent.Set();
     _exit(1);
 }
 
-void LinuxDaemonExecutor::OnCrash(int signum)
+void DaemonExecutor::OnCrash(int signum)
 {
     char** strings;
 
@@ -164,7 +164,7 @@ void LinuxDaemonExecutor::OnCrash(int signum)
     raise(signum);
 }
 
-bool LinuxDaemonExecutor::Execute(void* args)
+bool DaemonExecutor::Execute(void* args)
 {
     m_crashBuffSize = 200;
     m_lastSigNum = 0;
@@ -277,7 +277,7 @@ bool LinuxDaemonExecutor::Execute(void* args)
     return true;
 }
 
-bool LinuxDaemonExecutor::CreateProcessors(std::vector<std::unique_ptr<ICmdProcessor>>* processors)
+bool DaemonExecutor::CreateProcessors(std::vector<std::unique_ptr<ICmdProcessor>>* processors)
 {
     return true;
 }

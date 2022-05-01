@@ -12,7 +12,8 @@ function(prv_collect_sources SOURCE_FOLDER SRC_LIST_OUT)
             "${SOURCE_FOLDER}/*.mm"
             "${SOURCE_FOLDER}/*.cc"
             "${SOURCE_FOLDER}/*.go"
-            "${SOURCE_FOLDER}/*.rdl")
+            "${SOURCE_FOLDER}/*.rdl"
+            "${SOURCE_FOLDER}/*.json")
 
     set(LIST_FILTERED)
     foreach(SOURCE ${SRC_LIST})

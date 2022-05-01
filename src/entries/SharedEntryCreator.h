@@ -1,7 +1,7 @@
 #pragma once
 
 #include <api/entries/IEntry.h>
-#include <core/IAbstractCreator.h>
+#include <core/AbstractFactory.h>
 #include <entries/CoreDefs.h>
 
 namespace Gengine {

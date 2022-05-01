@@ -1,7 +1,14 @@
 #pragma once
 
 #include <map>
-#include "IAbstractCreator.h"
+#include <memory>
+
+template<class Interface, class... Args>
+class IAbstractCreator
+{
+public:
+    virtual std::shared_ptr<Interface> Create(Args... args) const = 0;
+};
 
 template<class Interface, class ObjectType, class... Args>
 class AbstractFactory 

@@ -1,6 +1,6 @@
 # thirdparties.cmake
 
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES .*Clang.*)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES .*Clang.*)
     set(GENGINE_COMPILER_IS_CLANG TRUE)
 endif()
 
@@ -160,6 +160,9 @@ foreach(TMP_BOOST_LIB_BASE IN LISTS Boost_COMPONENTS)
     list(APPEND Boost_LIBRARIES "${GENGINE_BOOST_${TMP_BOOST_LIB_BASE_UPPER}_LIB}")
 endforeach()
 
+#export libs
+gengine_export_var(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+gengine_export_var(Boost_LIBRARIES ${Boost_LIBRARIES})
 
 # Settings up gTest
 set(GENGINE_GTEST_VERSION                1.10.0)
@@ -180,6 +183,9 @@ foreach(TMP_GTEST_LIB_BASE IN LISTS GTest_COMPONENTS)
     list(APPEND GTest_LIBRARIES "${GENGINE_GTEST_${TMP_GTEST_LIB_BASE_UPPER}_LIB}")
 endforeach()
 
+gengine_export_var(GTest_INCLUDE_DIRS ${GTest_INCLUDE_DIRS})
+gengine_export_var(GTest_LIBRARIES ${GTest_LIBRARIES})
+
 # Settings up Log4cplus
 set(GENGINE_LOG4CPLUS_VERSION            1.2.1)
 set(GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME    log4cplus-${GENGINE_LOG4CPLUS_VERSION})
@@ -198,4 +204,8 @@ foreach(TMP_LOG4CPLUS_LIB_BASE IN LISTS Log4cplus_COMPONENTS)
 
     list(APPEND Log4cplus_LIBRARIES "${GENGINE_LOG4CPLUS_${TMP_LOG4CPLUS_LIB_BASE_UPPER}_LIB}")
 endforeach()
+
+gengine_export_var(Log4cplus_INCLUDE_DIRS ${Log4cplus_INCLUDE_DIRS})
+gengine_export_var(Log4cplus_LIBRARIES ${Log4cplus_LIBRARIES})
+
 

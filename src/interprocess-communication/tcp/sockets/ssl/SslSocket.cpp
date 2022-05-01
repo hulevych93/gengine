@@ -20,7 +20,7 @@ bool SslSocket::IsSuccess(const boost::system::error_code& err) const
 
 void SslSocket::SetTimeout(std::size_t seconds)
 {
-#ifdef BUILD_WINDOWS
+#ifdef _WIN32
     setsockopt(m_socket.lowest_layer().native(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&seconds, sizeof(seconds));
     setsockopt(m_socket.lowest_layer().native(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&seconds, sizeof(seconds));
 #else
