@@ -174,7 +174,7 @@ bool SlaveEntry::Initialize()
     if (initialized && config->aliveObjectName)
     {
         m_impl->run = m_impl->promise.get_future();
-        m_impl->tracker = m_factory->CreateModuleTracker(utf8toWchar(config->aliveObjectName.get()), *this);
+        m_impl->tracker = m_factory->CreateModuleTracker(utf8toWchar(config->aliveObjectName.get()), [&]() { Terminate(); });
         m_impl->tracker->Start();
     }
     if (initialized && config->lifetimeServiceId)

@@ -54,11 +54,6 @@ bool Serializer::AddFixed(const void* data, size_t size)
     return true;
 }
 
-bool Serializer::operator<<(std::size_t data)
-{
-    return AddFixed(&data, sizeof(data));
-}
-
 bool Serializer::operator<<(std::uint8_t data)
 {
     return AddFixed(&data, sizeof(data));

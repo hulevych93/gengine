@@ -17,10 +17,21 @@ gengine_export_var(GENGINE_INCLUDE_DIR ${GENGINE_INSTALL_DIR}/include)
 gengine_export_var(GENGINE_LIB_DIR ${GENGINE_INSTALL_DIR}/lib)
 gengine_export_var(GENGINE_BIN_DIR ${GENGINE_INSTALL_DIR}/bin)
 
-include(${GENGINE_CMAKE_DIR}/main.cmake)
-include(ExternalProject)
+if(WIN32)
+    set(AdditionalOS_LIBRARIES
+        Psapi.lib
+        Version.lib
+        Wtsapi32.lib
+        wbemuuid.lib
+        odbc32.lib
+        Oleacc.lib
+        ws2_32.lib)
 
-if(UNIX)
+    set(EXECUTABLE_TYPE WIN32)
+
+    ADD_DEFINITIONS(-DUNICODE)
+    ADD_DEFINITIONS(-D_UNICODE)
+elseif(UNIX)
     FIND_PACKAGE(X11 REQUIRED)
 
     set(AdditionalOS_LIBRARIES
@@ -29,6 +40,11 @@ if(UNIX)
         ${X11_LIBRARIES}
     )
 endif()
+
+add_definitions(-DEXPORT_SYMBOLS)
+
+include(${GENGINE_CMAKE_DIR}/main.cmake)
+include(ExternalProject)
 
 include_directories(${PROJECT_SOURCE_DIR})
 

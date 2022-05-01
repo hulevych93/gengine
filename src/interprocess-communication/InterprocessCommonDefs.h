@@ -21,7 +21,7 @@ namespace Gengine {
 namespace InterprocessCommunication {
 
 
-#if 1
+#if __linux__ || __APPLE__
 //handle of local socket on Linux os
 typedef int RPC_FILE_HANDLE;
 #define PIPE_PREFIX L"/tmp/com.gengine."

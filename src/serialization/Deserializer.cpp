@@ -67,11 +67,6 @@ bool Deserializer::GetFixed(void* get, size_t size) const
     }
 }
 
-bool Deserializer::operator>>(std::size_t& data) const
-{
-    return GetFixed(&data, sizeof(data));
-}
-
 bool Deserializer::operator>>(std::uint8_t& data) const
 {
     return GetFixed(&data, sizeof(data));

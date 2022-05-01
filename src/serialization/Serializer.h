@@ -19,7 +19,6 @@ public:
     std::shared_ptr<Blob> GetBlob();
 
 public:
-    bool operator<<(std::size_t data);
     bool operator<<(std::uint8_t data);
     bool operator<<(std::uint16_t data);
     bool operator<<(std::uint32_t data);

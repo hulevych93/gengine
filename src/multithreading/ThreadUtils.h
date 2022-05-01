@@ -9,7 +9,7 @@ class ThreadUtils
 {
 public:
     ThreadUtils() = delete;
-    static bool SetThreadName(std::thread& , const std::wstring& ) { return false; }
+    static bool SetThreadName(std::thread&, const std::wstring&);
 };
 }
 }

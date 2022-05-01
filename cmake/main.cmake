@@ -20,7 +20,21 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE DEBUG)
 endif()
 
-include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
 include(${GENGINE_CMAKE_DIR}/generate.cmake)
 include(${GENGINE_CMAKE_DIR}/sources.cmake)
 include(${GENGINE_CMAKE_DIR}/targets.cmake)
+
+if(WIN32)
+    gengine_set_runtime()
+elseif(UNIX)
+    FIND_PACKAGE(X11 REQUIRED)
+
+    set(AdditionalOS_LIBRARIES
+        iconv
+        pthread
+        ${X11_LIBRARIES}
+    )
+endif()
+
+include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
+

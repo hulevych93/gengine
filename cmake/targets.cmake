@@ -1,5 +1,11 @@
 # targets.cmake
 
+if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
+    set(GENGINE_ARCH x86_64)
+elseif("${CMAKE_SIZEOF_VOID_P}" EQUAL 4)
+    set(GENGINE_ARCH x86)
+endif()
+			
 set(GENGINE_TARGETS_COMMON_DEPENDENCIES)
 
 if(MSVC)
@@ -112,15 +118,30 @@ macro (gengine_dump_symbols)
     endforeach()
 endmacro()
 
-macro (gengine_set_static_build)
-    FOREACH(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
-                     CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
-        IF(${flag_var} MATCHES "/MD")
-            STRING(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        ENDIF(${flag_var} MATCHES "/MD")
-        IF(${flag_var} MATCHES "/MDd")
-            STRING(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
-        ENDIF(${flag_var} MATCHES "/MDd")
+macro (gengine_set_runtime)
+    set(RUNTIME_FLAG "/MD")
+    if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
+	    set(RUNTIME_FLAG "/MDd") 
+	endif()
+	
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${RUNTIME_FLAG})
+	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${RUNTIME_FLAG})	
+    set(CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}} ${RUNTIME_FLAG})
+	set(CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${RUNTIME_FLAG})	
+	
+	gengine_join_list(CMAKE_C_FLAGS " " CMAKE_C_FLAGS)
+	gengine_join_list(CMAKE_CXX_FLAGS " " CMAKE_CXX_FLAGS)
+	gengine_join_list(CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} " " CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE})
+	gengine_join_list(CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} " " CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE})
+	
+    FOREACH(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}
+                     CMAKE_C_FLAGS CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE})
+        IF(${flag_var} MATCHES "/MT")
+            STRING(REGEX REPLACE "/MT" "/MD" ${flag_var} "${${flag_var}}")
+        ENDIF()
+        IF(${flag_var} MATCHES "/MTd")
+            STRING(REGEX REPLACE "/MTd" "/MDd" ${flag_var} "${${flag_var}}")
+        ENDIF()
     ENDFOREACH(flag_var)
 endmacro()
 
@@ -143,7 +164,6 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 function (gengine_add_test TEST_NAME)
     set(FULL_TEST_NAME "${TEST_NAME}-test")
 
-    add_executable(${FULL_TEST_NAME} ${ADD_TEST_SOURCES})
     add_dependencies(${FULL_TEST_NAME} boost gtest ${TEST_NAME} ${ADD_TEST_LIBS})
 
     target_link_libraries(${FULL_TEST_NAME}

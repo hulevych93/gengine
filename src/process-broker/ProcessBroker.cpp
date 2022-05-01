@@ -11,7 +11,7 @@
 #include <interprocess-syncronization/ExecutableLauncher.h>
 
 #if _WIN32
-#include <interprocess-syncronization/Windows/WindowsServiceLauncher.h>
+#include <interprocess-syncronization/Windows/ServiceLauncher.h>
 #endif
 
 #include <shared-services/SharedServiceExport.h>
@@ -93,7 +93,7 @@ public:
                 else if (!procConfig.service.empty())
                 {
 #if _WIN32
-                    processContext->launcher = std::make_unique<WindowsServiceLauncher>(utf8toWchar(procConfig.service));
+                    processContext->launcher = std::make_unique<ServiceLauncher>(utf8toWchar(procConfig.service));
 #endif
                 }
                 if (!procConfig.lifetimeRef.empty())

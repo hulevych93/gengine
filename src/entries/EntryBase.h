@@ -100,8 +100,7 @@ private:
     std::unique_ptr<InterprocessSynchronization::IAliveObject> m_aliveObject;
 };
 
-class SlaveEntry : public EntryBase,
-    public InterprocessSynchronization::ServiceTrackerImpl
+class SlaveEntry : public EntryBase
 {
 public:
     SlaveEntry(std::unique_ptr<IEntryToolsFactory>&& factory);
@@ -110,7 +109,7 @@ public:
     bool Initialize() override;
     bool Execute(void* args) override;
     bool Exit(std::int32_t* exitCode) override;
-    void Terminate() override;
+    void Terminate();
 
 private:
     struct SlaveEntryImpl;

@@ -19,7 +19,6 @@ public:
     Deserializer(const std::shared_ptr<Blob>& blob);
     Deserializer(const void* data, size_t size);
 
-    bool operator>>(std::size_t& data) const;
     bool operator>>(std::uint8_t&  data) const;
     bool operator>>(std::uint16_t& data) const;
     bool operator>>(std::uint32_t& data) const;

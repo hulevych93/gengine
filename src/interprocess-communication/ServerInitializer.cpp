@@ -28,7 +28,7 @@ bool ServerInitializer::operator()(const PipeConnection& data) const
     GLOG_INFO("Starting namep pipe acceptor on pipe: %s", data);
 #if defined(_WIN32)
     m_engine = std::make_shared<WindowsCommunicationEngine>(m_threadId);
-    m_acceptor = std::make_unique<NamedPipeAcceptor>(PIPE_PREFIX + data, m_engine);
+    m_acceptor = std::make_unique<NamedPipeAcceptor>(std::wstring{ PIPE_PREFIX } + data.pipe, m_engine);
     return true;
 #elif __linux__ || __APPLE__
     m_engine = std::make_shared<UnixSocketEngine>(m_threadId);

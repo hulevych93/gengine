@@ -2,7 +2,7 @@
 #include "Executable.h"
 
 #if defined(_WIN32)
-#include <Windows/WindowsExecutableLauncher.h>
+#include <Windows/ExecutableLauncherImpl.h>
 #elif __linux__ || __APPLE__
 
 #endif
@@ -213,7 +213,7 @@ bool ExecutableLauncher::IsCanStart()
 std::shared_ptr<ExecutableLauncher> CreateExecutableLauncher()
 {
 #if defined(_WIN32)
-   return std::make_shared<ExecutableLauncher>();
+   return std::make_shared<ExecutableLauncherImpl>();
 #elif __linux__ || __APPLE__
    return std::make_shared<ExecutableLauncher>();
 #endif

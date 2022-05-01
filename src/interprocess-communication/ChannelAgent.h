@@ -4,6 +4,7 @@
 #include <interprocess-communication/InterprocessCommonDefs.h>
 
 #include <boost/variant.hpp>
+#include <array>
 
 namespace Gengine {
 namespace InterprocessCommunication {
@@ -69,7 +70,7 @@ private:
     std::unique_ptr<IChannel> m_impl;
 
     using ChannelState = boost::variant<ListeningChannelState, ProcessingChannelState, RespondingChannelState>;
-    std::array<ChannelState, 3> m_states = { ListeningChannelState{}, ProcessingChannelState{}, RespondingChannelState{} };
+    std::array<ChannelState, 3> m_states = { ListeningChannelState(), ProcessingChannelState(), RespondingChannelState()};
 
     std::uint32_t m_currentState = 0;
 };

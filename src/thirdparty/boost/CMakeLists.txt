@@ -1,6 +1,6 @@
 gengine_project(boost)
 
-set(TMP_DIR         ${GENGINE_3RD_PARTY_BUILD_DIR})
+set(TMP_DIR         ${GENGINE_3RD_PARTY_TMP_DIR})
 set(SRC_DIR         ${GENGINE_BOOST_BUILD_DIR})
 
 set(BUILD_TOOLSET_VERSION ${CMAKE_CXX_COMPILER_VERSION})
@@ -16,9 +16,6 @@ else()
     message(FATAL_ERROR "Unknown toolset for system: ${CMAKE_SYSTEM_NAME}")
 endif()
 
-set(USER_CONFIG_JAM ${GENGINE_TMP_DIR}/boost-user-config.jam)
-file(WRITE ${USER_CONFIG_JAM} "using ${BUILD_TOOLSET} : ${BUILD_TOOLSET_VERSION}\n\n")
-
 gengine_map_list(Boost_COMPONENTS "(.+)" "--with-\\1" LIB_OPTS)
 
 if(GENGINE_CUR_3RD_PARTY_BUILD_AS_SHARED)
@@ -33,8 +30,10 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
 endif()
 
 set(THREADING multi)
-if(EMSCRIPTEN)
-    set(THREADING single)
+
+set(RUNTIME_LINK static)
+if(WIN32)
+    set(RUNTIME_LINK shared)
 endif()
 
 set(ZLIB_SOURCE_FLAGS)
@@ -48,6 +47,11 @@ endif()
 set(ADDRESS_MODEL 64)
 if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
     set(ADDRESS_MODEL 32)
+endif()
+
+set(ARCH ia64)
+if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
+    set(ARCH x86)
 endif()
 
 set(BOOTSTRAP_COMMAND ${SRC_DIR}/bootstrap.sh)
@@ -81,7 +85,6 @@ set(BUILD_COMMAND_BASE
     ${BJAM_COMMAND}
         --user-config=${USER_CONFIG_JAM}
         --build-type=minimal
-        --layout=system
         -sNO_BZIP2=1 # needed when building iostreams
         -sNO_LZMA=1 # needed when building iostreams
         --hash
@@ -92,8 +95,6 @@ set(BUILD_COMMAND_BASE
         threading=${THREADING}
         link=${LINK_TYPE}
         address-model=${ADDRESS_MODEL}
-        target-os=${TARGET_OS}
-        boost.locale.icu=off
 )
 
 add_custom_target(boost_tools)
@@ -116,10 +117,10 @@ ExternalProject_Add(
     # Build
     BUILD_COMMAND       ${BUILD_COMMAND_BASE} --prefix=${GENGINE_BOOST_INSTALL_PREFIX} -j8 -d2 ${LIB_OPTS} install
                         ${BCP_NATIVE_BUILD_COMMAND}
-    BUILD_IN_SOURCE     1
-    BUILD_BYPRODUCTS    ${Boost_LIBRARIES}
+    DOWNLOAD_NO_EXTRACT 1
         # Install
     INSTALL_COMMAND     ""
+    BUILD_IN_SOURCE     1
 
     # Logging
     LOG_CONFIGURE       1

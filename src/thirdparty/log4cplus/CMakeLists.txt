@@ -1,6 +1,6 @@
 gengine_project(log4cplus)
 
-set(TMP_DIR         ${GENGINE_3RD_PARTY_BUILD_DIR})
+set(TMP_DIR         ${GENGINE_3RD_PARTY_TMP_DIR})
 set(SRC_DIR         ${GENGINE_LOG4CPLUS_BUILD_DIR})
 
 gengine_3rd_party_common_cmake_options(CMAKE_OPTS)

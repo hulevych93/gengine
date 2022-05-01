@@ -6,7 +6,7 @@
 #include <entries/BaseArgs.h>
 
 #if defined (_WIN32)
-#include "Windows/WindowsEntryToolsFactory.h"
+#include "Windows/EntryToolsFactory.h"
 #elif __linux__ || __APPLE__
 #include "Unix/LinuxEntryToolsFactory.h"
 #endif
@@ -18,7 +18,7 @@ namespace Entries {
 
 using args_type = boost::variant<wargv_type, argv_type, WinArgs>;
 
-#define FACTORY std::make_unique<WindowsEntryToolsFactory>()
+#define FACTORY std::make_unique<EntryToolsFactory>()
 
 #define IMPLEMENT_ENTRY \
 void* g_module_instance = nullptr;\
@@ -57,12 +57,13 @@ int wmain(int argc, wchar_t** argv)\
 }
 
 #else
-#define IMPLEMENT_CONSOLE_ENTRY(ENTRY)\
-int main(int argc, char** argv)\
+#define IMPLEMENT_CONSOLE_ENTRY \
+void* g_module_instance = nullptr;\
+int main(int argc, char** argv) \
 {\
-    Main::GetInstance(std::make_shared<ENTRY>(std::make_unique<WindowsEntryToolsFactory>()));\
+    Main mainObject(FACTORY);\
     auto args = BaseArgs<char>(argc, argv);\
-    return Main::GetInstance().Run(args);\
+    return mainObject.Run(args);\
 }
 #endif
 
@@ -82,9 +83,10 @@ int main(int argc, char** argv)\
     auto args = BaseArgs<char>(argc, argv);\
     return mainObject.Run(args);\
 }
-#endif
 
 #define IMPLEMENT_CONSOLE_ENTRY IMPLEMENT_ENTRY
+
+#endif
 
 }
 }

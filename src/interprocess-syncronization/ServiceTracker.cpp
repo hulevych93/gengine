@@ -2,13 +2,13 @@
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-ServiceTracker::ServiceTracker(ServiceTrackerImpl& serviceTrackerImpl)
-    : m_serviceTrackerImpl(serviceTrackerImpl)
+ServiceTracker::ServiceTracker(terminate_handler handler)
+    : m_handler(handler)
 {}
 
 void ServiceTracker::Terminate()
 {
-    m_serviceTrackerImpl.Terminate();
+    m_handler();
 }
 }
 }

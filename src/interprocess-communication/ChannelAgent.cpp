@@ -20,7 +20,7 @@ struct ChannelAgent::BufferImpl
         , processed(0)
     {}
 
-    void allocate(std::size_t bytes)
+    void allocate(std::uint32_t bytes)
     {
         if (size < bytes)
         {
