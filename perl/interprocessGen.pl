@@ -579,7 +579,7 @@ sub print_get_input_parameters
     if(inputs->GetParameterHeader(iParameterCounter)->parameterType!=".$type_enum.")
     {
         GLOG_WARNING_INTERNAL(\"Argument expected to be ".$type."\");
-        return ResponseCodes::CODE_PARAMETERS_MISMATCH;
+        return ResponseCodes::ParametersMismatch;
     }
     inputs->Get(iParameterCounter, ".$parameter_name.");
     iParameterCounter++;");
@@ -670,7 +670,7 @@ sub print_executer_request_handler
     printf($hFile "    default:
         //unknown request
         GLOG_ERROR(\"Unknown request %%08X\",functionCode);
-        return ResponseCodes::CODE_UNKNOWN_FUNCTION;
+        return ResponseCodes::UnknownFunction;
     }
 }\n\n");
 }
@@ -692,7 +692,7 @@ sub print_executer_request_handlers_implementations
     {
         GLOG_WARNING_INTERNAL(\"$input_parameters_count parameters expected;\");
         assert(0 && \"Input parameters count mismatch!\");
-        return ResponseCodes::CODE_PARAMETERS_MISMATCH;
+        return ResponseCodes::ParametersMismatch;
     }
     int iParameterCounter=0;\n");
         #get input parameters
@@ -710,7 +710,7 @@ sub print_executer_request_handlers_implementations
         print_append_output_parameters($hFile, @output_parameters);
         print($hFile "    }\n");
         #done
-        printf($hFile "    return result ? ResponseCodes::CODE_OK : ResponseCodes::CODE_REQUEST_ERROR;\n}\n\n");
+        printf($hFile "    return result ? ResponseCodes::Ok : ResponseCodes::RequestError;\n}\n\n");
     }
 }
 
@@ -740,7 +740,7 @@ sub print_executer_event_handler
     printf($hFile "    default:
         //unknown request
         GLOG_ERROR(\"Unknown event %%08X\",functionCode);
-        return ResponseCodes::CODE_UNKNOWN_FUNCTION;
+        return ResponseCodes::UnknownFunction;
     }
 }\n\n");
     }
@@ -750,7 +750,7 @@ sub print_executer_event_handler
                     const std::shared_ptr<const InputParameters>& inputs) override
 {
     GLOG_ERROR(\"Unknown event %%08X\",functionCode);
-    return ResponseCodes::CODE_UNKNOWN_FUNCTION;
+    return ResponseCodes::UnknownFunction;
 }\n\n");
     }
 }
@@ -771,7 +771,7 @@ sub print_executer_event_handlers_implementations
     {
         GLOG_WARNING_INTERNAL(\"$input_parameters_count parameters expected;\");
         assert(0 && \"Input parameters count mismatch!\");
-        return ResponseCodes::CODE_PARAMETERS_MISMATCH;
+        return ResponseCodes::ParametersMismatch;
     }
     int iParameterCounter=0;\n");
 
@@ -781,7 +781,7 @@ sub print_executer_event_handlers_implementations
         print_executer_call($method->{"arguments"},$hFile);
         print($hFile ");\n");
         #done
-        printf($hFile "    return result ? ResponseCodes::CODE_OK : ResponseCodes::CODE_REQUEST_ERROR;\n}\n\n");
+        printf($hFile "    return result ? ResponseCodes::Ok : ResponseCodes::RequestError;\n}\n\n");
     }
 }
 

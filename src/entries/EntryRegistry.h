@@ -3,7 +3,6 @@
 #include <core/StaticList.h>
 #include <core/AbstractFactory.h>
 
-#include <entries/CoreDefs.h>
 #include <entries/IEntryToolsFactory.h>
 #include <entries/SharedEntryCreator.h>
 

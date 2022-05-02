@@ -1,0 +1,15 @@
+
+{
+  "name": "TestService",
+  "consoleLogger": false,
+  "workers": [
+    {
+      "id": 0,
+      "name": "MainTestThread"
+    }
+  ],
+  "inServices": [
+  ],
+  "outServices": [
+  ]
+}

@@ -159,7 +159,7 @@ ResponseCodes InterprocessServer::ProcessRequest(std::uint32_t function, const i
     {
         return executorIter->second->HandleRequest(function, inputs, outputs);
     }
-    return ResponseCodes::CODE_UNKNOWN_INTERFACE;
+    return ResponseCodes::UnknownInterface;
 }
 
 void InterprocessServer::ProcessEvent(std::uint32_t function, const interface_key& binding, std::shared_ptr<const InputParameters> inputs) const

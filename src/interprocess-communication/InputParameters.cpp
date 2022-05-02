@@ -84,7 +84,7 @@ std::int8_t InputParameters::GetParametersCount() const
 
 bool InputParameters::Get(std::int8_t index, bool& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_BOOL);
+    return Get(index, value, ParametersTypes::Boolean);
 }
 
 bool  InputParameters::Get(std::int8_t index, void*& value) const
@@ -95,7 +95,7 @@ bool  InputParameters::Get(std::int8_t index, void*& value) const
         return false;
     }
     ParameterHeader* header = m_parameters[index];
-    if (header->parameterType != ParametersTypes::TYPE_PTR)
+    if (header->parameterType != ParametersTypes::RawPtr)
     {
         assert(0);
         return false;
@@ -109,49 +109,49 @@ bool  InputParameters::Get(std::int8_t index, void*& value) const
 
 bool InputParameters::Get(std::int8_t index, std::uint8_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_UINT8);
+    return Get(index, value, ParametersTypes::UInt8);
 }
 
 bool InputParameters::Get(std::int8_t index, std::uint16_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_UINT16);
+    return Get(index, value, ParametersTypes::UInt16);
 }
 
 bool InputParameters::Get(std::int8_t index, std::uint32_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_UINT32);
+    return Get(index, value, ParametersTypes::UInt32);
 }
 
 bool InputParameters::Get(std::int8_t index, std::uint64_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_UINT64);
+    return Get(index, value, ParametersTypes::UInt64);
 }
 
 bool InputParameters::Get(std::int8_t index, std::int8_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_INT8);
+    return Get(index, value, ParametersTypes::Int8);
 }
 
 bool InputParameters::Get(std::int8_t index, std::int16_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_INT16);
+    return Get(index, value, ParametersTypes::Int16);
 }
 
 bool InputParameters::Get(std::int8_t index, std::int32_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_INT32);
+    return Get(index, value, ParametersTypes::Int32);
 }
 
 bool InputParameters::Get(std::int8_t index, std::int64_t& value) const
 {
-    return Get(index, value, ParametersTypes::TYPE_INT64);
+    return Get(index, value, ParametersTypes::Int64);
 }
 
 bool InputParameters::Get(std::int8_t index, Serialization::ISerializable& value) const
 {
     void* data = nullptr;
     std::uint32_t size = 0;
-    if (Get(index, &data, &size, ParametersTypes::BINARY_SERIALIZABLE))
+    if (Get(index, &data, &size, ParametersTypes::BinarySerializable))
     {
         auto blob = std::make_shared<Blob>(data, size);
         Serialization::Deserializer deserializer(blob);
@@ -166,7 +166,7 @@ bool InputParameters::Get(std::int8_t index, JSON::IJsonSerializable& value) con
 {
     void* data = nullptr;
     std::uint32_t size = 0;
-    if (Get(index, &data, &size, ParametersTypes::JSON_SERIALIZABLE))
+    if (Get(index, &data, &size, ParametersTypes::JsonSerializable))
     {
         auto json = std::string(reinterpret_cast<const char*>(data), size / sizeof(char));
         Value root;
@@ -182,7 +182,7 @@ bool InputParameters::Get(std::int8_t index, std::wstring& value) const
 {
     void* data = nullptr;
     std::uint32_t size = 0;
-    if (Get(index, &data, &size, ParametersTypes::TYPE_WSTRING))
+    if (Get(index, &data, &size, ParametersTypes::WideString))
     {
         value = std::wstring(reinterpret_cast<const wchar_t*>(data), size / sizeof(wchar_t));
         return true;
@@ -195,7 +195,7 @@ bool InputParameters::Get(std::int8_t index, std::string& value) const
 {
     void* data = nullptr;
     std::uint32_t size = 0;
-    if (Get(index, &data, &size, ParametersTypes::TYPE_STRING))
+    if (Get(index, &data, &size, ParametersTypes::String))
     {
         value = std::string(reinterpret_cast<const char*>(data), size / sizeof(char));
         return true;
@@ -208,7 +208,7 @@ bool InputParameters::Get(std::int8_t index, Blob& value) const
 {
     void* data = nullptr;
     std::uint32_t size = 0;
-    if (Get(index, &data, &size, ParametersTypes::TYPE_BLOB))
+    if (Get(index, &data, &size, ParametersTypes::Blob))
     {
         value = Blob(data, size);
         return true;
@@ -263,34 +263,34 @@ bool InputParameters::IsParameterHeaderValid(ParameterHeader* header)
 {
     switch (header->parameterType)
     {
-    case ParametersTypes::TYPE_WSTRING:
+    case ParametersTypes::WideString:
         return ((header->parameterSize % sizeof(wchar_t)) == 0);
-    case ParametersTypes::TYPE_INT8:
+    case ParametersTypes::Int8:
         return header->parameterSize == sizeof(std::int8_t);
-    case ParametersTypes::TYPE_INT16:
+    case ParametersTypes::Int16:
         return header->parameterSize == sizeof(std::int16_t);
-    case ParametersTypes::TYPE_INT32:
+    case ParametersTypes::Int32:
         return header->parameterSize == sizeof(std::int32_t);
-    case ParametersTypes::TYPE_INT64:
+    case ParametersTypes::Int64:
         return header->parameterSize == sizeof(std::int64_t);
-    case ParametersTypes::TYPE_UINT8:
+    case ParametersTypes::UInt8:
         return header->parameterSize == sizeof(std::uint8_t);
-    case ParametersTypes::TYPE_UINT16:
+    case ParametersTypes::UInt16:
         return header->parameterSize == sizeof(std::uint16_t);
-    case ParametersTypes::TYPE_UINT32:
+    case ParametersTypes::UInt32:
         return header->parameterSize == sizeof(std::uint32_t);
-    case ParametersTypes::TYPE_UINT64:
+    case ParametersTypes::UInt64:
         return header->parameterSize == sizeof(std::uint64_t);
-    case ParametersTypes::TYPE_BOOL:
+    case ParametersTypes::Boolean:
         return header->parameterSize == sizeof(bool);
-    case ParametersTypes::TYPE_PTR:
+    case ParametersTypes::RawPtr:
         return header->parameterSize == sizeof(void*);
-    case ParametersTypes::TYPE_BLOB:
-    case ParametersTypes::TYPE_STRING:
-    case ParametersTypes::TYPE_SINGLE_CONTAINEER:
-    case ParametersTypes::TYPE_PAIRED_CONTAINEER:
-    case ParametersTypes::BINARY_SERIALIZABLE:
-    case ParametersTypes::JSON_SERIALIZABLE:
+    case ParametersTypes::Blob:
+    case ParametersTypes::String:
+    case ParametersTypes::Container:
+    case ParametersTypes::Map:
+    case ParametersTypes::BinarySerializable:
+    case ParametersTypes::JsonSerializable:
         return true;
     default:
         //unknown parameter type

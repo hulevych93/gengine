@@ -40,12 +40,12 @@ private:
     void Loop();
 
 private:
-    RPC_FILE_HANDLE m_queue;
-    RPC_FILE_HANDLE m_stopSignal;
-    RPC_FILE_HANDLE m_stopSignalTrigger;
+    HandleType m_queue;
+    HandleType m_stopSignal;
+    HandleType m_stopSignalTrigger;
 
     struct ContextImpl;
-    using TCallbacks = std::unordered_map<RPC_FILE_HANDLE, std::unique_ptr<ContextImpl>>;
+    using TCallbacks = std::unordered_map<HandleType, std::unique_ptr<ContextImpl>>;
     TCallbacks m_clientCallbacks;
 
     std::uint32_t m_loopId;

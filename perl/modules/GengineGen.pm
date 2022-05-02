@@ -516,16 +516,16 @@ sub get_parameter_enum_from_type
 {
     (my $arg)=@_;
     my $input_type=$arg->{"type"};
-    return "ParametersTypes::TYPE_SINGLE_CONTAINEER" if(is_vector_parameter($arg));
-    return "ParametersTypes::TYPE_SINGLE_CONTAINEER" if(is_deque_parameter($arg));
-    return "ParametersTypes::TYPE_SINGLE_CONTAINEER" if(is_list_parameter($arg));
-    return "ParametersTypes::TYPE_SINGLE_CONTAINEER" if(is_set_parameter($arg));
-    return "ParametersTypes::TYPE_SINGLE_CONTAINEER" if(is_hash_set_parameter($arg));
-    return "ParametersTypes::TYPE_PAIRED_CONTAINEER" if(is_map_parameter($arg));
-    return "ParametersTypes::TYPE_PAIRED_CONTAINEER" if(is_hash_map_parameter($arg));
-    return "ParametersTypes::TYPE_PAIRED_CONTAINEER" if(is_hash_map_parameter($arg));
-    return "ParametersTypes::BINARY_SERIALIZABLE" if(is_binary_serializable($arg));
-    return "ParametersTypes::JSON_SERIALIZABLE" if(is_json_serializable($arg));
+    return "ParametersTypes::Container" if(is_vector_parameter($arg));
+    return "ParametersTypes::Container" if(is_deque_parameter($arg));
+    return "ParametersTypes::Container" if(is_list_parameter($arg));
+    return "ParametersTypes::Container" if(is_set_parameter($arg));
+    return "ParametersTypes::Container" if(is_hash_set_parameter($arg));
+    return "ParametersTypes::Map" if(is_map_parameter($arg));
+    return "ParametersTypes::Map" if(is_hash_map_parameter($arg));
+    return "ParametersTypes::Map" if(is_hash_map_parameter($arg));
+    return "ParametersTypes::BinarySerializable" if(is_binary_serializable($arg));
+    return "ParametersTypes::JsonSerializable" if(is_json_serializable($arg));
     return get_parameter_enum_from_type_internal($input_type);
 }
 
@@ -533,19 +533,19 @@ sub get_parameter_enum_from_type_internal
 {
     (my $input_type)=@_;
     my $result = $input_type;
-    $result ="ParametersTypes::TYPE_INT8"     if($input_type eq "int8");
-    $result ="ParametersTypes::TYPE_INT16"    if($input_type eq "int16");
-    $result ="ParametersTypes::TYPE_INT32"    if($input_type eq "int32");
-    $result ="ParametersTypes::TYPE_INT64"    if($input_type eq "int64");
-    $result ="ParametersTypes::TYPE_UINT8"    if($input_type eq "uint8");
-    $result ="ParametersTypes::TYPE_UINT16"   if($input_type eq "uint16");
-    $result ="ParametersTypes::TYPE_UINT32"   if($input_type eq "uint32");
-    $result ="ParametersTypes::TYPE_UINT64"   if($input_type eq "uint64");
-    $result ="ParametersTypes::TYPE_BOOL"     if($input_type eq "bool");
-    $result ="ParametersTypes::TYPE_WSTRING"  if($input_type eq "WString");
-    $result ="ParametersTypes::TYPE_STRING"   if($input_type eq "String");
-    $result ="ParametersTypes::TYPE_BLOB"     if($input_type eq "BLOBOBJ");
-    $result ="ParametersTypes::TYPE_PTR"     if($input_type eq "Ptr");
+    $result ="ParametersTypes::Int8"     if($input_type eq "int8");
+    $result ="ParametersTypes::Int16"    if($input_type eq "int16");
+    $result ="ParametersTypes::Int32"    if($input_type eq "int32");
+    $result ="ParametersTypes::Int64"    if($input_type eq "int64");
+    $result ="ParametersTypes::UInt8"    if($input_type eq "uint8");
+    $result ="ParametersTypes::UInt16"   if($input_type eq "uint16");
+    $result ="ParametersTypes::UInt32"   if($input_type eq "uint32");
+    $result ="ParametersTypes::UInt64"   if($input_type eq "uint64");
+    $result ="ParametersTypes::Boolean"     if($input_type eq "bool");
+    $result ="ParametersTypes::WideString"  if($input_type eq "WString");
+    $result ="ParametersTypes::String"   if($input_type eq "String");
+    $result ="ParametersTypes::Blob"     if($input_type eq "BLOBOBJ");
+    $result ="ParametersTypes::RawPtr"     if($input_type eq "Ptr");
     return $result;
 }
 

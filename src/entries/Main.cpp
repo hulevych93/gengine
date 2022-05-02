@@ -146,8 +146,8 @@ private:
 const std::wstring Main::ProgramOptionsPattern(L"%1% options:");
 Main* Main::Instance = nullptr;
 
-Main::Main(std::unique_ptr<IEntryToolsFactory>&& factory)
-    : m_factory(std::move(factory))
+Main::Main()
+    : m_factory(makeFactory())
 {
     assert(!Instance);
     Instance = this;

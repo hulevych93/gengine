@@ -16,23 +16,23 @@ namespace InterprocessCommunication {
 struct NamedPipeAcceptor::ListeningImpl
 {
     ListeningImpl()
-        : handle(INVALID_RPC_FILE)
+        : handle(InvalidHandle)
     {}
 
     void operator()()
     {
-        handle = INVALID_RPC_FILE;
+        handle = InvalidHandle;
         callback(true, std::move(channel));
     }
 
     void clear()
     {
-        handle = INVALID_RPC_FILE;
+        handle = InvalidHandle;
         callback = connected_callback();
         channel.reset();
     }
 
-    RPC_FILE_HANDLE handle;
+    HandleType handle;
     connected_callback callback;
     std::unique_ptr<IChannel> channel;
 };
@@ -68,10 +68,10 @@ void NamedPipeAcceptor::AcceptConnection(connected_callback callback)
                 auto dwMyErr = GetLastError();
                 GLOG_ERROR("GetOverlappedResult failed %d", dwMyErr);
             
-                if (m_listeningImpl->handle != INVALID_RPC_FILE)
+                if (m_listeningImpl->handle != InvalidHandle)
                 {
                     ::CloseHandle(m_listeningImpl->handle);
-                    m_listeningImpl->handle = INVALID_RPC_FILE;
+                    m_listeningImpl->handle = InvalidHandle;
                 }
             }
         });
@@ -97,7 +97,7 @@ void NamedPipeAcceptor::AcceptConnection(connected_callback callback)
 
 bool NamedPipeAcceptor::CreateListeningHandle()
 {
-    if (m_listeningImpl->handle == INVALID_RPC_FILE)
+    if (m_listeningImpl->handle == InvalidHandle)
     {
         SECURITY_ATTRIBUTES securityAttributes;
         memset(&securityAttributes, NULL, sizeof(SECURITY_ATTRIBUTES));

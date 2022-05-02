@@ -26,6 +26,7 @@ std::wstring GetSystemDirPath();
 std::wstring GetModuleName(void* handle);
 std::wstring GetExecutableFilePath();
 std::wstring GetModuleFilePath(void* handle);
+std::wstring GetKernelObjectPath(const std::wstring& name);
 
 std::wstring GetRandomFileName(const std::wstring& pattern);
 }

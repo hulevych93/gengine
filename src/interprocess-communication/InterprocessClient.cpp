@@ -44,7 +44,7 @@ bool InterprocessClient::SendRequest(const interface_key& interfaceKey,
         ResponseHeader response_header;
         if (m_impl->Recv(&response_header, sizeof(response_header)))
         {
-            if (response_header.responseCode == ResponseCodes::CODE_OK)
+            if (response_header.responseCode == ResponseCodes::Ok)
             {
                 if (response_header.responseDataSize > 0)
                 {
@@ -89,7 +89,7 @@ bool InterprocessClient::SendEvent(const interface_key& interfaceKey, std::uint8
         ResponseHeader response_header;
         if (m_impl->Recv(&response_header, sizeof(response_header)))
         {
-            if (response_header.responseCode == ResponseCodes::CODE_OK && response_header.responseDataSize == 0)
+            if (response_header.responseCode == ResponseCodes::Ok && response_header.responseDataSize == 0)
             {
                 return true;
             }

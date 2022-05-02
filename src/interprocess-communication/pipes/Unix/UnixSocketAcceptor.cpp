@@ -31,7 +31,7 @@ void UnixSocketAcceptor::AcceptConnection(connected_callback callback)
     if (!m_channel)
     {
         auto listeningHandle = socket(PF_LOCAL, SOCK_STREAM, 0);
-        if (listeningHandle  != INVALID_RPC_FILE)
+        if (listeningHandle  != InvalidHandle)
         {
             int nonBlocking = 1;
             const int nRet = ioctl(listeningHandle , FIONBIO, &nonBlocking);
@@ -56,7 +56,7 @@ void UnixSocketAcceptor::AcceptConnection(connected_callback callback)
                             GLOG_INFO("TRACE: Getting overlapped result...");
 
                             auto acceptedSocket = accept(listeningHandle, NULL, NULL);
-                            if(acceptedSocket != INVALID_RPC_FILE)
+                            if(acceptedSocket != InvalidHandle)
                             {
                                 if (fcntl(acceptedSocket, F_SETFL, fcntl(acceptedSocket, F_GETFL) | O_NONBLOCK) != -1)
                                 {
@@ -86,6 +86,12 @@ void UnixSocketAcceptor::AcceptConnection(connected_callback callback)
             }
         }
     }
+}
+
+std::unique_ptr<InterprocessAcceptor> makeAcceptor(const std::wstring& connectionString,
+                                                   const std::shared_ptr<CommunicationEngine>& engine)
+{
+    return std::make_unique<UnixSocketAcceptor>(connectionString, engine);
 }
 
 }

@@ -1,11 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <boost/variant.hpp>
 
 namespace Gengine {
 namespace Entries {
 template <class ArgvT>
-struct BaseArgs
+struct BaseArgs final
 {
     BaseArgs(std::int32_t argc = 0, ArgvT* argv[] = nullptr)
         : argc(argc)
@@ -19,7 +20,7 @@ struct BaseArgs
 using wargv_type = BaseArgs<wchar_t>;
 using argv_type = BaseArgs<char>;
 
-struct WinArgs
+struct WinArgs final
 {
     WinArgs(void* instance, void* prevInstance, char* cmdLine, int cmdShow)
         : instance(instance)
@@ -33,5 +34,12 @@ struct WinArgs
     char* cmdLine;
     int cmdShow;
 };
+
+#if defined(_WIN32)
+using args_type = boost::variant<wargv_type, argv_type, WinArgs>;
+#elif __linux__ || __APPLE__
+using args_type = boost::variant<wargv_type, argv_type>;
+#endif
+
 }
 }

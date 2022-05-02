@@ -15,6 +15,9 @@ public:
     virtual void RegisterConnection(const IChannel& connection, engine_callback callback) = 0;
     virtual void UnregisterConnection(const IChannel& connection) = 0;
 };
+
+std::unique_ptr<CommunicationEngine> makeEngine(std::uint32_t threadId);
+
 }
 }
 

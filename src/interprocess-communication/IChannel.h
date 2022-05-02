@@ -9,6 +9,7 @@ class IChannel
 {
 public:
     virtual ~IChannel() = default;
+
     virtual void Disconnect() = 0;
     virtual bool IsConnected() const = 0;
 
@@ -22,5 +23,8 @@ public:
     virtual bool SendAsync(const void* data, std::uint32_t size) = 0;
     virtual bool RecvAsync(void* data, std::uint32_t size) = 0;
 };
+
+std::unique_ptr<IChannel> makeChannel(const std::wstring& connectionString);
+
 }
 }

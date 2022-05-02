@@ -10,7 +10,7 @@ class NamedPipeChannel : public IChannel
 {
 public:
     NamedPipeChannel();
-    NamedPipeChannel(RPC_FILE_HANDLE handle);
+    NamedPipeChannel(HandleType handle);
     ~NamedPipeChannel();
 
     bool Connect(const std::wstring& data);
@@ -26,7 +26,7 @@ protected:
     bool RecvAsync(void* data, std::uint32_t size) override;
 
 private:
-    RPC_FILE_HANDLE m_socket;
+    HandleType m_socket;
     std::atomic<bool> m_stopped;
     mutable Multithreading::Event m_ioReady;
     Multithreading::Event m_evtStopped;

@@ -3,18 +3,22 @@
 #include <memory>
 #include <unordered_map>
 
-#include <entries/CoreDefs.h>
 #include <entries/BaseArgs.h>
+#include <entries/EntryPoint.h>
+#include <entries/EntryBase.h>
+
 #include <entries/IEntryToolsFactory.h>
 #include <api/entries/ICmdProcessor.h>
 #include <api/entries/IEntry.h>
+#include <entries/EntryRegistry.h>
+#include <entries/SimpleExecutor.h>
 
 namespace Gengine {
 namespace Entries {
 class Main
 {
 public:
-    explicit Main(std::unique_ptr<IEntryToolsFactory>&& factory);
+    Main();
 
     Main(const Main&) = delete;
     Main(Main&&) = delete;

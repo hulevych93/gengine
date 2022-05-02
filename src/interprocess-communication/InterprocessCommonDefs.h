@@ -17,66 +17,50 @@
 #include <api/connection/PipeConnection.h>
 #include <api/connection/TcpConnection.h>
 
+#include <interprocess-communication/HandleType.h>
+
 namespace Gengine {
 namespace InterprocessCommunication {
-
-
-#if __linux__ || __APPLE__
-//handle of local socket on Linux os
-typedef int RPC_FILE_HANDLE;
-#define PIPE_PREFIX L"/tmp/com.gengine."
-#elif defined(_WIN32)
-//HANDLE of named pipe
-typedef void* RPC_FILE_HANDLE;
-#define PIPE_PREFIX L"\\\\.\\Pipe\\"
-#else 
-#error "ERROR! Unknown build config!"
-#endif
-
-#define INVALID_RPC_FILE (RPC_FILE_HANDLE)(~0)
 
 class IChannel;
 class CommunicationEngine;
 
 using interface_key = std::string;
-
 using ipc_connection = boost::variant<PipeConnection, TcpConnection>;
-using connected_callback = std::function<void(bool, std::unique_ptr<IChannel>&&)>;
-
+using connected_callback = std::function<void(bool success, std::unique_ptr<IChannel>&& channel)>;
 using accepted_callback = std::function<void()>;
-using readwrite_callback = std::function<void(bool, std::uint32_t, bool)>;
-
+using readwrite_callback = std::function<void(bool success, std::uint32_t bytesProcessed, bool)>;
 using engine_callback = boost::variant<accepted_callback, readwrite_callback>;
 
 enum class ParametersTypes : std::uint8_t
 {
-    TYPE_INT8 = 0,
-    TYPE_INT16,
-    TYPE_INT32,
-    TYPE_INT64,
-    TYPE_UINT8,
-    TYPE_UINT16,
-    TYPE_UINT32,
-    TYPE_UINT64,
-    TYPE_WSTRING,
-    TYPE_STRING,
-    TYPE_BLOB,
-    TYPE_BOOL,
-    TYPE_PTR,
-    TYPE_SINGLE_CONTAINEER,
-    TYPE_PAIRED_CONTAINEER,
-    BINARY_SERIALIZABLE,
-    JSON_SERIALIZABLE
+    Int8 = 0,
+    Int16,
+    Int32,
+    Int64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
+    WideString,
+    String,
+    Blob,
+    Boolean,
+    RawPtr,
+    Container,
+    Map,
+    BinarySerializable,
+    JsonSerializable
 };
 
 enum class ResponseCodes : std::uint8_t
 {
-    CODE_OK = 0,
-    CODE_REQUEST_ERROR,
-    CODE_INVALID_REQUEST,
-    CODE_UNKNOWN_FUNCTION,
-    CODE_PARAMETERS_MISMATCH,
-    CODE_UNKNOWN_INTERFACE
+    Ok = 0,
+    RequestError,
+    InvalidRequest,
+    UnknownFunction,
+    ParametersMismatch,
+    UnknownInterface
 };
 
 struct RequestHeader final
@@ -87,16 +71,16 @@ struct RequestHeader final
     bool request = false;
 };
 
-struct ResponseHeader
+struct ResponseHeader final
 {
-    std::uint32_t responseDataSize;
-    ResponseCodes responseCode;
+    std::uint32_t responseDataSize = 0u;
+    ResponseCodes responseCode = ResponseCodes::Ok;
 };
 
-struct ParameterHeader
+struct ParameterHeader final
 {
-    std::uint32_t parameterSize;
-    ParametersTypes parameterType;
+    std::uint32_t parameterSize = 0u;
+    ParametersTypes parameterType = ParametersTypes::Int8;
 };
 
 }

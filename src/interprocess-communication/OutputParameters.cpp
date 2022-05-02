@@ -41,7 +41,7 @@ void OutputParameters::AppendIntegerParameter(Type value, ParametersTypes type)
 
 void OutputParameters::Append(bool value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_BOOL);
+    AppendIntegerParameter(value, ParametersTypes::Boolean);
 }
 
 void OutputParameters::Append(void* value)
@@ -50,48 +50,48 @@ void OutputParameters::Append(void* value)
     ParameterHeader* header = nullptr;
     AllocateBufferSpace(sizeof(value), &header, &dest);
     header->parameterSize = sizeof(value);
-    header->parameterType = ParametersTypes::TYPE_PTR;
+    header->parameterType = ParametersTypes::RawPtr;
     memcpy(dest, &value, sizeof(value));
 }
 
 void OutputParameters::Append(std::int8_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_INT8);
+    AppendIntegerParameter(value, ParametersTypes::Int8);
 }
 
 void OutputParameters::Append(std::int16_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_INT16);
+    AppendIntegerParameter(value, ParametersTypes::Int16);
 }
 
 void OutputParameters::Append(std::int32_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_INT32);
+    AppendIntegerParameter(value, ParametersTypes::Int32);
 }
 
 void OutputParameters::Append(std::int64_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_INT64);
+    AppendIntegerParameter(value, ParametersTypes::Int64);
 }
 
 void OutputParameters::Append(std::uint8_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_UINT8);
+    AppendIntegerParameter(value, ParametersTypes::UInt8);
 }
 
 void OutputParameters::Append(std::uint16_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_UINT16);
+    AppendIntegerParameter(value, ParametersTypes::UInt16);
 }
 
 void OutputParameters::Append(std::uint32_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_UINT32);
+    AppendIntegerParameter(value, ParametersTypes::UInt32);
 }
 
 void OutputParameters::Append(std::uint64_t value)
 {
-    AppendIntegerParameter(value, ParametersTypes::TYPE_UINT64);
+    AppendIntegerParameter(value, ParametersTypes::UInt64);
 }
 
 void OutputParameters::Append(const ISerializable& type)
@@ -99,7 +99,7 @@ void OutputParameters::Append(const ISerializable& type)
     Serializer serializer;
     type.Serialize(serializer);
     auto blob = serializer.GetBlob();
-    AppendSizedParameter(blob->GetData(), blob->GetSize(), ParametersTypes::BINARY_SERIALIZABLE);
+    AppendSizedParameter(blob->GetData(), blob->GetSize(), ParametersTypes::BinarySerializable);
 }
 
 void OutputParameters::Append(const IJsonSerializable& type)
@@ -109,7 +109,7 @@ void OutputParameters::Append(const IJsonSerializable& type)
     std::string stream;
     root.Serialize(stream);
     auto size = static_cast<std::uint32_t>(stream.length() * sizeof(char));
-    AppendSizedParameter(stream.c_str(), size, ParametersTypes::JSON_SERIALIZABLE);
+    AppendSizedParameter(stream.c_str(), size, ParametersTypes::JsonSerializable);
 }
 
 void* OutputParameters::AppendSizedParameter(std::uint32_t size, ParametersTypes type)
@@ -135,18 +135,18 @@ void OutputParameters::AppendSizedParameter(const void* data, std::uint32_t size
 void OutputParameters::Append(const std::wstring& value)
 {
     auto size = static_cast<std::uint32_t>(value.length() * sizeof(wchar_t));
-    AppendSizedParameter(value.c_str(), size, ParametersTypes::TYPE_WSTRING);
+    AppendSizedParameter(value.c_str(), size, ParametersTypes::WideString);
 }
 
 void OutputParameters::Append(const std::string& value)
 {
     auto size = static_cast<std::uint32_t>(value.length() * sizeof(char));
-    AppendSizedParameter(value.c_str(), size, ParametersTypes::TYPE_STRING);
+    AppendSizedParameter(value.c_str(), size, ParametersTypes::String);
 }
 
 void OutputParameters::Append(const Blob& param)
 {
-    AppendSizedParameter(param.GetData(), param.GetSize(), ParametersTypes::TYPE_BLOB);
+    AppendSizedParameter(param.GetData(), param.GetSize(), ParametersTypes::Blob);
 }
 
 }

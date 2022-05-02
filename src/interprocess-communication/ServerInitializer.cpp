@@ -1,14 +1,7 @@
 #include <interprocess-communication/ServerInitializer.h>
 
-#if defined(_WIN32)
-#include <interprocess-communication/pipes/Windows/WindowsCommunicationEngine.h>
-#include <interprocess-communication/pipes/Windows/NamedPipeAcceptor.h>
-#elif __APPLE__ || __linux__
-#include <interprocess-communication/pipes/Unix/UnixSocketAcceptor.h>
-#endif
-#if __APPLE__
-#include <interprocess-communication/pipes/MacOS/UnixSocketEngine.h>
-#endif
+#include <interprocess-communication/InterprocessAcceptor.h>
+#include <interprocess-communication/CommunicationEngine.h>
 
 #include <interprocess-communication/tcp/TCPAcceptor.h>
 #include <interprocess-communication/tcp/TCPCommunicationEngine.h>
@@ -25,23 +18,14 @@ ServerInitializer::ServerInitializer(std::shared_ptr<CommunicationEngine>& engin
 
 bool ServerInitializer::operator()(const PipeConnection& data) const
 {
-    GLOG_INFO("Starting namep pipe acceptor on pipe: %s", data);
-#if defined(_WIN32)
-    m_engine = std::make_shared<WindowsCommunicationEngine>(m_threadId);
-    m_acceptor = std::make_unique<NamedPipeAcceptor>(std::wstring{ PIPE_PREFIX } + data.pipe, m_engine);
+    const std::wstring connectionString = std::wstring{ ChannelAddressPrefix } + data.pipe;
+    m_acceptor = makeAcceptor(connectionString, m_engine);
+    m_engine = makeEngine(m_threadId);
     return true;
-#elif __linux__ || __APPLE__
-    m_engine = std::make_shared<UnixSocketEngine>(m_threadId);
-    m_acceptor = std::make_unique<UnixSocketAcceptor>(PIPE_PREFIX + data.pipe, m_engine);
-    return true;
-#endif
-
-    return false;
 }
 
 bool ServerInitializer::operator()(const TcpConnection& data) const
 {
-   GLOG_INFO("Starting tcp acceptor on: %s, %d", data.ip, data.port);
    m_engine = std::make_shared<TCPCommunicationEngine>(m_threadId);
    m_acceptor = std::make_unique<TCPAcceptor>(data, m_engine);
    return true;

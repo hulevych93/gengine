@@ -26,5 +26,8 @@ public:
     virtual std::unique_ptr<InterprocessSynchronization::InstanceRegistratorInterface> CreateInstanceRegistrator(const std::wstring& module, InterprocessSynchronization::InstanceType type = InterprocessSynchronization::InstanceType::Sigle) = 0;
     virtual std::unique_ptr<InterprocessSynchronization::ServiceTracker> CreateModuleTracker(const std::wstring& module, InterprocessSynchronization::ServiceTracker::terminate_handler handler) = 0;
 };
+
+std::unique_ptr<IEntryToolsFactory> makeFactory();
+
 }
 }

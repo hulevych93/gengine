@@ -2,7 +2,8 @@
 
 #include <api/entries/IEntry.h>
 #include <core/AbstractFactory.h>
-#include <entries/CoreDefs.h>
+#include <entries/EntryBase.h>
+#include <entries/IEntryToolsFactory.h>
 
 namespace Gengine {
 namespace Entries {

@@ -7,6 +7,7 @@
 #include <interprocess-syncronization/Unix/LinuxSingleInstanceRegistrator.h>
 #include <interprocess-syncronization/Unix/LinuxDaemonTracker.h>
 
+#include <filesystem/Filesystem.h>
 #include <core/Encoding.h>
 
 namespace Gengine {
@@ -30,20 +31,14 @@ std::unique_ptr<IAliveObject> EntryToolsFactory::CreateAliveObject(const std::ws
 std::unique_ptr<InstanceRegistratorInterface> EntryToolsFactory::CreateInstanceRegistrator(const std::wstring& module, InstanceType type)
 {
     std::wstring objName;
-#if __WIN32
-    objName = L"Global\\";
-#elif __linux__ || __APPLE__
-    objName = L"/tmp/";
-#endif
+
     switch(type)
     {
     case InstanceType::Sigle:
         objName += module;
         break;
     case InstanceType::OnePerUserSession:
-        /*
-        objName += (boost::wformat(module) % utf8toWchar(ProcessHelper::GetSessionKey(ProcessHelper::GetCurrentProcessId()))).str();
-        */
+        //objName += Filesystem::GetKernelObjectPath(boost::wformat(module) % utf8toWchar(ProcessHelper::GetSessionKey(ProcessHelper::GetCurrentProcessId()))).str());
         break;
     }
 
@@ -57,6 +52,11 @@ std::unique_ptr<InstanceRegistratorInterface> EntryToolsFactory::CreateInstanceR
 std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std::wstring& module,InterprocessSynchronization::ServiceTracker::terminate_handler handler)
 {
     return std::make_unique<LinuxDaemonTracker>(toUtf8(module), handler);
+}
+
+std::unique_ptr<IEntryToolsFactory> makeFactory()
+{
+    return std::make_unique<EntryToolsFactory>();
 }
 
 }

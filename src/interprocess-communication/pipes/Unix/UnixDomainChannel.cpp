@@ -14,18 +14,18 @@ namespace Gengine {
 namespace InterprocessCommunication {
 
 UnixDomainChannel::UnixDomainChannel()
-    : m_socket(INVALID_RPC_FILE)
+    : m_socket(InvalidHandle)
     , m_stopped(false)
 {}
 
 UnixDomainChannel::UnixDomainChannel(const std::shared_ptr<UnixSocketEngine>& engine)
-    : m_socket(INVALID_RPC_FILE)
+    : m_socket(InvalidHandle)
     , m_stopped(false)
     , m_engine(engine)
 {
 }
 
-UnixDomainChannel::UnixDomainChannel(RPC_FILE_HANDLE handle, const std::shared_ptr<UnixSocketEngine>& engine)
+UnixDomainChannel::UnixDomainChannel(HandleType handle, const std::shared_ptr<UnixSocketEngine>& engine)
     : m_socket(handle)
     , m_stopped(false)
     , m_engine(engine)
@@ -39,7 +39,7 @@ UnixDomainChannel::~UnixDomainChannel()
 bool UnixDomainChannel::Connect(const std::wstring &serverSocketFileName)
 {
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
-    if (m_socket == INVALID_RPC_FILE)
+    if (m_socket == InvalidHandle)
     {
         assert(0);
         return false;
@@ -64,17 +64,17 @@ void UnixDomainChannel::Disconnect()
     if(IsConnected())
     {
         m_stopped.store(true);
-        if (m_socket != INVALID_RPC_FILE)
+        if (m_socket != InvalidHandle)
         {
             close(m_socket);
-            m_socket = INVALID_RPC_FILE;
+            m_socket = InvalidHandle;
         }
     }
 }
 
 bool UnixDomainChannel::IsConnected() const
 {
-    return m_socket != INVALID_RPC_FILE;
+    return m_socket != InvalidHandle;
 }
 
 bool UnixDomainChannel::Send(const void *data, std::uint32_t size, std::uint32_t* bytesProccessed)
@@ -127,6 +127,16 @@ bool UnixDomainChannel::RecvAsync(void* data, std::uint32_t size)
 {
     m_engine->PostRead(*this, data, size);
     return true;
+}
+
+std::unique_ptr<IChannel> makeChannel(const std::wstring& connectionString)
+{
+    auto channel = std::make_unique<UnixDomainChannel>();
+    if (channel->Connect(connectionString))
+    {
+        return channel;
+    }
+    return nullptr;
 }
 
 }

@@ -25,5 +25,8 @@ private:
 protected:
     std::int32_t m_code;
 };
+
+std::unique_ptr<IExecutor> makeServiceExecutor(IEntry& entry);
+
 }
 }

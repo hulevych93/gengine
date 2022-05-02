@@ -109,13 +109,13 @@ private:
     template<class T>
     void AppendSigleContainer(const T& container)
     {
-        AppendContainer(container, ParametersTypes::TYPE_SINGLE_CONTAINEER);
+        AppendContainer(container, ParametersTypes::Container);
     }
 
     template<class T>
     void AppendPairedContainer(const T& container)
     {
-        AppendContainer(container, ParametersTypes::TYPE_PAIRED_CONTAINEER);
+        AppendContainer(container, ParametersTypes::Map);
     }
 
 private:

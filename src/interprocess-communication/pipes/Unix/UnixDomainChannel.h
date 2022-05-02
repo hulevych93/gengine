@@ -11,7 +11,7 @@ class UnixDomainChannel final : public IChannel
 public:
     UnixDomainChannel();
     UnixDomainChannel(const std::shared_ptr<UnixSocketEngine>& engine);
-    UnixDomainChannel(RPC_FILE_HANDLE handle, const std::shared_ptr<UnixSocketEngine>& engine);
+    UnixDomainChannel(HandleType handle, const std::shared_ptr<UnixSocketEngine>& engine);
 
     UnixDomainChannel(const UnixDomainChannel&) = delete;
     UnixDomainChannel(UnixDomainChannel&&) = delete;
@@ -20,7 +20,7 @@ public:
 
     bool Connect(const std::wstring &serverSocketFileName);
 
-    RPC_FILE_HANDLE getHandle() const
+    HandleType getHandle() const
     {
         return m_socket;
     }
@@ -36,7 +36,7 @@ protected:
     bool RecvAsync(void* data, std::uint32_t size) override;
 
 private:
-    RPC_FILE_HANDLE m_socket;
+    HandleType m_socket;
     std::atomic<bool> m_stopped;
     std::shared_ptr<UnixSocketEngine> m_engine;
 };

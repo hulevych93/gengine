@@ -1,6 +1,5 @@
 #include <entries/TestEntry.h>
 #include <entries/TestArgsVisitor.h>
-#include <entries/CoreDefs.h>
 
 #include <gtest/gtest.h>
 #include <core/Logger.h>

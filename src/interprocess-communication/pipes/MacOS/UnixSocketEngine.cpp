@@ -89,11 +89,11 @@ UnixSocketEngine::UnixSocketEngine(std::uint32_t threadId)
 
 UnixSocketEngine::~UnixSocketEngine()
 {
-    if (m_stopSignal != INVALID_RPC_FILE)
+    if (m_stopSignal != InvalidHandle)
     {
         ::close(m_stopSignal);
     }
-    if (m_stopSignalTrigger != INVALID_RPC_FILE)
+    if (m_stopSignalTrigger != InvalidHandle)
     {
         ::close(m_stopSignalTrigger);
     }
@@ -212,6 +212,11 @@ void UnixSocketEngine::Loop()
             }
         }
     }
+}
+
+std::unique_ptr<CommunicationEngine> makeEngine(std::uint32_t threadId)
+{
+    return std::make_unique<UnixSocketEngine>(threadId);
 }
 
 }

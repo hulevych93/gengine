@@ -189,7 +189,7 @@ void ChannelAgent::Execute()
         {
             GLOG_ERROR("Failed deserialize RPC request; Function code %08X",
                 m_buffer->requestHeader_->functionCode);
-            MakeResult(ResponseCodes::CODE_INVALID_REQUEST);
+            MakeResult(ResponseCodes::InvalidRequest);
             return;
         }
     }
@@ -207,7 +207,7 @@ void ChannelAgent::Execute()
         m_server.ProcessEvent(m_buffer->requestHeader_->functionCode,
             m_buffer->requestHeader_->interfaceKey,
             inputs);
-        MakeResult(ResponseCodes::CODE_OK);
+        MakeResult(ResponseCodes::Ok);
     }
 }
 

@@ -6,7 +6,7 @@
 namespace Gengine {
 namespace InterprocessCommunication {
 NamedPipeChannel::NamedPipeChannel()
-    : m_socket(INVALID_RPC_FILE)
+    : m_socket(InvalidHandle)
     , m_changeHandles(2)
     , m_stopped(false)
 {
@@ -17,7 +17,7 @@ NamedPipeChannel::NamedPipeChannel()
     m_evtStopped.Create(true, false);
 }
 
-NamedPipeChannel::NamedPipeChannel(RPC_FILE_HANDLE handle)
+NamedPipeChannel::NamedPipeChannel(HandleType handle)
     : NamedPipeChannel()
 {
     m_socket = handle;
@@ -25,7 +25,7 @@ NamedPipeChannel::NamedPipeChannel(RPC_FILE_HANDLE handle)
 
 NamedPipeChannel::~NamedPipeChannel()
 {
-    if (m_socket != INVALID_RPC_FILE)
+    if (m_socket != InvalidHandle)
     {
         ::CloseHandle(reinterpret_cast<HANDLE>(m_socket));
     }
@@ -73,13 +73,13 @@ void NamedPipeChannel::Disconnect()
         m_evtStopped.Set();
 
         ::CloseHandle(m_socket);
-        m_socket = INVALID_RPC_FILE;
+        m_socket = InvalidHandle;
     }
 }
 
 bool NamedPipeChannel::IsConnected() const
 {
-    return m_socket != INVALID_RPC_FILE;
+    return m_socket != InvalidHandle;
 }
 
 bool NamedPipeChannel::Send(const void* data, std::uint32_t size, std::uint32_t* bytesProccessed)

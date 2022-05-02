@@ -135,13 +135,13 @@ private:
     template<class T>
     bool GetContainerSingle(std::int8_t index, T& container) const
     {
-        return GetContainer(index, container, ParametersTypes::TYPE_SINGLE_CONTAINEER);
+        return GetContainer(index, container, ParametersTypes::Container);
     }
 
     template<class T>
     bool GetContainerPaired(std::int8_t index, T& container) const
     {
-        return GetContainer(index, container, ParametersTypes::TYPE_PAIRED_CONTAINEER);
+        return GetContainer(index, container, ParametersTypes::Map);
     }
 
     template<class Type>

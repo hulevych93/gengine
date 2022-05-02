@@ -226,6 +226,8 @@ bool DaemonExecutor::Execute(void* args)
         return true;
     }
 
+    std::this_thread::sleep_for(std::chrono::seconds(25));
+
     StartSignalThread();
 
     /* At this point we are executing as the child process */
@@ -281,5 +283,11 @@ bool DaemonExecutor::CreateProcessors(std::vector<std::unique_ptr<ICmdProcessor>
 {
     return true;
 }
+
+std::unique_ptr<IExecutor> makeServiceExecutor(IEntry& entry)
+{
+    return std::make_unique<DaemonExecutor>(entry);
+}
+
 }
 }

@@ -1,10 +1,6 @@
 #include <interprocess-communication/ChannelConnector.h>
 
-#if _WIN32
-#include <interprocess-communication/pipes/Windows/NamedPipeChannel.h>
-#else
-#include <interprocess-communication/pipes/Unix/UnixDomainChannel.h>
-#endif
+#include <interprocess-communication/IChannel.h>
 
 #include <interprocess-communication/tcp/TCPCommunicationEngine.h>
 #include <interprocess-communication/tcp/TCPChannel.h>
@@ -19,17 +15,13 @@ ChannelConnector::ChannelConnector(std::uint32_t threadId, std::unique_ptr<IChan
 
 bool ChannelConnector::operator()(const PipeConnection& data) const
 {
-#if __linux__ || __APPLE__
-    auto channel = std::make_unique<UnixDomainChannel>();
-#elif _WIN32
-    auto channel = std::make_unique<NamedPipeChannel>();
-#endif
-    auto connected = channel->Connect(PIPE_PREFIX + data.pipe);
-    if (connected)
+    auto channel = makeChannel(std::wstring{ChannelAddressPrefix} + data.pipe);
+    if (channel)
     {
         impl = std::move(channel);
+        return true;
     }
-    return connected;
+    return false;
 }
 
 bool ChannelConnector::operator()(const TcpConnection& data) const
