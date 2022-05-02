@@ -7,7 +7,7 @@ gengine_add_struct(TcpConnection ${GENGINE_RDLS_DIR}/connection.rdl GEN_SRC)
 
 if(WIN32)
     set(PLATFORM_HANDLE_TYPE "void*")
-    set(PLATFORM_CHANNEL_PREFIX "\\\\.\\Pipe\\")
+    set(PLATFORM_CHANNEL_PREFIX "\\\\\\\\.\\\\Pipe\\\\")
 elseif(UNIX)
     set(PLATFORM_HANDLE_TYPE "int")
     set(PLATFORM_CHANNEL_PREFIX "/tmp/com.gengine.")

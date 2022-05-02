@@ -56,5 +56,10 @@ std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std
     return std::make_unique<ServiceTrackerImpl>(module.c_str(), handler);
 }
 
+std::unique_ptr<IEntryToolsFactory> makeFactory()
+{
+	return std::make_unique<EntryToolsFactory>();
+}
+
 }
 }

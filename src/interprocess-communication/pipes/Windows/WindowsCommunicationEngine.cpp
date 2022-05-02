@@ -121,5 +121,10 @@ void WindowsCommunicationEngine::Loop()
     }
 }
 
+std::unique_ptr<CommunicationEngine> makeEngine(std::uint32_t threadId)
+{
+	return std::make_unique< WindowsCommunicationEngine>(threadId);
+}
+
 }
 }

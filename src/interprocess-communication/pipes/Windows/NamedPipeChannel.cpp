@@ -261,5 +261,15 @@ bool NamedPipeChannel::GetOverlapped(std::uint32_t *uiBytesTransferred)
     return true;
 }
 
+std::unique_ptr<IChannel> makeChannel(const std::wstring& connectionString)
+{
+	auto channel = std::make_unique<NamedPipeChannel>();
+	if (channel->Connect(connectionString))
+	{
+		return channel;
+	}
+	return nullptr;
+}
+
 }
 }

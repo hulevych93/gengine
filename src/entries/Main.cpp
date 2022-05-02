@@ -1,7 +1,6 @@
 #include <entries/Main.h>
 
 #include <api/core/ILogger.h>
-#include <api/core/IEnvironment.h>
 #include <api/entries/IExecutor.h>
 
 #include <entries/EntryRegistry.h>
@@ -153,7 +152,6 @@ Main::Main()
     Instance = this;
 
     IMRORT_SHARED_SERVICE(Logger);
-    IMRORT_CREATOR_SHARED_SERVICE(Environment);
 }
 
 std::int32_t Main::Run(args_type args)

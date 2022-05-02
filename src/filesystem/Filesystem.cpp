@@ -114,10 +114,5 @@ std::wstring GetRandomFileName(const std::wstring &szPattern)
     return tmpName;
 }
 
-std::wstring GetKernelObjectPath(const std::wstring& name)
-{
-    return std::wstring{L"/tmp/"} + name;
-}
-
 }
 }

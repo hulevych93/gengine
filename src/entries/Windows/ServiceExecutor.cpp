@@ -7,7 +7,7 @@
 
 #include <api/entries/IEntry.h>
 #include <entries/Windows/ServiceUtils.h>
-//#include <core/ProcessHelper.h>
+
 #include <core/Encoding.h>
 #include <core/Logger.h>
 
@@ -265,5 +265,11 @@ bool ServiceExecutor::SWindowsServiceDebugCommand::Process(void* args, bool* suc
     *success = true;
     return true;
 }
+
+std::unique_ptr<IExecutor> makeServiceExecutor(IEntry& entry)
+{
+	return std::make_unique<ServiceExecutor>(entry);
+}
+
 }
 }

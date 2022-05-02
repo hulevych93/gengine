@@ -9,7 +9,7 @@ namespace InterprocessCommunication {
 
 using HandleType = ${PLATFORM_HANDLE_TYPE};
 constexpr const wchar_t* ChannelAddressPrefix = L"${PLATFORM_CHANNEL_PREFIX}";
-constexpr HandleType InvalidHandle = (HandleType)(~0);
+constexpr const HandleType InvalidHandle = (HandleType)(0);
 
 }
 }

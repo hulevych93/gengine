@@ -34,7 +34,8 @@ if(WIN32)
     add_definitions(-DUNICODE)
     add_definitions(-D_UNICODE)
     add_definitions(-DEXPORT_SYMBOLS)
-
+    add_definitions(-D_WIN32_WINNT=0x0601)
+	
 elseif(UNIX)
     find_package(X11 REQUIRED)
 

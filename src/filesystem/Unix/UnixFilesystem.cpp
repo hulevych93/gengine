@@ -63,5 +63,11 @@ std::wstring GetSystemDirPath()
     return L"/var/";
 }
 
+std::wstring GetKernelObjectPath(const std::wstring& name)
+{
+    return std::wstring{L"/tmp/"} + name;
+}
+
+
 }
 }
