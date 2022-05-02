@@ -175,14 +175,14 @@ void InitializeServices(const std::unordered_map<std::string, ServiceConfig>& in
 void DeInitializeServices();
 const TService& GetRouter();
 
-#define REGISTER_SERVICE(key, handler, name, serviceType) \
+#define GENGINE_REGISTER_SERVICE(key, handler, name, serviceType) \
     static FactoryItem<StaticServiceRegistrator> const registrationBroker##name(StaticServiceRegistrator(key, handler, serviceType));
 
-#define ENABLE_SERVICES { Runtime<StaticServiceRegistrator>::Do(); } while(false);
-#define DISABLE_SERVICES { Runtime<StaticServiceRegistrator>::Undo(); } while(false);
+#define GENGINE_ENABLE_SERVICES { Runtime<StaticServiceRegistrator>::Do(); } while(false);
+#define GENGINE_DISABLE_SERVICES { Runtime<StaticServiceRegistrator>::Undo(); } while(false);
 
-#define INITIALIZE_SERVICES(inServices, outServices) ENABLE_SERVICES InitializeServices(inServices, outServices)
-#define UNINITIALIZE_SERVICES DeInitializeServices(); DISABLE_SERVICES
+#define GENGINE_INITIALIZE_SERVICES(inServices, outServices) GENGINE_ENABLE_SERVICES InitializeServices(inServices, outServices)
+#define GENGINE_UNINITIALIZE_SERVICES DeInitializeServices(); GENGINE_DISABLE_SERVICES
 
 }
 }

@@ -208,7 +208,7 @@ sub output_client_dummy_implementation
     printf($hFile "    return std::make_shared<${class_name}>();\n");
     printf($hFile "}\n");
     printf($hFile "};\n\n");
-    printf($hFile "REGISTER_SERVICE(\"$interface_name\", ");
+    printf($hFile "GENGINE_REGISTER_SERVICE(\"$interface_name\", ");
     printf($hFile " (std::make_shared<${class_name}Creator>()), ${class_name}, ServiceType::Null) \n");
     printf($hFile "\n}");
     close($hFile);
@@ -307,7 +307,7 @@ sub output_client_implementation
     printf($hFile "    return std::make_shared<${class_name}>(key);\n");
     printf($hFile "}\n");
     printf($hFile "};\n\n");
-    printf($hFile "REGISTER_SERVICE(\"$interface_name\", ");
+    printf($hFile "GENGINE_REGISTER_SERVICE(\"$interface_name\", ");
     printf($hFile " (std::make_shared<${class_name}Creator>()), ${class_name}, ServiceType::Remote) \n");
     if(!is_any_out_parameters_exist($interface))
     {
@@ -358,7 +358,7 @@ sub output_client_implementation
         printf($hFile "    return std::make_shared<${class_name}>();\n");
         printf($hFile "}\n");
         printf($hFile "};\n\n");
-        printf($hFile "REGISTER_SERVICE(\"$interface_name\", ");
+        printf($hFile "GENGINE_REGISTER_SERVICE(\"$interface_name\", ");
         printf($hFile " (std::make_shared<${class_name}Creator>()), ${class_name}, ServiceType::Composite) \n");
     }
     printf($hFile "\n}");
@@ -434,7 +434,7 @@ sub output_executer_implementation
     printf($hFile "    return std::make_shared<${class_name}>(key, service);\n");
     printf($hFile "}\n");
     printf($hFile "};\n\n");
-    printf($hFile "REGISTER_EXECUTOR(\"$interface_name\", ");
+    printf($hFile "GENGINE_REGISTER_EXECUTOR(\"$interface_name\", ");
     printf($hFile "(std::make_shared<${class_name}Creator>()), ${class_name}) \n}");
     close($hFile);
 }

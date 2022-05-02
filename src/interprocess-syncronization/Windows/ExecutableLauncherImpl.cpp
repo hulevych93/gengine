@@ -40,12 +40,12 @@ void ExecutableLauncherImpl::StartInternal()
    m_serviceObj.Reveal();
 
    auto handler = [this] { CheckAppsRoutine(); };
-   POST_HEARTBEAT_TASK(handler);
+   GENGINE_POST_TASK(handler);
 
    if (m_loopId == INVALID_TIMER_ID)
    {
       auto handler = [this] { Loop(); };
-      m_loopId = START_HEARTBEAT_TIMER(handler, 500);
+      m_loopId = GENGINE_START_TIMER(handler, 500);
    }
 }
 
@@ -56,7 +56,7 @@ void ExecutableLauncherImpl::StopInternal()
    if (m_loopId != INVALID_TIMER_ID)
    {
       m_StopEvent.Set();
-      STOP_HEARTBEAT_TIMER_WITH_WAIT(m_loopId);
+      GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
       m_loopId = INVALID_TIMER_ID;
    }
 

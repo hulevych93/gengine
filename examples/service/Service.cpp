@@ -44,7 +44,7 @@ public:
             GLOG_INFO("I'm alive");
         };
 
-        START_HEARTBEAT_TIMER(std::move(handler), 5000);
+        GENGINE_START_TIMER(std::move(handler), 5000);
 
         return true;
     }
@@ -53,7 +53,7 @@ public:
     {
         assert(exitCode);
 
-        STOP_HEARTBEAT_TIMER_WITH_WAIT(m_timerId);
+        GENGINE_STOP_TIMER_WITH_WAIT(m_timerId);
 
         *exitCode = 0;
 

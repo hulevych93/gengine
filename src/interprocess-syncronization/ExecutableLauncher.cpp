@@ -35,7 +35,7 @@ void ExecutableLauncher::AddExecutable(const executable_params& params, IExecuta
         }
         m_executablesMap.emplace(params, listener);
     };
-    POST_HEARTBEAT_WAITED_TASK(handler);
+    GENGINE_POST_WAITED_TASK(handler);
 }
 
 void ExecutableLauncher::RemoveExecutable(const executable_params& params)
@@ -49,7 +49,7 @@ void ExecutableLauncher::RemoveExecutable(const executable_params& params)
             Stop();
         }
     };
-    POST_HEARTBEAT_WAITED_TASK(handler);
+    GENGINE_POST_WAITED_TASK(handler);
 }
 
 void ExecutableLauncher::WaitForStop(const executable_params& params)
@@ -69,7 +69,7 @@ void ExecutableLauncher::WaitForStop(const executable_params& params)
             }
         }
     };
-    POST_HEARTBEAT_WAITED_TASK(handler);
+    GENGINE_POST_WAITED_TASK(handler);
 
     std::uint32_t tryCounter = 0;
     auto dead = true;
@@ -117,7 +117,7 @@ void ExecutableLauncher::StartInternal()
     if (m_checkAppsTimerId == INVALID_TIMER_ID)
     {
         auto handler = boost::bind(&ExecutableLauncher::CheckAppsRoutine, this);
-        m_checkAppsTimerId = START_HEARTBEAT_TIMER(handler, CheckTimeout);
+        m_checkAppsTimerId = GENGINE_START_TIMER(handler, CheckTimeout);
     }
 }
 
@@ -125,7 +125,7 @@ void ExecutableLauncher::StopInternal()
 {
     if (m_checkAppsTimerId != INVALID_TIMER_ID)
     {
-        STOP_HEARTBEAT_TIMER_WITH_WAIT(m_checkAppsTimerId);
+        GENGINE_STOP_TIMER_WITH_WAIT(m_checkAppsTimerId);
         m_checkAppsTimerId = INVALID_TIMER_ID;
     }
 

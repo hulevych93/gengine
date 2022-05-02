@@ -157,7 +157,7 @@ public:
             m_echoClient->echo(hello);
             GLOG_INFO("received");
         };
-        POST_TASK(handler); // post task via worker thread
+        GENGINE_POST_TASK(handler); // post task via worker thread
         return true;
     }
 

@@ -8,8 +8,8 @@ namespace Services {
 void InitializePlugins(const std::wstring& config);
 void DeinitializePlugins();
 
-#define INITIALIZE_PLUGINS(config) InitializePlugins(config)
-#define UNINITIALIZE_PLUGINS DeinitializePlugins()
+#define GENGINE_INITIALIZE_PLUGINS(config) InitializePlugins(config)
+#define GENGINE_UNGENGINE_INITIALIZE_PLUGINS DeinitializePlugins()
 
 }
 }

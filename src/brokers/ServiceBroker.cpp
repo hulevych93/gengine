@@ -106,7 +106,7 @@ void ServiceClientStub::Execute(TServiceCall call)
         auto handler = [this, call, service = m_service]() {
             call(service);
         };
-        POST_HEARTBEAT_TASK(handler);
+        GENGINE_POST_TASK(handler);
     }
     else
     {
@@ -137,7 +137,7 @@ void ServiceClientStub::Run()
             auto handler = [this, call]() {
                 call(m_service);
             };
-            POST_HEARTBEAT_TASK(handler);
+            GENGINE_POST_TASK(handler);
         }
 
         m_calls.clear();

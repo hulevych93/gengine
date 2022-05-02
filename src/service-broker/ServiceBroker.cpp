@@ -98,7 +98,7 @@ private:
        {
            if (connectionTimerId != INVALID_TIMER_ID)
            {
-               STOP_HEARTBEAT_TIMER(connectionTimerId);
+               GENGINE_STOP_TIMER(connectionTimerId);
            }
        }
 
@@ -138,7 +138,7 @@ private:
        void Kill() override
        {
            if (connectionTimerId != INVALID_TIMER_ID)
-               STOP_HEARTBEAT_TIMER_WITH_WAIT(connectionTimerId);
+               GENGINE_STOP_TIMER_WITH_WAIT(connectionTimerId);
 
            if (processHolder)
                processHolder->Stop();
@@ -222,7 +222,7 @@ private:
                    connected(service);
                    if (connectionTimerId != INVALID_TIMER_ID)
                    {
-                       STOP_HEARTBEAT_TIMER(connectionTimerId);
+                       GENGINE_STOP_TIMER(connectionTimerId);
                        connectionTimerId = INVALID_TIMER_ID;
                    }
                    return true;
@@ -255,7 +255,7 @@ private:
            {
                if (connectionTimerId == INVALID_TIMER_ID)
                {
-                   connectionTimerId = START_HEARTBEAT_TIMER(task, 1000);
+                   connectionTimerId = GENGINE_START_TIMER(task, 1000);
                }
 
                return false;
@@ -532,8 +532,8 @@ void ServiceBroker::Configure(const std::unordered_map<std::string, ServiceConfi
             signals.emplace(std::make_pair(serviceIter.first, std::move(serviceContext)));
         }
     };
-    POST_HEARTBEAT_WAITED_TASK(task);
-    ENABLE_SERVICES
+    GENGINE_POST_WAITED_TASK(task);
+    GENGINE_ENABLE_SERVICES
 }
 
 void ServiceBroker::Deconfigure()
@@ -545,8 +545,8 @@ void ServiceBroker::Deconfigure()
         }
         signals.clear();
     };
-    POST_HEARTBEAT_DEINITIALIZATION_TASK(task);
-    DISABLE_SERVICES
+    GENGINE_POST_DEINITIALIZATION_TASK(task);
+    GENGINE_DISABLE_SERVICES
 }
 
 void ServiceBroker::Register(const std::string& key, TServiceCreator&& creator, ServiceType preffered)
@@ -573,7 +573,7 @@ connection ServiceBroker::Subscribe(const std::string& id, IServiceClient& clien
            conns = context->Subscribe(client);
        }
    };
-   POST_HEARTBEAT_WAITED_TASK(task);
+   GENGINE_POST_WAITED_TASK(task);
 
    return conns;
 }
@@ -588,7 +588,7 @@ void ServiceBroker::Touch(const std::string& id, IServiceClient& client)
             context->Touch(client);
         }
     };
-    POST_HEARTBEAT_TASK(task);
+    GENGINE_POST_TASK(task);
 }
 
 void ServiceBroker::Kill(const std::string& id)
@@ -601,7 +601,7 @@ void ServiceBroker::Kill(const std::string& id)
             context->Kill();
         }
     };
-    POST_HEARTBEAT_WAITED_TASK(task);
+    GENGINE_POST_WAITED_TASK(task);
 }
 
 EXPORT_GLOBAL_SHARED_SERVICE(ServiceBroker)

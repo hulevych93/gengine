@@ -122,8 +122,8 @@ private:
 void InitializePersistency(const std::string& directory);
 void DeinitializePersistency();
 
-#define INITIALIZE_PERSISTENCY(config) InitializePersistency(config)
-#define UNINITIALIZE_PERSISTENCY DeinitializePersistency()
+#define GENGINE_INITIALIZE_PERSISTENCY(config) InitializePersistency(config)
+#define GENGINE_UNGENGINE_INITIALIZE_PERSISTENCY DeinitializePersistency()
 
 }
 }

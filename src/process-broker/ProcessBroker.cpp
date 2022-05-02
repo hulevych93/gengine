@@ -103,7 +103,7 @@ public:
                 signals.emplace(std::make_pair(procConfig.id, std::move(processContext)));
             }
         };
-        POST_HEARTBEAT_WAITED_TASK(task);
+        GENGINE_POST_WAITED_TASK(task);
     }
 
     void Deconfigure() override
@@ -121,7 +121,7 @@ public:
                 m_launcher.reset();
             }
         };
-        POST_HEARTBEAT_DEINITIALIZATION_TASK(task);
+        GENGINE_POST_DEINITIALIZATION_TASK(task);
     }
 
     connection PowerUp(uint32_t id, IProcessClient& client) override
@@ -143,7 +143,7 @@ public:
                 }
             }
         };
-        POST_HEARTBEAT_WAITED_TASK(task);
+        GENGINE_POST_WAITED_TASK(task);
 
         return conns;
     }
@@ -179,11 +179,11 @@ public:
         };
         if (force)
         {
-            POST_HEARTBEAT_WAITED_TASK(task);
+            GENGINE_POST_WAITED_TASK(task);
         }
         else
         {
-            POST_HEARTBEAT_TASK(task);
+            GENGINE_POST_TASK(task);
         }
     }
 

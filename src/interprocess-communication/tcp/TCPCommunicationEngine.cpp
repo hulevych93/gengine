@@ -76,7 +76,7 @@ void TCPCommunicationEngine::StartInternal()
 {
     m_engineImpl->work = std::make_unique<boost::asio::io_context::work>(m_engineImpl->service);
     auto handler = [this] { m_engineImpl->service.run(); };
-    POST_HEARTBEAT_TASK(handler);
+    GENGINE_POST_TASK(handler);
 }
 
 void TCPCommunicationEngine::StopInternal()

@@ -22,7 +22,7 @@ void ServiceLauncher::StartInternal()
     if (m_checkAppsTimerId == Services::INVALID_TIMER_ID)
     {
         auto handler = boost::bind(&ServiceLauncher::CheckServicesRoutine, this);
-        m_checkAppsTimerId = START_HEARTBEAT_TIMER(handler, CheckTimeout);
+        m_checkAppsTimerId = GENGINE_START_TIMER(handler, CheckTimeout);
     }
 }
 
@@ -30,7 +30,7 @@ void ServiceLauncher::StopInternal()
 {
     if (m_checkAppsTimerId != Services::INVALID_TIMER_ID)
     {
-        STOP_HEARTBEAT_TIMER_WITH_WAIT(m_checkAppsTimerId);
+        GENGINE_STOP_TIMER_WITH_WAIT(m_checkAppsTimerId);
         m_checkAppsTimerId = Services::INVALID_TIMER_ID;
     }
 

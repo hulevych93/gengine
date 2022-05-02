@@ -247,7 +247,7 @@ ExecutorBroker::~ExecutorBroker()
     {
         if (signalIter.second->connectionTimerId != INVALID_TIMER_ID)
         {
-            STOP_HEARTBEAT_TIMER(signalIter.second->connectionTimerId);
+            GENGINE_STOP_TIMER(signalIter.second->connectionTimerId);
         }
     }
 }
@@ -291,7 +291,7 @@ void ExecutorBroker::Configure(const std::unordered_map<std::string, ServiceConf
         }
     }
 
-    ENABLE_EXECUTORS
+    GENGINE_ENABLE_EXECUTORS
 }
 
 void ExecutorBroker::Register(const std::string& key, TExecutorCreator&& creator)
@@ -319,7 +319,7 @@ bool ExecutorBroker::Run(const std::string& id, IMicroService& handler)
         {
             if (context->connectionTimerId == INVALID_TIMER_ID)
             {
-                context->connectionTimerId = START_HEARTBEAT_TIMER(task, 1000);
+                context->connectionTimerId = GENGINE_START_TIMER(task, 1000);
             }
         }
         return true;
@@ -335,7 +335,7 @@ void ExecutorBroker::Stop(const std::string& id)
         iter->second->Stop();
 
         if (iter->second->connectionTimerId != INVALID_TIMER_ID)
-            STOP_HEARTBEAT_TIMER_WITH_WAIT(iter->second->connectionTimerId);
+            GENGINE_STOP_TIMER_WITH_WAIT(iter->second->connectionTimerId);
     }
 }
 

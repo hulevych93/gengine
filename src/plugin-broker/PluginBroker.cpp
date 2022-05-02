@@ -112,11 +112,11 @@ protected:
                     auto config = reinterpret_cast<PluginConfig*>(config_);
                     if (!config->inServices.empty() || !config->outServices.empty())
                     {
-                        INITIALIZE_SERVICES(config->inServices, config->outServices);
+                        GENGINE_INITIALIZE_SERVICES(config->inServices, config->outServices);
                     }
                     if (!config->outServices.empty())
                     {
-                        INITIALIZE_EXECUTORS(config->outServices);
+                        GENGINE_INITIALIZE_EXECUTORS(config->outServices);
                     }
                     if (!config->workers.empty())
                     {

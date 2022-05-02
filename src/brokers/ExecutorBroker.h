@@ -130,13 +130,13 @@ private:
 
 void InitializeExecutors(const std::unordered_map<std::string, ServiceConfig>& config);
 
-#define REGISTER_EXECUTOR(key, handler, name) static FactoryItem<StaticExecutorRegistrator> const registrationBroker##name(StaticExecutorRegistrator(key, handler));
+#define GENGINE_REGISTER_EXECUTOR(key, handler, name) static FactoryItem<StaticExecutorRegistrator> const registrationBroker##name(StaticExecutorRegistrator(key, handler));
 
-#define ENABLE_EXECUTORS do { Runtime<StaticExecutorRegistrator>::Do(); } while(false);
-#define DISABLE_EXECUTORS do { Runtime<StaticExecutorRegistrator>::Undo(); } while(false);
+#define GENGINE_ENABLE_EXECUTORS do { Runtime<StaticExecutorRegistrator>::Do(); } while(false);
+#define GENGINE_DISABLE_EXECUTORS do { Runtime<StaticExecutorRegistrator>::Undo(); } while(false);
 
-#define INITIALIZE_EXECUTORS(config) ENABLE_EXECUTORS InitializeExecutors(config)
-#define UNINITIALIZE_EXECUTORS DISABLE_EXECUTORS
+#define GENGINE_INITIALIZE_EXECUTORS(config) GENGINE_ENABLE_EXECUTORS InitializeExecutors(config)
+#define GENGINE_UNGENGINE_INITIALIZE_EXECUTORS GENGINE_DISABLE_EXECUTORS
 
 }
 }

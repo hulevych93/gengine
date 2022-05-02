@@ -73,24 +73,24 @@ public:
         if (m_config.persistencyDir)
         {
             auto persistencyDir = Filesystem::CombinePath(toUtf8(Filesystem::GetAppFolder()), m_config.persistencyDir.get());
-            INITIALIZE_PERSISTENCY(persistencyDir);
+            GENGINE_INITIALIZE_PERSISTENCY(persistencyDir);
         }
         if (m_config.pluginsDir)
         {
             auto pluginsDir = Filesystem::CombinePath(Filesystem::GetAppFolder(), utf8toWchar(m_config.pluginsDir.get()));
-            INITIALIZE_PLUGINS(pluginsDir);
+            GENGINE_INITIALIZE_PLUGINS(pluginsDir);
         }
         if (!m_config.inServices.empty() || !m_config.outServices.empty())
         {
-            INITIALIZE_SERVICES(m_config.inServices, m_config.outServices);
+            GENGINE_INITIALIZE_SERVICES(m_config.inServices, m_config.outServices);
         }
         if (!m_config.outServices.empty())
         {
-            INITIALIZE_EXECUTORS(m_config.outServices);
+            GENGINE_INITIALIZE_EXECUTORS(m_config.outServices);
         }
         if (!m_config.processes.empty())
         {
-            INITIALIZE_PROCESSES(m_config.processes);
+            GENGINE_INITIALIZE_PROCESSES(m_config.processes);
         }
         if (m_config.consoleLogger)
         {
@@ -107,15 +107,15 @@ public:
         {
             if (m_config.persistencyDir)
             {
-                UNINITIALIZE_PERSISTENCY;
+                GENGINE_UNGENGINE_INITIALIZE_PERSISTENCY;
             }
             if (!m_config.processes.empty())
             {
-                UNINITIALIZE_PROCESSES;
+                GENGINE_UNINITIALIZE_PROCESSES;
             }
             if (m_config.pluginsDir)
             {
-                UNINITIALIZE_PLUGINS;
+                GENGINE_UNGENGINE_INITIALIZE_PLUGINS;
             }
             if (m_config.consoleLogger)
             {
@@ -123,11 +123,11 @@ public:
             }
             if (!m_config.inServices.empty())
             {
-                UNINITIALIZE_SERVICES;
+                GENGINE_UNINITIALIZE_SERVICES;
             }
             if (!m_config.outServices.empty())
             {
-                UNINITIALIZE_EXECUTORS;
+                GENGINE_UNGENGINE_INITIALIZE_EXECUTORS;
             }
             if (!m_config.workers.empty())
             {

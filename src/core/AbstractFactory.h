@@ -3,6 +3,8 @@
 #include <map>
 #include <memory>
 
+namespace Gengine
+{
 template<class Interface, class... Args>
 class IAbstractCreator
 {
@@ -88,3 +90,4 @@ public:
         return std::shared_ptr<Interface>();
     }
 };
+}

@@ -71,23 +71,23 @@ static const std::int32_t INVALID_TIMER_ID = -1;
 std::set<ThreadConfig> threadConf = { thread };\
 GENGINE_INTIALIZE_CONCURRENCY(threadConf)
 
-#define POST_THREAD_TASK(THREAD, HANDLER) THREAD->PostTask(HANDLER);
-#define POST_THREAD_WAITED_TASK(THREAD, HANDLER) THREAD->PostTaskAndWait(HANDLER);
-#define POST_HEARTBEAT_TASK(HANDLER) GetWorkingThread() != nullptr ? \
+#define GENGINE_POST_THREAD_TASK(THREAD, HANDLER) THREAD->PostTask(HANDLER);
+#define GENGINE_POST_THREAD_WAITED_TASK(THREAD, HANDLER) THREAD->PostTaskAndWait(HANDLER);
+#define GENGINE_POST_TASK(HANDLER) GetWorkingThread() != nullptr ? \
                                  GetWorkingThread()->PostTask(HANDLER) : \
                                  std::shared_ptr<Gengine::Services::IFuture>()
-#define POST_HEARTBEAT_WAITED_TASK(HANDLER) if(GetWorkingThread() != nullptr)\
+#define GENGINE_POST_WAITED_TASK(HANDLER) if(GetWorkingThread() != nullptr)\
                                          GetWorkingThread()->PostTaskAndWait(HANDLER);
-#define START_THREAD_TIMER(THREAD, HANDLER, PERIOD) THREAD->StartTimer(HANDLER), PERIOD);
-#define START_HEARTBEAT_TIMER(HANDLER, PERIOD) GetWorkingThread() != nullptr ? \
+#define GENGINE_START_THREAD_TIMER(THREAD, HANDLER, PERIOD) THREAD->StartTimer(HANDLER), PERIOD);
+#define GENGINE_START_TIMER(HANDLER, PERIOD) GetWorkingThread() != nullptr ? \
                                                GetWorkingThread()->StartTimer(HANDLER, PERIOD) : \
                                                Services::INVALID_TIMER_ID;
-#define START_HEARTBEAT_TIMER_WITH_DELAY(HANDLER, PERIOD, OFFSET) GetWorkingThread() != nullptr ? \
+#define GENGINE_START_TIMER_WITH_DELAY(HANDLER, PERIOD, OFFSET) GetWorkingThread() != nullptr ? \
                                                GetWorkingThread()->StartTimer(HANDLER, PERIOD, OFFSET) : \
                                                Services::INVALID_TIMER_ID;
-#define STOP_HEARTBEAT_TIMER(TIMER_ID) GetWorkingThread()->StopTimer(TIMER_ID);
-#define STOP_HEARTBEAT_TIMER_WITH_WAIT(TIMER_ID) GetWorkingThread()->StopAndWaitTimer(TIMER_ID);
-#define POST_HEARTBEAT_DEINITIALIZATION_TASK(HANDLER) if(GetWorkingThread() != nullptr) \
+#define GENGINE_STOP_TIMER(TIMER_ID) GetWorkingThread()->StopTimer(TIMER_ID);
+#define GENGINE_STOP_TIMER_WITH_WAIT(TIMER_ID) GetWorkingThread()->StopAndWaitTimer(TIMER_ID);
+#define GENGINE_POST_DEINITIALIZATION_TASK(HANDLER) if(GetWorkingThread() != nullptr) \
                                  GetWorkingThread()->PostDeinializationTask(HANDLER);
 
 }

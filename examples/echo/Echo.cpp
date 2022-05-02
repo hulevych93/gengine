@@ -51,7 +51,7 @@ public:
             m_echoClient->echo(hello);
             GLOG_INFO("received");
         };
-        POST_HEARTBEAT_TASK(handler);
+        GENGINE_POST_TASK(handler);
         return true;
     }
 

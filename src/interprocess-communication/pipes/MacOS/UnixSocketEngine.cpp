@@ -166,7 +166,7 @@ void UnixSocketEngine::StartInternal()
     if (m_loopId == Services::INVALID_TIMER_ID)
     {
         auto handler = [this] { Loop(); };
-        m_loopId = START_HEARTBEAT_TIMER(handler, 0);
+        m_loopId = GENGINE_START_TIMER(handler, 0);
     }
 }
 
@@ -177,7 +177,7 @@ void UnixSocketEngine::StopInternal()
         char byte = 0;
         assert(write(m_stopSignalTrigger, &byte, 1) != -1 || errno == EWOULDBLOCK);
 
-        STOP_HEARTBEAT_TIMER_WITH_WAIT(m_loopId);
+        GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
         m_loopId = Services::INVALID_TIMER_ID;
     }
     Dispose();

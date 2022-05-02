@@ -49,8 +49,8 @@ private:
 void InitializeProcesses(const std::set<ProcessConfig>& config);
 void DeinitializeProcesses();
 
-#define INITIALIZE_PROCESSES(config) InitializeProcesses(config)
-#define UNINITIALIZE_PROCESSES DeinitializeProcesses()
+#define GENGINE_INITIALIZE_PROCESSES(config) InitializeProcesses(config)
+#define GENGINE_UNINITIALIZE_PROCESSES DeinitializeProcesses()
 
 }
 }

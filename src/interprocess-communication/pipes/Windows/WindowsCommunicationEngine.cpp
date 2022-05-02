@@ -84,7 +84,7 @@ void WindowsCommunicationEngine::StartInternal()
     if (m_loopId == Services::INVALID_TIMER_ID)
     {
         auto handler = [this] { Loop(); };
-        m_loopId = START_HEARTBEAT_TIMER(handler, 0);
+        m_loopId = GENGINE_START_TIMER(handler, 0);
     }
 }
 
@@ -93,7 +93,7 @@ void WindowsCommunicationEngine::StopInternal()
     if (m_loopId != Services::INVALID_TIMER_ID)
     {
         m_StopEvent.Set();
-        STOP_HEARTBEAT_TIMER_WITH_WAIT(m_loopId);
+        GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
         m_loopId = Services::INVALID_TIMER_ID;
     }
     Dispose();
