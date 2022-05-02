@@ -29,8 +29,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
     set(BUILD_VARIANT debug)
 endif()
 
-set(THREADING multi)
-
 set(RUNTIME_LINK static)
 if(WIN32)
     set(RUNTIME_LINK shared)
@@ -39,11 +37,6 @@ endif()
 set(ADDRESS_MODEL 64)
 if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
     set(ADDRESS_MODEL 32)
-endif()
-
-set(ARCH ia64)
-if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
-    set(ARCH x86)
 endif()
 
 set(BOOTSTRAP_COMMAND ${SRC_DIR}/bootstrap.sh)
@@ -75,16 +68,14 @@ set(BJAM_COMMAND "${SRC_DIR}/b2${GENGINE_HOST_EXECUTABLE_SUFFIX}")
 
 set(BUILD_COMMAND_BASE
     ${BJAM_COMMAND}
-        --user-config=${USER_CONFIG_JAM}
         --build-type=minimal
         -sNO_BZIP2=1 # needed when building iostreams
         -sNO_LZMA=1 # needed when building iostreams
         --hash
-        ${ZLIB_SOURCE_FLAGS}
         ${NO_EVENT_LOG}
         toolset=${BUILD_TOOLSET}-${BUILD_TOOLSET_VERSION}
         variant=${BUILD_VARIANT}
-        threading=${THREADING}
+        threading=multi
         link=${LINK_TYPE}
         address-model=${ADDRESS_MODEL}
 )
