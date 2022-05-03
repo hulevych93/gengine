@@ -19,8 +19,8 @@ ServerInitializer::ServerInitializer(
 bool ServerInitializer::operator()(const PipeConnection& data) const {
   const std::wstring connectionString =
       std::wstring{ChannelAddressPrefix} + data.pipe;
-  m_acceptor = makeAcceptor(connectionString, m_engine);
   m_engine = makeEngine(m_threadId);
+  m_acceptor = makeAcceptor(connectionString, m_engine);
   return true;
 }
 

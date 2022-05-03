@@ -63,8 +63,8 @@ void Logger::Log(const char* function_name,
           int iErrno = errno;
           if (iErrno == EILSEQ ||  // character cannot be converted to ASCII
                                    // (May be on MS Windows systems)
-              iErrno == EINVAL)  // invalid format string
-          {                      // always ensure buffer is zero terminated
+              iErrno == EINVAL)    // invalid format string
+          {                        // always ensure buffer is zero terminated
             buffer[bufferSize - 1] = 0;
             packed = true;
           } else {  // seems, not enough buffer space; increasebuffer and try
