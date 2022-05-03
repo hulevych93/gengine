@@ -47,4 +47,5 @@ include(${GENGINE_CMAKE_DIR}/sources.cmake)
 include(${GENGINE_CMAKE_DIR}/targets.cmake)
 include(${GENGINE_CMAKE_DIR}/platform.cmake)
 include(${GENGINE_CMAKE_DIR}/thirdparty.cmake)
+include(${GENGINE_CMAKE_DIR}/clang-format.cmake)
 

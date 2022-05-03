@@ -8,10 +8,6 @@ function(prv_collect_sources SOURCE_FOLDER SRC_LIST_OUT)
     file(GLOB_RECURSE SRC_LIST
             "${SOURCE_FOLDER}/*.cpp"
             "${SOURCE_FOLDER}/*.h"
-            "${SOURCE_FOLDER}/*.m"
-            "${SOURCE_FOLDER}/*.mm"
-            "${SOURCE_FOLDER}/*.cc"
-            "${SOURCE_FOLDER}/*.go"
             "${SOURCE_FOLDER}/*.rdl"
             "${SOURCE_FOLDER}/*.json")
 
@@ -20,7 +16,6 @@ function(prv_collect_sources SOURCE_FOLDER SRC_LIST_OUT)
       set(FOUND "-1")
       foreach(EXCLUDE ${ARGN})
         string(FIND ${SOURCE} ${EXCLUDE} FOUND)
-        #message("${ARGN}: Ignore ${EXCLUDE} in ${SOURCE}: ${FOUND}")
         if(NOT("${FOUND}" STREQUAL "-1"))
             break()
         endif()
@@ -61,6 +56,11 @@ function(gengine_collect_src LIST_OUT)
     endif()
 
     prv_collect_sources(${PROJECT_SOURCE_DIR} TMP_SRC_LIST ${IGNORED_LIST})
+    set(${LIST_OUT} ${TMP_SRC_LIST} PARENT_SCOPE)
+endfunction()
+
+function(gengine_collect_only_cpp LIST_OUT)
+    gengine_collect_src(TMP_SRC_LIST ".json" ".rdl")
     set(${LIST_OUT} ${TMP_SRC_LIST} PARENT_SCOPE)
 endfunction()
 
