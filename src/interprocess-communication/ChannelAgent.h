@@ -31,7 +31,7 @@ class ChannelAgent {
     bool HandleIO(ChannelAgent& agent, std::uint32_t bytesProcessed);
   };
 
-  friend ListeningChannelState;
+  friend class ListeningChannelState;
 
   class ProcessingChannelState final {
    public:
@@ -39,7 +39,7 @@ class ChannelAgent {
     bool HandleIO(ChannelAgent& agent, std::uint32_t bytesProcessed);
   };
 
-  friend ProcessingChannelState;
+  friend class ProcessingChannelState;
 
   class RespondingChannelState final {
    public:
@@ -47,7 +47,7 @@ class ChannelAgent {
     bool HandleIO(ChannelAgent& agent, std::uint32_t bytesProcessed);
   };
 
-  friend RespondingChannelState;
+  friend class RespondingChannelState;
 
  private:
   void Execute();

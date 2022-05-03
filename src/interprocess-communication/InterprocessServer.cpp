@@ -1,12 +1,12 @@
 #include "InterprocessServer.h"
 
-#include "ChannelAgent.h"
-#include "CommunicationEngine.h"
-#include "InputParameters.h"
-#include "InterfaceExecutor.h"
-#include "InterprocessAcceptor.h"
-#include "OutputParameters.h"
-#include "ServerInitializer.h"
+#include <interprocess-communication/ChannelAgent.h>
+#include <interprocess-communication/CommunicationEngine.h>
+#include <interprocess-communication/InputParameters.h>
+#include <interprocess-communication/InterfaceExecutor.h>
+#include <interprocess-communication/InterprocessAcceptor.h>
+#include <interprocess-communication/OutputParameters.h>
+#include <interprocess-communication/ServerInitializer.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>

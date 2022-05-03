@@ -1,9 +1,10 @@
 #include "TCPAcceptor.h"
-#include "TCPChannel.h"
-#include "TCPCommunicationEngine.h"
+
+#include <interprocess-communication/tcp/TCPChannel.h>
+#include <interprocess-communication/tcp/TCPCommunicationEngine.h>
+#include <interprocess-communication/tcp/sockets/TCPSocket.h>
 
 #include <core/Logger.h>
-#include <interprocess-communication/tcp/sockets/TCPSocket.h>
 
 namespace bai = boost::asio::ip;
 

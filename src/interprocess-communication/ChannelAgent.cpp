@@ -1,10 +1,10 @@
 #include "ChannelAgent.h"
 
-#include "CommunicationEngine.h"
-#include "IChannel.h"
-#include "InputParameters.h"
-#include "InterprocessServer.h"
-#include "OutputParameters.h"
+#include <interprocess-communication/CommunicationEngine.h>
+#include <interprocess-communication/IChannel.h>
+#include <interprocess-communication/InputParameters.h>
+#include <interprocess-communication/InterprocessServer.h>
+#include <interprocess-communication/OutputParameters.h>
 
 #include <core/Logger.h>
 

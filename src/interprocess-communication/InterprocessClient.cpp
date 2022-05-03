@@ -1,9 +1,9 @@
 #include "InterprocessClient.h"
 
-#include "ChannelConnector.h"
-#include "IChannel.h"
-#include "InputParameters.h"
-#include "OutputParameters.h"
+#include <interprocess-communication/ChannelConnector.h>
+#include <interprocess-communication/IChannel.h>
+#include <interprocess-communication/InputParameters.h>
+#include <interprocess-communication/OutputParameters.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>

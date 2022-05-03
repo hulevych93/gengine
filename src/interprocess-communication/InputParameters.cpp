@@ -16,45 +16,45 @@ bool InputParameters::Deserialize(void* data, std::uint32_t size) {
     memcpy(m_buffer.get(), data, size);
     m_size = size;
 
-    auto pCurrentByte = m_buffer.get();
-    auto uiSizeLeft = m_size;
-    auto bOk = true;  // is request parsed successfully?
+    auto data = m_buffer.get();
+    auto left = m_size;
+    auto success = true;
 
-    while (uiSizeLeft > 0) {
-      if (uiSizeLeft < sizeof(ParameterHeader)) {
+    while (left > 0) {
+      if (left < sizeof(ParameterHeader)) {
         assert(0);  // invalid data
-        bOk = false;
+        success = false;
         break;
       }
-      ParameterHeader* pHeader = (ParameterHeader*)pCurrentByte;
-      uiSizeLeft -= sizeof(ParameterHeader);
-      pCurrentByte += sizeof(ParameterHeader);
-      if (uiSizeLeft < pHeader->parameterSize) {
+      auto* header = (ParameterHeader*)data;
+      left -= sizeof(ParameterHeader);
+      data += sizeof(ParameterHeader);
+      if (left < header->parameterSize) {
         assert(0);
-        bOk = false;
+        success = false;
         break;
       }
       // validate parameter type and size
-      if (!IsParameterHeaderValid(pHeader)) {
+      if (!IsParameterHeaderValid(header)) {
         assert(0);
-        bOk = false;
+        success = false;
         break;
       }
       // parameter ok
-      m_parameters.push_back(pHeader);
-      uiSizeLeft -= pHeader->parameterSize;
-      pCurrentByte += pHeader->parameterSize;
+      m_parameters.push_back(header);
+      left -= header->parameterSize;
+      data += header->parameterSize;
     }
-    if (!bOk) {
+    if (!success) {
       // error during request parsing;
       // cleanup and return false
       m_parameters.clear();
       m_size = 0;
       return false;
     }
-    return true;  // parsed successfully
+    return true;
   }
-  return true;  // empty request is completely legal
+  return true;
 }
 
 const ParameterHeader* InputParameters::GetParameterHeader(
