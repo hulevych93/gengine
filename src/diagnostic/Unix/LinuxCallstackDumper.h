@@ -1,25 +1,24 @@
 #pragma once
 
-#include <string>
-#include <memory>
 #include <diagnostic/IDumper.h>
+#include <memory>
+#include <string>
 
 namespace Gengine {
 namespace Diagnostic {
-class LinuxCallstackDumper: public IDumper
-{
-public:
-    LinuxCallstackDumper();
-    ~LinuxCallstackDumper() = default;
+class LinuxCallstackDumper : public IDumper {
+ public:
+  LinuxCallstackDumper();
+  ~LinuxCallstackDumper() = default;
 
-public:
-    void WriteDump() override;
+ public:
+  void WriteDump() override;
 
-private:
-    static void ExitHandler();
+ private:
+  static void ExitHandler();
 
-private:
-    static LinuxCallstackDumper *m_instance;
+ private:
+  static LinuxCallstackDumper* m_instance;
 };
-}
-}
+}  // namespace Diagnostic
+}  // namespace Gengine

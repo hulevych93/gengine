@@ -1,3 +1,3 @@
 // dummy api file
 
-static const int Dummy= 100;
+static const int Dummy = 100;

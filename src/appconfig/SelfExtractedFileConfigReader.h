@@ -5,17 +5,15 @@
 namespace Gengine {
 namespace AppConfig {
 
-class SelfExtractedFileConfigReader : public FileConfigReader
-{
-public:
-    SelfExtractedFileConfigReader(const config& conf);
+class SelfExtractedFileConfigReader : public FileConfigReader {
+ public:
+  SelfExtractedFileConfigReader(const config& conf);
 
-    bool Load() override;
+  bool Load() override;
 
-private:
-    static const std::wstring FilePath;
+ private:
+  static const std::wstring FilePath;
 };
 
-}
-}
-
+}  // namespace AppConfig
+}  // namespace Gengine

@@ -4,17 +4,15 @@
 
 namespace Gengine {
 namespace InterprocessCommunication {
-struct ChannelConnector : boost::static_visitor<bool>
-{
-   ChannelConnector(std::uint32_t threadId, std::unique_ptr<IChannel>& impl);
+struct ChannelConnector : boost::static_visitor<bool> {
+  ChannelConnector(std::uint32_t threadId, std::unique_ptr<IChannel>& impl);
 
-   bool operator()(const PipeConnection& data) const;
-   bool operator()(const TcpConnection& data) const;
+  bool operator()(const PipeConnection& data) const;
+  bool operator()(const TcpConnection& data) const;
 
-private:
-   std::unique_ptr<IChannel>& impl;
-   std::uint32_t threadId;
+ private:
+  std::unique_ptr<IChannel>& impl;
+  std::uint32_t threadId;
 };
-}
-}
-
+}  // namespace InterprocessCommunication
+}  // namespace Gengine

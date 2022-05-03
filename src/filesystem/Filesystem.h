@@ -29,5 +29,5 @@ std::wstring GetModuleFilePath(void* handle);
 std::wstring GetKernelObjectPath(const std::wstring& name);
 
 std::wstring GetRandomFileName(const std::wstring& pattern);
-}
-}
+}  // namespace Filesystem
+}  // namespace Gengine

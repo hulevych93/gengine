@@ -1,36 +1,33 @@
 #pragma once
 
-#include <string>
 #include <boost/format.hpp>
+#include <string>
 
 namespace Gengine {
 
-struct IFilter
-{
-    virtual ~IFilter() = default;
-    virtual bool Match(const std::wstring& value) const = 0;
+struct IFilter {
+  virtual ~IFilter() = default;
+  virtual bool Match(const std::wstring& value) const = 0;
 };
 
-struct DefaultFilter : public IFilter
-{
-    bool Match(std::wstring const& value) const override;
+struct DefaultFilter : public IFilter {
+  bool Match(std::wstring const& value) const override;
 };
 
-struct RegexFilter : public IFilter
-{
-    explicit RegexFilter(const std::wstring& filter);
-    RegexFilter(std::wstring const& filter, std::uint32_t flag);
-    ~RegexFilter();
+struct RegexFilter : public IFilter {
+  explicit RegexFilter(const std::wstring& filter);
+  RegexFilter(std::wstring const& filter, std::uint32_t flag);
+  ~RegexFilter();
 
-    bool Match(std::wstring const& value) const override;
+  bool Match(std::wstring const& value) const override;
 
-private:
-    void LazyInitRule() const;
+ private:
+  void LazyInitRule() const;
 
-private:
-    std::wstring m_filter;
-    struct RegexFilterImpl;
-    std::unique_ptr<RegexFilterImpl> m_impl;
+ private:
+  std::wstring m_filter;
+  struct RegexFilterImpl;
+  std::unique_ptr<RegexFilterImpl> m_impl;
 };
 
-}
+}  // namespace Gengine

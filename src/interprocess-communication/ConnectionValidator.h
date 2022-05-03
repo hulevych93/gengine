@@ -5,10 +5,9 @@
 namespace Gengine {
 namespace InterprocessCommunication {
 
-struct ConnectionValidator : boost::static_visitor<bool>
-{
-    bool operator()(const PipeConnection& data) const;
-    bool operator()(const TcpConnection& data) const;
+struct ConnectionValidator : boost::static_visitor<bool> {
+  bool operator()(const PipeConnection& data) const;
+  bool operator()(const TcpConnection& data) const;
 };
-}
-}
+}  // namespace InterprocessCommunication
+}  // namespace Gengine

@@ -17,69 +17,51 @@ using namespace Gengine;
 using namespace Gengine::Services;
 using namespace Gengine::Entries;
 
-class TestService final : public Entries::EntryBase,
-                 public Worker
-{
-public:
-    TestService(std::unique_ptr<Entries::IEntryToolsFactory>&& factory)
-        : EntryBase(std::move(factory))
-        , Worker(0)
-    {
+class TestService final : public Entries::EntryBase, public Worker {
+ public:
+  TestService(std::unique_ptr<Entries::IEntryToolsFactory>&& factory)
+      : EntryBase(std::move(factory)), Worker(0) {}
 
-    }
+  ~TestService() = default;
 
-    ~TestService() = default;
+  bool Initialize() override { return true; }
 
-    bool Initialize() override
-    {
-        return true;
-    }
+  bool Execute(void* args) override {
+    assert(args);
 
-    bool Execute(void* args) override
-    {
-        assert(args);
+    auto handler = [&]() { GLOG_INFO("I'm alive"); };
 
-        auto handler = [&]()
-        {
-            GLOG_INFO("I'm alive");
-        };
+    GENGINE_START_TIMER(std::move(handler), 5000);
 
-        GENGINE_START_TIMER(std::move(handler), 5000);
+    return true;
+  }
 
-        return true;
-    }
+  bool Exit(std::int32_t* exitCode) override {
+    assert(exitCode);
 
-    bool Exit(std::int32_t* exitCode) override
-    {
-        assert(exitCode);
+    GENGINE_STOP_TIMER_WITH_WAIT(m_timerId);
 
-        GENGINE_STOP_TIMER_WITH_WAIT(m_timerId);
+    *exitCode = 0;
 
-        *exitCode = 0;
+    return true;
+  }
 
-        return true;
-    }
+  bool Finalize() override { return true; }
 
-    bool Finalize() override
-    {
-        return true;
-    }
+  bool CreateExecutor(std::shared_ptr<IExecutor>* executor) override {
+    assert(executor);
+    *executor = makeServiceExecutor(*this);
+    return true;
+  }
 
-    bool CreateExecutor(std::shared_ptr<IExecutor>* executor) override
-    {
-        assert(executor);
-        *executor = makeServiceExecutor(*this);
-        return true;
-    }
+  bool CreateProcessors(std::vector<std::unique_ptr<Gengine::ICmdProcessor>>*
+                            processors) override {
+    assert(processors);
+    return true;
+  }
 
-    bool CreateProcessors(std::vector<std::unique_ptr<Gengine::ICmdProcessor>>* processors) override
-    {
-        assert(processors);
-        return true;
-    }
-
-private:
-    std::int32_t m_timerId;
+ private:
+  std::int32_t m_timerId;
 };
 
 REGISTER_MAIN_ENTRY(TestService)

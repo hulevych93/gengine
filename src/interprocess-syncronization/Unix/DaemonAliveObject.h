@@ -4,17 +4,16 @@
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-class DaemonAliveObject: public IAliveObject
-{
-public:
-    explicit DaemonAliveObject(const wchar_t* mappingFileName);
-    ~DaemonAliveObject();
+class DaemonAliveObject : public IAliveObject {
+ public:
+  explicit DaemonAliveObject(const wchar_t* mappingFileName);
+  ~DaemonAliveObject();
 
-    void Free() override;
-    bool IsLocked() const override;
+  void Free() override;
+  bool IsLocked() const override;
 
-private:
-    int m_aliveFile;
+ private:
+  int m_aliveFile;
 };
-}
-}
+}  // namespace InterprocessSynchronization
+}  // namespace Gengine

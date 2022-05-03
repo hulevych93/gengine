@@ -6,16 +6,15 @@ namespace Gengine {
 
 struct PluginConfig;
 
-class PluginBase : public IPlugin
-{
-public:
-    PluginBase();
+class PluginBase : public IPlugin {
+ public:
+  PluginBase();
 
-    bool GetConfig(void** config) override;
-    bool Handshake(PluginInfo* info) override;
+  bool GetConfig(void** config) override;
+  bool Handshake(PluginInfo* info) override;
 
-private:
-    mutable std::unique_ptr<PluginConfig> m_config;
+ private:
+  mutable std::unique_ptr<PluginConfig> m_config;
 };
 
-}
+}  // namespace Gengine

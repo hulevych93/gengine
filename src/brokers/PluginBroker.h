@@ -11,5 +11,5 @@ void DeinitializePlugins();
 #define GENGINE_INITIALIZE_PLUGINS(config) InitializePlugins(config)
 #define GENGINE_UNGENGINE_INITIALIZE_PLUGINS DeinitializePlugins()
 
-}
-}
+}  // namespace Services
+}  // namespace Gengine

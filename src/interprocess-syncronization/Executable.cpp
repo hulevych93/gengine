@@ -5,16 +5,10 @@
 namespace Gengine {
 namespace InterprocessSynchronization {
 Executable::Executable(const executable_params& params)
-    : m_params(params)
-    , m_handle(nullptr)
-    , m_pid(0)
-{
-}
+    : m_params(params), m_handle(nullptr), m_pid(0) {}
 
-void Executable::Launch(SessionId key)
-{
-    if (!IsAlive())
-    {
+void Executable::Launch(SessionId key) {
+  if (!IsAlive()) {
 #if 0
         process_handle_t info(nullptr);
         auto path = Filesystem::CombinePath(Filesystem::GetAppFolder(), m_params.path);
@@ -29,38 +23,30 @@ void Executable::Launch(SessionId key)
             m_key = key;
         }
 #endif
-    }
+  }
 }
 
-std::uint32_t Executable::GetPid() const
-{
-    return m_pid;
+std::uint32_t Executable::GetPid() const {
+  return m_pid;
 }
 
-void* Executable::GetHandle() const
-{
-    return m_handle;
+void* Executable::GetHandle() const {
+  return m_handle;
 }
 
-bool Executable::IsAlive()
-{
-    return m_pid > 0;
+bool Executable::IsAlive() {
+  return m_pid > 0;
 }
 
-void Executable::Kill()
-{
+void Executable::Kill() {}
 
-}
-
-SessionId Executable::GetSessionKey() const
-{
-    return m_key;
+SessionId Executable::GetSessionKey() const {
+  return m_key;
 }
 
-const executable_params& Executable::GetParams() const
-{
-    return m_params;
+const executable_params& Executable::GetParams() const {
+  return m_params;
 }
 
-}
-}
+}  // namespace InterprocessSynchronization
+}  // namespace Gengine

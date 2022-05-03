@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <boost/signals2/connection.hpp>
+#include <string>
 
 namespace Gengine {
 
@@ -17,106 +17,86 @@ namespace Services {
 
 using connection = std::vector<boost::signals2::scoped_connection>;
 
-class IPersistency
-{
-public:
-    virtual ~IPersistency() = default;
-    virtual void operator()(const Serialization::ISerializable& object) = 0;
-    virtual void operator()(Serialization::ISerializable& object) const = 0;
-    virtual void operator()(const JSON::IJsonSerializable& object) = 0;
-    virtual void operator()(JSON::IJsonSerializable& object) const = 0;
+class IPersistency {
+ public:
+  virtual ~IPersistency() = default;
+  virtual void operator()(const Serialization::ISerializable& object) = 0;
+  virtual void operator()(Serialization::ISerializable& object) const = 0;
+  virtual void operator()(const JSON::IJsonSerializable& object) = 0;
+  virtual void operator()(JSON::IJsonSerializable& object) const = 0;
 };
 
-class IPersistencyClient
-{
-public:
-    virtual ~IPersistencyClient() = default;
-    virtual void OnPersistency(const IPersistency& persistency) = 0;
-    virtual void OnPersistency(IPersistency& persistency) const = 0;
+class IPersistencyClient {
+ public:
+  virtual ~IPersistencyClient() = default;
+  virtual void OnPersistency(const IPersistency& persistency) = 0;
+  virtual void OnPersistency(IPersistency& persistency) const = 0;
 };
 
-class IPersistencyBroker
-{
-public:
-    virtual ~IPersistencyBroker() = default;
-    virtual void Configure(const std::string& directory) = 0;
-    virtual void Deconfigure() = 0;
-    virtual connection Subscribe(const std::string& id, IPersistencyClient& client) = 0;
-    virtual void Load(const std::string& id) = 0;
-    virtual void Store(const std::string& id) const = 0;
-    virtual void Delete(const std::string& id) = 0;
+class IPersistencyBroker {
+ public:
+  virtual ~IPersistencyBroker() = default;
+  virtual void Configure(const std::string& directory) = 0;
+  virtual void Deconfigure() = 0;
+  virtual connection Subscribe(const std::string& id,
+                               IPersistencyClient& client) = 0;
+  virtual void Load(const std::string& id) = 0;
+  virtual void Store(const std::string& id) const = 0;
+  virtual void Delete(const std::string& id) = 0;
 };
 
-class PersistableBase : public IPersistencyClient
-{
-public:
-    explicit PersistableBase(const std::string& id);
-    ~PersistableBase();
+class PersistableBase : public IPersistencyClient {
+ public:
+  explicit PersistableBase(const std::string& id);
+  ~PersistableBase();
 
-    void Load();
-    void Store();
-    void Delete();
+  void Load();
+  void Store();
+  void Delete();
 
-private:
-    const std::string m_id;
-    connection m_endpoint;
+ private:
+  const std::string m_id;
+  connection m_endpoint;
 };
 
-template<class Data>
-class PersistableData: public PersistableBase
-{
-protected:
-    void OnPersistency(const IPersistency& persistency) override
-    {
-        persistency(m_data);
-    }
-    void OnPersistency(IPersistency& persistency) const override
-    {
-        persistency(m_data);
-    }
+template <class Data>
+class PersistableData : public PersistableBase {
+ protected:
+  void OnPersistency(const IPersistency& persistency) override {
+    persistency(m_data);
+  }
+  void OnPersistency(IPersistency& persistency) const override {
+    persistency(m_data);
+  }
 
-private:
-    Data m_data;
+ private:
+  Data m_data;
 };
 
-template<class Data>
-class Persistable : public PersistableBase,
-                    public Data
-{
-protected:
-    explicit Persistable(const std::string& id)
-    : PersistableBase(id)
-    {}
-    
-    void OnPersistency(const IPersistency& persistency) override
-    {
-        if (m_initialized)
-        {
-            persistency(GetThis());
-        }
-    }
-    void OnPersistency(IPersistency& persistency) const override
-    {
-        if (!m_initialized)
-        {
-            persistency(GetThis());
-            m_initialized = true;
-        }
-    }
+template <class Data>
+class Persistable : public PersistableBase, public Data {
+ protected:
+  explicit Persistable(const std::string& id) : PersistableBase(id) {}
 
-private:
-    Data & GetThis()
-    {
-        return *static_cast<Data*>(this);
+  void OnPersistency(const IPersistency& persistency) override {
+    if (m_initialized) {
+      persistency(GetThis());
     }
-
-    const Data & GetThis() const
-    {
-        return *static_cast<const Data*>(this);
+  }
+  void OnPersistency(IPersistency& persistency) const override {
+    if (!m_initialized) {
+      persistency(GetThis());
+      m_initialized = true;
     }
+  }
 
-private:
-    mutable bool m_initialized = false;
+ private:
+  Data& GetThis() { return *static_cast<Data*>(this); }
+
+  const Data& GetThis() const { return *static_cast<const Data*>(this); }
+
+ private:
+  mutable bool m_initialized = false;
 };
 
 void InitializePersistency(const std::string& directory);
@@ -125,6 +105,5 @@ void DeinitializePersistency();
 #define GENGINE_INITIALIZE_PERSISTENCY(config) InitializePersistency(config)
 #define GENGINE_UNGENGINE_INITIALIZE_PERSISTENCY DeinitializePersistency()
 
-}
-}
-
+}  // namespace Services
+}  // namespace Gengine

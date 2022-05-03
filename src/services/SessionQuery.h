@@ -4,9 +4,8 @@
 
 namespace Gengine {
 
-class SessionQuery : public ISessionQuery
-{
-public:
-    bool QueryActiveSessionsIDs(std::vector<SessionId>* ids) override;
+class SessionQuery : public ISessionQuery {
+ public:
+  bool QueryActiveSessionsIDs(std::vector<SessionId>* ids) override;
 };
-}
+}  // namespace Gengine

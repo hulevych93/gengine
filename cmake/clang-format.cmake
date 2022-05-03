@@ -12,7 +12,7 @@ function(gengine_run_clang_format)
         gengine_collect_only_cpp(ALL_SRC)
 
         foreach(SFILE ${ALL_SRC})
-            execute_process(COMMAND ${CLANGFORMAT_EXECUTABLE} -style=LLVM -i ${SFILE})
+            execute_process(COMMAND ${CLANGFORMAT_EXECUTABLE} -style=Chromium -i ${SFILE})
         endforeach()
     endif()
 endfunction()

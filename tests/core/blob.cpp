@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <entries/TestEntry.h>
-#include <entries/Main.h>
 #include <entries/EntryRegistry.h>
+#include <entries/Main.h>
+#include <entries/TestEntry.h>
 
 #include <core/Logger.h>
 
@@ -13,23 +13,17 @@
 #include <string>
 
 #ifdef BUILD_WINDOWS
-#include <tchar.h>
 #include <Objbase.h>
+#include <tchar.h>
 #endif
 
 #include <core/Blob.h>
 
-class GTest : public testing::Test
-{
-protected:
-    void SetUp()
-    {
-    }
+class GTest : public testing::Test {
+ protected:
+  void SetUp() {}
 
-    void TearDown()
-    {
-
-    }
+  void TearDown() {}
 };
 
 constexpr const char* Data = "data";
@@ -37,126 +31,119 @@ constexpr const char* Data = "data";
 using namespace Gengine;
 using namespace Entries;
 
-TEST_F(GTest, defaultContructedBlob)
-{
-    Blob object;
-    EXPECT_TRUE(object.GetSize() == 0);
-    EXPECT_TRUE(object.GetData() == nullptr);
+TEST_F(GTest, defaultContructedBlob) {
+  Blob object;
+  EXPECT_TRUE(object.GetSize() == 0);
+  EXPECT_TRUE(object.GetData() == nullptr);
 }
 
-TEST_F(GTest, allocatedBlob)
-{
-    Blob object(10);
-    EXPECT_TRUE(object.GetSize() == 10);
-    EXPECT_TRUE(object.GetData() != nullptr);
+TEST_F(GTest, allocatedBlob) {
+  Blob object(10);
+  EXPECT_TRUE(object.GetSize() == 10);
+  EXPECT_TRUE(object.GetData() != nullptr);
 }
 
-TEST_F(GTest, dataConstructedBlob)
-{
-    Blob object(Data, strlen(Data));
-    EXPECT_TRUE(object.GetSize() == strlen(Data));
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()), strlen(Data)) == Data);
+TEST_F(GTest, dataConstructedBlob) {
+  Blob object(Data, strlen(Data));
+  EXPECT_TRUE(object.GetSize() == strlen(Data));
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
+                          strlen(Data)) == Data);
 }
 
-TEST_F(GTest, copyConstructedBlob)
-{
-    Blob object(Data, strlen(Data));
-    Blob object2(object);
+TEST_F(GTest, copyConstructedBlob) {
+  Blob object(Data, strlen(Data));
+  Blob object2(object);
 
-    EXPECT_TRUE(object == object2);
+  EXPECT_TRUE(object == object2);
 }
 
-TEST_F(GTest, assignedBlob)
-{
-    Blob object(Data, strlen(Data));
-    Blob object2;
+TEST_F(GTest, assignedBlob) {
+  Blob object(Data, strlen(Data));
+  Blob object2;
 
-    object2 = object;
-    EXPECT_TRUE(object == object2);
+  object2 = object;
+  EXPECT_TRUE(object == object2);
 }
 
-TEST_F(GTest, moveConstructedBlob)
-{
-    Blob object(Data, strlen(Data));
-    Blob object2(std::move(object));
+TEST_F(GTest, moveConstructedBlob) {
+  Blob object(Data, strlen(Data));
+  Blob object2(std::move(object));
 
-    EXPECT_TRUE((object.GetSize() == 0 && object.GetData() == nullptr));
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object2.GetData()), strlen(Data)) == Data);
+  EXPECT_TRUE((object.GetSize() == 0 && object.GetData() == nullptr));
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object2.GetData()),
+                          strlen(Data)) == Data);
 }
 
-TEST_F(GTest, moveAssignedBlob)
-{
-    Blob object(Data, strlen(Data));
-    Blob object2;
+TEST_F(GTest, moveAssignedBlob) {
+  Blob object(Data, strlen(Data));
+  Blob object2;
 
-    object2 = std::move(object);
-    EXPECT_TRUE((object.GetSize() == 0 && object.GetData() == nullptr));
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object2.GetData()), strlen(Data)) == Data);
+  object2 = std::move(object);
+  EXPECT_TRUE((object.GetSize() == 0 && object.GetData() == nullptr));
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object2.GetData()),
+                          strlen(Data)) == Data);
 }
 
-TEST_F(GTest, resizeBlob)
-{
-    Blob object;
-    object.Resize(100);
-    EXPECT_TRUE(object.GetSize() == 100);
-    EXPECT_TRUE(object.GetData() != nullptr);
+TEST_F(GTest, resizeBlob) {
+  Blob object;
+  object.Resize(100);
+  EXPECT_TRUE(object.GetSize() == 100);
+  EXPECT_TRUE(object.GetData() != nullptr);
 }
 
-TEST_F(GTest, resizeWithPreserveBlob)
-{
-    Blob object;
-    object.SetData(Data, strlen(Data));
+TEST_F(GTest, resizeWithPreserveBlob) {
+  Blob object;
+  object.SetData(Data, strlen(Data));
 
-    EXPECT_TRUE(object.GetSize() == strlen(Data));
-    EXPECT_TRUE(object.GetData() != nullptr);
+  EXPECT_TRUE(object.GetSize() == strlen(Data));
+  EXPECT_TRUE(object.GetData() != nullptr);
 
-    object.Resize(strlen(Data) * 2, true);
-    EXPECT_TRUE(object.GetSize() == strlen(Data) * 2);
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()), strlen(Data)) == Data);
+  object.Resize(strlen(Data) * 2, true);
+  EXPECT_TRUE(object.GetSize() == strlen(Data) * 2);
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
+                          strlen(Data)) == Data);
 }
 
-TEST_F(GTest, resizeWithNoPreserveBlob)
-{
-    Blob object;
-    object.SetData(Data, strlen(Data));
+TEST_F(GTest, resizeWithNoPreserveBlob) {
+  Blob object;
+  object.SetData(Data, strlen(Data));
 
-    EXPECT_TRUE(object.GetSize() == strlen(Data));
-    EXPECT_TRUE(object.GetData() != nullptr);
+  EXPECT_TRUE(object.GetSize() == strlen(Data));
+  EXPECT_TRUE(object.GetData() != nullptr);
 
-    object.Resize(strlen(Data) * 2, false);
-    EXPECT_TRUE(object.GetSize() == strlen(Data) * 2);
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()), strlen(Data) * 2) != Data);
+  object.Resize(strlen(Data) * 2, false);
+  EXPECT_TRUE(object.GetSize() == strlen(Data) * 2);
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
+                          strlen(Data) * 2) != Data);
 }
 
-TEST_F(GTest, clearDataBlob)
-{
-    Blob object;
-    object.SetData(Data, strlen(Data));
+TEST_F(GTest, clearDataBlob) {
+  Blob object;
+  object.SetData(Data, strlen(Data));
 
-    EXPECT_TRUE(object.GetSize() == strlen(Data));
-    EXPECT_TRUE(object.GetData() != nullptr);
+  EXPECT_TRUE(object.GetSize() == strlen(Data));
+  EXPECT_TRUE(object.GetData() != nullptr);
 
-    object.Clear();
-    EXPECT_TRUE(object.GetSize() == 0);
-    EXPECT_TRUE(object.GetData() == nullptr);
+  object.Clear();
+  EXPECT_TRUE(object.GetSize() == 0);
+  EXPECT_TRUE(object.GetData() == nullptr);
 }
 
-TEST_F(GTest, addDataBlob)
-{
-    const auto data2 = std::string("bbbbb");
+TEST_F(GTest, addDataBlob) {
+  const auto data2 = std::string("bbbbb");
 
-    Blob object;
-    object.SetData(Data, strlen(Data));
+  Blob object;
+  object.SetData(Data, strlen(Data));
 
-    EXPECT_TRUE(object.GetSize() == strlen(Data));
-    EXPECT_TRUE(object.GetData() != nullptr);
+  EXPECT_TRUE(object.GetSize() == strlen(Data));
+  EXPECT_TRUE(object.GetData() != nullptr);
 
-    object.AddData(data2.data(), data2.size());
-    EXPECT_TRUE(object.GetSize() == strlen(Data) + data2.size());
-    EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
-                            strlen(Data) + data2.size()) == std::string{Data} + data2);
+  object.AddData(data2.data(), data2.size());
+  EXPECT_TRUE(object.GetSize() == strlen(Data) + data2.size());
+  EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
+                          strlen(Data) + data2.size()) ==
+              std::string{Data} + data2);
 }
-
 
 REGISTER_TESTS_ENTRY(GTestModule)
 IMPLEMENT_CONSOLE_ENTRY

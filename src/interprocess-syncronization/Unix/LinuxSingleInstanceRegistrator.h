@@ -4,18 +4,17 @@
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-class LinuxSingleInstanceRegistrator:  public InstanceRegistratorInterface
-{
-public:
-    LinuxSingleInstanceRegistrator(std::wstring&& objectName);
-    virtual ~LinuxSingleInstanceRegistrator();
+class LinuxSingleInstanceRegistrator : public InstanceRegistratorInterface {
+ public:
+  LinuxSingleInstanceRegistrator(std::wstring&& objectName);
+  virtual ~LinuxSingleInstanceRegistrator();
 
-    bool RegisterInstance() override;
-    void UnregisterInstance() override;
-    bool IsInstanceRegistered() const override;
+  bool RegisterInstance() override;
+  void UnregisterInstance() override;
+  bool IsInstanceRegistered() const override;
 
-private:
-    int m_iSingleInstanceFile;
+ private:
+  int m_iSingleInstanceFile;
 };
-}
-}
+}  // namespace InterprocessSynchronization
+}  // namespace Gengine

@@ -1,21 +1,20 @@
 #pragma once
 
-#include <string>
-#include <memory>
 #include <cstdint>
+#include <memory>
 #include <sstream>
+#include <string>
 
 namespace Gengine {
 namespace JSON {
 
-enum class type_t : std::uint8_t
-{
-    TypeNull = 0,
-    TypeString,
-    TypeNumber,
-    TypeObject,
-    TypeArray,
-    TypeBool
+enum class type_t : std::uint8_t {
+  TypeNull = 0,
+  TypeString,
+  TypeNumber,
+  TypeObject,
+  TypeArray,
+  TypeBool
 };
 
 using char_t = char;
@@ -47,15 +46,14 @@ class ObjectValue;
 class StringValue;
 class NumberValue;
 class ArrayValue;
-}
+}  // namespace details
 
 using detail_value_t = std::unique_ptr<details::NullValue>;
 
-class IJsonSerializable
-{
-public:
-    virtual bool Serialize(Object& serializer) const = 0;
-    virtual bool Deserialize(const Object& deserializer) = 0;
+class IJsonSerializable {
+ public:
+  virtual bool Serialize(Object& serializer) const = 0;
+  virtual bool Deserialize(const Object& deserializer) = 0;
 };
 
 static const char* MapKey = "key";
@@ -63,5 +61,5 @@ static const char* MapValue = "value";
 
 static const char* VariantKey = "which";
 static const char* VariantData = "data";
-}
-}
+}  // namespace JSON
+}  // namespace Gengine

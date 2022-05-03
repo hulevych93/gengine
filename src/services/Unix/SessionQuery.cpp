@@ -4,10 +4,9 @@
 
 namespace Gengine {
 
-bool SessionQuery::QueryActiveSessionsIDs(std::vector<SessionId>* ids)
-{
-    assert(ids);
-    return true;
+bool SessionQuery::QueryActiveSessionsIDs(std::vector<SessionId>* ids) {
+  assert(ids);
+  return true;
 }
 
-}
+}  // namespace Gengine
