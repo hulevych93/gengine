@@ -1,7 +1,7 @@
 #include "EntryToolsFactory.h"
 
-#include <diagnostic/Unix/LinuxCallstackDumper.h>
-#include <diagnostic/Unix/LinuxErrorsDumper.h>
+#include <entries/diagnostic/Unix/LinuxCallstackDumper.h>
+#include <entries/diagnostic/Unix/LinuxErrorsDumper.h>
 #include <interprocess-syncronization/Unix/DaemonAliveObject.h>
 #include <interprocess-syncronization/Unix/LinuxDaemonTracker.h>
 #include <interprocess-syncronization/Unix/LinuxSingleInstanceRegistrator.h>

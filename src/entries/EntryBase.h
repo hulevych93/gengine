@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <api/entries/IEntry.h>
-#include <diagnostic/IDumper.h>
+#include <entries/diagnostic/IDumper.h>
 #include <interprocess-syncronization/IAliveObject.h>
 #include <interprocess-syncronization/ServiceTracker.h>
 

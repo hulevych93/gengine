@@ -66,6 +66,7 @@ function (prv_gengine_add_includes)
     include_directories(
         .
         ${Boost_INCLUDE_DIRS}
+        ${X11_INCLUDE_DIR}
         ${GENGINE_ROOT_DIR}
         ${GENGINE_BINARY_DIR}
         ${GTest_INCLUDE_DIRS}
