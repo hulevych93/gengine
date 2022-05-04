@@ -82,7 +82,7 @@ std::wstring GetSystemDirPath()
 
 std::wstring GetKernelObjectPath(const std::wstring& name)
 {
-	return std::wstring{L"\\Global\\\\"} + name;
+    return std::wstring{L"\\Global\\\\"} + name;
 }
 
 }

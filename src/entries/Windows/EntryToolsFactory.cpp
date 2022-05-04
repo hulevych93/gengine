@@ -58,7 +58,7 @@ std::unique_ptr<ServiceTracker> EntryToolsFactory::CreateModuleTracker(const std
 
 std::unique_ptr<IEntryToolsFactory> makeFactory()
 {
-	return std::make_unique<EntryToolsFactory>();
+    return std::make_unique<EntryToolsFactory>();
 }
 
 }

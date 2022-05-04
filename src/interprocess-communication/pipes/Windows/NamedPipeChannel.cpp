@@ -188,18 +188,17 @@ bool NamedPipeChannel::SendAsync(const void* data, std::uint32_t size)
 {
     if (!m_stopped.load())
     {
-        DWORD dwWritten = 0;
-        BOOL bOk = WriteFile(m_socket, data, size, &dwWritten, reinterpret_cast<OVERLAPPED*>(m_overlapped));
-        DWORD dwErr = GetLastError();
-        if (!bOk && dwErr != ERROR_IO_PENDING)
+        DWORD processed = 0;
+        BOOL ok = WriteFile(m_socket, data, size, &processed, reinterpret_cast<OVERLAPPED*>(m_overlapped));
+        DWORD err = GetLastError();
+        if (!ok && err != ERROR_IO_PENDING)
         {
-            if (dwErr == ERROR_NO_DATA ||
-                dwErr == ERROR_BROKEN_PIPE)
+            if (err == ERROR_NO_DATA ||
+                err == ERROR_BROKEN_PIPE)
             {
-                GLOG_WARNING("Server pipe being closed");
                 return false;
             }
-            GLOG_ERROR("Failed Write to pipe %d", dwErr);
+            GLOG_ERROR("Failed Write to pipe %d", err);
             return false;
         }
         return true;
@@ -212,18 +211,17 @@ bool NamedPipeChannel::RecvAsync(void* data, std::uint32_t size)
 {
     if (!m_stopped.load())
     {
-        DWORD dwRead = 0;
-        BOOL bOk = ReadFile(m_socket, data, size, &dwRead, reinterpret_cast<OVERLAPPED*>(m_overlapped));
-        DWORD dwErr = GetLastError();
-        if (!bOk && dwErr != ERROR_IO_PENDING)
+        DWORD processed = 0;
+        BOOL ok = ReadFile(m_socket, data, size, &processed, reinterpret_cast<OVERLAPPED*>(m_overlapped));
+        DWORD err = GetLastError();
+        if (!ok && err != ERROR_IO_PENDING)
         {
-            if (dwErr == ERROR_NO_DATA ||
-                dwErr == ERROR_BROKEN_PIPE)
+            if (err == ERROR_NO_DATA ||
+                err == ERROR_BROKEN_PIPE)
             {
-                GLOG_WARNING("Server pipe being closed");
                 return false;
             }
-            GLOG_ERROR("Failed Read pipe %d", dwErr);
+            GLOG_ERROR("Failed Read pipe %d", err);
             assert(0);
             return false;
         }
@@ -238,23 +236,24 @@ void* NamedPipeChannel::GetIOHandle() const
     return m_ioReady.GetOSHandle();
 }
 
-bool NamedPipeChannel::GetOverlapped(std::uint32_t *uiBytesTransferred)
+bool NamedPipeChannel::GetOverlapped(std::uint32_t bytesProcessed)
 {
-    DWORD nTransferred = 0;
-    BOOL bOk = GetOverlappedResult(m_socket, reinterpret_cast<OVERLAPPED*>(m_overlapped), &nTransferred, TRUE);
-    *uiBytesTransferred = nTransferred;
-    if (!bOk)
+    DWORD processed = 0;
+    BOOL ok = GetOverlappedResult(m_socket, reinterpret_cast<OVERLAPPED*>(m_overlapped), &processed, TRUE);
+    if(bytesProcessed)
+        *bytesProcessed = processed;
+    if (!ok)
     {
-        DWORD dwErr = GetLastError();
-        if (dwErr == ERROR_BROKEN_PIPE)
-            return false;//client exited unexpectedly
-        if (dwErr == ERROR_MORE_DATA)
+        DWORD err = GetLastError();
+        if (err == ERROR_BROKEN_PIPE)
+            return false;
+        if (err == ERROR_MORE_DATA)
         {
             GLOG_WARNING("More data available!");
-            return true;//seems, client send more data, we will process it later
+            return true;
         }
-        //oops - unexpected error
-        GLOG_ERROR("GetOverlappedResult failed! Error %d", dwErr);
+
+        GLOG_ERROR("GetOverlappedResult failed! Error %d", err);
         assert(0);
         return false;
     }
@@ -263,12 +262,12 @@ bool NamedPipeChannel::GetOverlapped(std::uint32_t *uiBytesTransferred)
 
 std::unique_ptr<IChannel> makeChannel(const std::wstring& connectionString)
 {
-	auto channel = std::make_unique<NamedPipeChannel>();
-	if (channel->Connect(connectionString))
-	{
-		return channel;
-	}
-	return nullptr;
+    auto channel = std::make_unique<NamedPipeChannel>();
+    if (channel->Connect(connectionString))
+    {
+        return channel;
+    }
+    return nullptr;
 }
 
 }

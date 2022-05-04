@@ -268,7 +268,7 @@ bool ServiceExecutor::SWindowsServiceDebugCommand::Process(void* args, bool* suc
 
 std::unique_ptr<IExecutor> makeServiceExecutor(IEntry& entry)
 {
-	return std::make_unique<ServiceExecutor>(entry);
+    return std::make_unique<ServiceExecutor>(entry);
 }
 
 }

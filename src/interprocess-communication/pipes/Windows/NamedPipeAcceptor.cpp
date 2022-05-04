@@ -128,9 +128,9 @@ bool NamedPipeAcceptor::CreateListeningHandle()
 }
 
 std::unique_ptr<InterprocessAcceptor> makeAcceptor(const std::wstring& connectionString,
-	const std::shared_ptr<CommunicationEngine>& engine)
+    const std::shared_ptr<CommunicationEngine>& engine)
 {
-	return std::make_unique<NamedPipeAcceptor>(connectionString, engine);
+    return std::make_unique<NamedPipeAcceptor>(connectionString, engine);
 }
 
 }
