@@ -9,6 +9,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  BUILD_FILES_ROOT: ${{github.workspace}}/3rd-parties
 
 jobs:
   build:
