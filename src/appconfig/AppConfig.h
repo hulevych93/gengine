@@ -10,7 +10,7 @@
 namespace Gengine {
 namespace AppConfig {
 
-bool Merge(EntryConfig& left, const EntryConfig& right);
+bool Merge(EntryConfig& left, const EntryConfig& right) noexcept;
 
 }
 }  // namespace Gengine

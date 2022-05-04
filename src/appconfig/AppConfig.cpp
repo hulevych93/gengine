@@ -3,7 +3,7 @@
 namespace Gengine {
 namespace AppConfig {
 
-bool Merge(EntryConfig& left, const EntryConfig& right) {
+bool Merge(EntryConfig& left, const EntryConfig& right) noexcept {
   if (!left.consoleLogger)
     left.consoleLogger = right.consoleLogger;
   if (!left.singleObjectName)

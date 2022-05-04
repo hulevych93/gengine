@@ -19,7 +19,7 @@
 namespace Gengine {
 namespace JSON {
 
-class InputValue : public boost::static_visitor<bool> {
+class InputValue final : public boost::static_visitor<bool> {
  public:
   InputValue(Value& value);
 
@@ -172,7 +172,7 @@ class InputValue : public boost::static_visitor<bool> {
   Value& m_value;
 };
 
-class OutputValue : public boost::static_visitor<bool> {
+class OutputValue final : public boost::static_visitor<bool> {
  public:
   OutputValue(const Value& value);
 

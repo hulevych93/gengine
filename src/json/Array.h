@@ -2,20 +2,21 @@
 
 #include <json/Common.h>
 #include <json/Value.h>
+
 #include <vector>
 
 namespace Gengine {
 namespace JSON {
 
-class Array {
-  typedef std::vector<Value> storage_type;
+class Array final {
+  using storage_type = std::vector<Value>;
 
  public:
-  typedef storage_type::iterator iterator;
-  typedef storage_type::const_iterator const_iterator;
-  typedef storage_type::reverse_iterator reverse_iterator;
-  typedef storage_type::const_reverse_iterator const_reverse_iterator;
-  typedef storage_type::size_type size_type;
+  using iterator = storage_type::iterator;
+  using const_iterator = storage_type::const_iterator;
+  using reverse_iterator = storage_type::reverse_iterator;
+  using const_reverse_iterator = storage_type::const_reverse_iterator;
+  using size_type = storage_type::size_type;
 
  public:
   Array();

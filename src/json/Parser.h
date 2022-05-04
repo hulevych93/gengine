@@ -1,17 +1,13 @@
 #pragma once
 
 #include <json/Common.h>
+#include <json/Value.h>
 #include <memory>
 
 namespace Gengine {
 namespace JSON {
-class Value;
 
-namespace details {
-class NullValue;
-}
-
-class Parser {
+class Parser final {
  public:
   typedef string_t::iterator Location;
 
@@ -34,7 +30,7 @@ class Parser {
     Token() : kind(Kind::EndOfFile) {}
 
     Kind kind;
-    std::unique_ptr<details::NullValue> value;
+    Value value;
     Location start;
   };
 

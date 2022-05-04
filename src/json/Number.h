@@ -5,9 +5,13 @@
 namespace Gengine {
 namespace JSON {
 
-class Number {
+class Number final {
  private:
-  enum class type_t : std::uint8_t { signed_type, unsigned_type, real_type };
+  enum class number_type : std::uint8_t {
+    signed_type,
+    unsigned_type,
+    real_type
+  };
 
  public:
   Number(real_t value);
@@ -39,7 +43,7 @@ class Number {
     uint64_t m_uintValue;
   };
 
-  type_t m_type;
+  number_type m_type;
 };
 
 }  // namespace JSON

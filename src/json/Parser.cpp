@@ -1,7 +1,6 @@
 #include <json/Parser.h>
 #include <limits>
 
-#include <json/DetailValue.h>
 #include <json/JSON.h>
 
 namespace Gengine {
@@ -59,8 +58,8 @@ void JSON::Parser::ParseValue(Token& token, JSON::Value& root) {
       break;
     case Token::Kind::StringLiteral:
       try {
-        if (token.value) {
-          root = token.value->ToString();
+        if (!token.value.IsNull()) {
+          root = token.value.ToString();
         } else {
           throw std::logic_error("Unable to parse string");
         }
@@ -70,8 +69,8 @@ void JSON::Parser::ParseValue(Token& token, JSON::Value& root) {
       break;
     case Token::Kind::NumberLiteral:
       try {
-        if (token.value) {
-          root = token.value->ToNumber();
+        if (!token.value.IsNull()) {
+          root = token.value.ToNumber();
         } else {
           throw std::logic_error("Unable to parse number");
         }
@@ -81,8 +80,8 @@ void JSON::Parser::ParseValue(Token& token, JSON::Value& root) {
       break;
     case Token::Kind::BooleanLiteral:
       try {
-        if (token.value) {
-          root = token.value->ToBool();
+        if (!token.value.IsNull()) {
+          root = token.value.ToBool();
         } else {
           throw std::logic_error("Unable to parse bool");
         }
@@ -113,8 +112,9 @@ void JSON::Parser::ParseObject(Token& token, JSON::Value& root) {
       string_t fieldName;
       switch (token.kind) {
         case Parser::Token::Kind::StringLiteral:
-          if (token.value && token.value->Type() == JSON::type_t::TypeString) {
-            fieldName = token.value->ToString();
+          if (!token.value.IsNull() &&
+              token.value.Type() == JSON::type_t::TypeString) {
+            fieldName = token.value.ToString();
           } else {
             throw std::logic_error("Incorrect token type");
           }
@@ -373,7 +373,7 @@ bool JSON::Parser::CompleteStringLiteral(Token& token) {
 
   if (ch == '"') {
     token.kind = Token::Kind::StringLiteral;
-    token.value = std::make_unique<StringValue>(value);
+    token.value = value;
     result = true;
   }
 
@@ -462,7 +462,7 @@ bool JSON::Parser::CompleteNumberLiteral(char_t first, Token& token) {
 
     if (isReal) {
       double realValue = std::stod(value);
-      token.value = std::make_unique<NumberValue>(realValue);
+      token.value = Number{realValue};
     } else {
       JSON::uint64_t uintValue = std::stoull(value);
       if (minus_sign) {
@@ -470,12 +470,12 @@ bool JSON::Parser::CompleteNumberLiteral(char_t first, Token& token) {
         if (uintValue < static_cast<JSON::uint64_t>(
                             std::numeric_limits<JSON::int64_t>::max())) {
           intValue -= uintValue;
-          token.value = std::make_unique<NumberValue>(intValue);
+          token.value = Number{intValue};
         } else {
           throw std::exception();
         }
       } else {
-        token.value = std::make_unique<NumberValue>(uintValue);
+        token.value = Number{uintValue};
       }
     }
 
@@ -501,7 +501,7 @@ bool JSON::Parser::CompleteKeywordTrue(Token& token) {
   if (NextCharacter(ch) && ch != 'e')
     return false;
   token.kind = Token::Kind::BooleanLiteral;
-  token.value = std::make_unique<BoolValue>(true);
+  token.value = true;
   return true;
 }
 
@@ -516,7 +516,7 @@ bool JSON::Parser::CompleteKeywordFalse(Token& token) {
   if (NextCharacter(ch) && ch != 'e')
     return false;
   token.kind = Token::Kind::BooleanLiteral;
-  token.value = std::make_unique<BoolValue>(false);
+  token.value = false;
   return true;
 }
 
@@ -529,7 +529,7 @@ bool JSON::Parser::CompleteKeywordNull(Token& token) {
   if (NextCharacter(ch) && ch != 'l')
     return false;
   token.kind = Token::Kind::NullLiteral;
-  token.value = std::make_unique<NullValue>();
+  token.value = Value{};
   return true;
 }
 

@@ -1,12 +1,12 @@
 #pragma once
 
 #include <json/Common.h>
-#include <vector>
+#include <json/DetailValue.h>
 
 namespace Gengine {
 namespace JSON {
 
-class Value {
+class Value final {
  public:
   Value();
   Value(const Value& that);
@@ -56,7 +56,7 @@ class Value {
   real_t ToReal() const;
 
  private:
-  detail_value_t m_value;
+  details::value_t m_value;
 };
 
 }  // namespace JSON

@@ -48,10 +48,9 @@ class NumberValue;
 class ArrayValue;
 }  // namespace details
 
-using detail_value_t = std::unique_ptr<details::NullValue>;
-
 class IJsonSerializable {
  public:
+  virtual ~IJsonSerializable() = default;
   virtual bool Serialize(Object& serializer) const = 0;
   virtual bool Deserialize(const Object& deserializer) = 0;
 };

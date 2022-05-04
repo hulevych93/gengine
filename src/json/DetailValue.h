@@ -1,44 +1,36 @@
 #pragma once
 
-#include <json/Array.h>
+#include <json/Common.h>
 #include <json/Number.h>
-#include <json/Object.h>
+
+#include <boost/variant.hpp>
+
 #include <unordered_map>
 
 namespace Gengine {
 namespace JSON {
 namespace details {
 
-class NullValue {
+class NullValue final {
  public:
-  NullValue();
-  virtual ~NullValue();
+  NullValue() = default;
 
-  virtual type_t Type() const;
-  virtual void Serialize(stream_t& stream) const;
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
 
-  virtual const string_t& ToString() const;
-  virtual const Number& ToNumber() const;
-  virtual const Object& ToObject() const;
-  virtual const Array& ToArray() const;
-  virtual bool ToBool() const;
-  virtual bool IsEquals(const detail_value_t& that) const;
-  virtual detail_value_t Copy() const;
-
- private:
-  static string_t NullLiteral();
+  bool operator==(const NullValue& that) const;
 };
 
-class StringValue : public NullValue {
+class StringValue final {
  public:
   StringValue(const string_t& value);
-  virtual ~StringValue();
 
-  type_t Type() const override;
-  void Serialize(stream_t& stream) const override;
-  const string_t& ToString() const override;
-  bool IsEquals(const detail_value_t& that) const override;
-  detail_value_t Copy() const override;
+  const string_t& ToString() const;
+
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
+
+  bool operator==(const StringValue& that) const;
 
  private:
   string_t m_value;
@@ -48,70 +40,85 @@ class StringValue : public NullValue {
   static const std::unordered_map<string_t, string_t> EspaceChars;
 };
 
-class NumberValue : public NullValue {
+class NumberValue final {
  public:
   NumberValue(const Number& value);
-  virtual ~NumberValue();
 
-  type_t Type() const override;
-  void Serialize(stream_t& stream) const override;
-  const Number& ToNumber() const override;
-  bool IsEquals(const detail_value_t& that) const override;
-  detail_value_t Copy() const override;
+  const Number& ToNumber() const;
+
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
+
+  bool operator==(const NumberValue& that) const;
 
  private:
   Number m_value;
 };
 
-class ObjectValue : public NullValue {
+class ObjectValue final {
  public:
   ObjectValue(const Object& that);
-  virtual ~ObjectValue();
+  ObjectValue(const ObjectValue& value);
+  ObjectValue(ObjectValue&& value);
+  ~ObjectValue();
 
-  type_t Type() const override;
-  void Serialize(stream_t& stream) const override;
-  const Object& ToObject() const override;
-  bool IsEquals(const detail_value_t& that) const override;
-  detail_value_t Copy() const override;
+  ObjectValue& operator=(const ObjectValue& that);
+  ObjectValue& operator=(ObjectValue&& that);
+
+  const Object& ToObject() const;
+
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
+
+  bool operator==(const ObjectValue& that) const;
 
  private:
-  Object m_value;
+  std::unique_ptr<Object> m_value;
 };
 
-class ArrayValue : public NullValue {
+class ArrayValue final {
  public:
   ArrayValue(const Array& value);
-  virtual ~ArrayValue();
+  ArrayValue(const ArrayValue& value);
+  ArrayValue(ArrayValue&& value);
+  ~ArrayValue();
 
-  type_t Type() const override;
-  void Serialize(stream_t& stream) const override;
-  const Array& ToArray() const override;
-  bool IsEquals(const detail_value_t& that) const override;
-  detail_value_t Copy() const override;
+  ArrayValue& operator=(const ArrayValue& that);
+  ArrayValue& operator=(ArrayValue&& that);
+
+  const Array& ToArray() const;
+
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
+
+  bool operator==(const ArrayValue& that) const;
 
  private:
-  Array m_value;
+  std::unique_ptr<Array> m_value;
 };
 
-class BoolValue : public NullValue {
+class BoolValue final {
  public:
-  BoolValue(const bool& value);
-  virtual ~BoolValue();
+  BoolValue(bool value);
 
-  type_t Type() const override;
-  void Serialize(stream_t& stream) const override;
-  bool ToBool() const override;
-  bool IsEquals(const detail_value_t& that) const override;
-  detail_value_t Copy() const override;
+  bool ToBool() const;
 
- private:
-  static string_t TrueLiteral();
-  static string_t FalseLiteral();
+  type_t Type() const;
+  void Serialize(stream_t& stream) const;
+
+  bool operator==(const BoolValue& that) const;
 
  private:
   bool m_value;
 };
-}  // namespace details
 
+using value_t = boost::variant<NullValue,
+                               StringValue,
+                               NumberValue,
+                               BoolValue,
+                               ArrayValue,
+                               ObjectValue>;
+
+}  // namespace details
 }  // namespace JSON
 }  // namespace Gengine

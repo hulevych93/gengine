@@ -11,66 +11,62 @@ namespace JSON {
 
 using namespace details;
 
-Value::Value() : m_value(std::make_unique<NullValue>()) {}
+Value::Value() : m_value(NullValue{}) {}
 
 Value::~Value() = default;
 
-Value::Value(const Value& that) : m_value(that.m_value->Copy()) {}
+Value::Value(const Value& that) : m_value(that.m_value) {}
 
 Value::Value(Value&& that) : m_value(std::move(that.m_value)) {}
 
-Value::Value(const Object& value)
-    : m_value(std::make_unique<ObjectValue>(value)) {}
+Value::Value(const Object& value) : m_value(ObjectValue{value}) {}
 
-Value::Value(const Array& value)
-    : m_value(std::make_unique<ArrayValue>(value)) {}
+Value::Value(const Array& value) : m_value(ArrayValue{value}) {}
 
-Value::Value(const Number& value)
-    : m_value(std::make_unique<NumberValue>(value)) {}
+Value::Value(const Number& value) : m_value(NumberValue{value}) {}
 
-Value::Value(const char_t* value)
-    : m_value(std::make_unique<StringValue>(value)) {}
+Value::Value(const char_t* value) : m_value(StringValue{value}) {}
 
-Value::Value(const string_t& value)
-    : m_value(std::make_unique<StringValue>(value)) {}
+Value::Value(const string_t& value) : m_value(StringValue{value}) {}
 
-Value::Value(real_t value) : m_value(std::make_unique<NumberValue>(value)) {}
+Value::Value(real_t value) : m_value(NumberValue{value}) {}
 
-Value::Value(int64_t value) : m_value(std::make_unique<NumberValue>(value)) {}
+Value::Value(int64_t value) : m_value(NumberValue{value}) {}
 
-Value::Value(uint64_t value) : m_value(std::make_unique<NumberValue>(value)) {}
+Value::Value(uint64_t value) : m_value(NumberValue{value}) {}
 
 Value::Value(int32_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<int64_t>(value))) {}
+    : m_value(NumberValue(static_cast<int64_t>(value))) {}
 
 Value::Value(uint32_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<uint64_t>(value))) {}
+    : m_value(NumberValue(static_cast<uint64_t>(value))) {}
 
 Value::Value(int8_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<int64_t>(value))) {}
+    : m_value(NumberValue(static_cast<int64_t>(value))) {}
 
 Value::Value(uint8_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<uint64_t>(value))) {}
+    : m_value(NumberValue(static_cast<uint64_t>(value))) {}
 
 Value::Value(int16_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<int64_t>(value))) {}
+    : m_value(NumberValue(static_cast<int64_t>(value))) {}
 
 Value::Value(uint16_t value)
-    : m_value(std::make_unique<NumberValue>(static_cast<uint64_t>(value))) {}
+    : m_value(NumberValue(static_cast<uint64_t>(value))) {}
 
-Value::Value(bool value) : m_value(std::make_unique<BoolValue>(value)) {}
+Value::Value(bool value) : m_value(BoolValue{value}) {}
 
 type_t Value::Type() const {
-  return m_value->Type();
+  return boost::apply_visitor([](auto&& value) { return value.Type(); },
+                              m_value);
 }
 
 bool Value::operator==(const Value& that) const {
-  return m_value->IsEquals(that.m_value);
+  return m_value == that.m_value;
 }
 
 Value& Value::operator=(const Value& that) {
   if (this != &that) {
-    m_value = that.m_value->Copy();
+    m_value = that.m_value;
   }
   return *this;
 }
@@ -107,7 +103,8 @@ bool Value::IsBool() const {
 }
 
 void Value::Serialize(stream_t& stream) const {
-  m_value->Serialize(stream);
+  boost::apply_visitor(
+      [&stream](auto&& value) { return value.Serialize(stream); }, m_value);
 }
 
 void Value::Serialize(string_t& stream) const {
@@ -122,35 +119,35 @@ void Value::Deserialize(const string_t& stream) {
 }
 
 const string_t& Value::ToString() const {
-  return m_value->ToString();
+  return boost::get<StringValue>(m_value).ToString();
 }
 
 const Number& Value::ToNumber() const {
-  return m_value->ToNumber();
+  return boost::get<NumberValue>(m_value).ToNumber();
 }
 
 const Object& Value::ToObject() const {
-  return m_value->ToObject();
+  return boost::get<ObjectValue>(m_value).ToObject();
 }
 
 const Array& Value::ToArray() const {
-  return m_value->ToArray();
+  return boost::get<ArrayValue>(m_value).ToArray();
 }
 
 bool Value::ToBool() const {
-  return m_value->ToBool();
+  return boost::get<BoolValue>(m_value).ToBool();
 }
 
 uint64_t Value::ToUint64() const {
-  return m_value->ToNumber().ToUint64();
+  return ToNumber().ToUint64();
 }
 
 int64_t Value::ToInt64() const {
-  return m_value->ToNumber().ToInt64();
+  return ToNumber().ToInt64();
 }
 
 real_t Value::ToReal() const {
-  return m_value->ToNumber().ToReal();
+  return ToNumber().ToReal();
 }
 
 }  // namespace JSON

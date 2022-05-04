@@ -1,12 +1,14 @@
 #pragma once
 
 #include <json/Common.h>
+#include <json/Value.h>
+
 #include <vector>
 
 namespace Gengine {
 namespace JSON {
 
-class Object {
+class Object final {
  public:
   using value_type = std::pair<key_t, Value>;
   using input_value = InputValue;

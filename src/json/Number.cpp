@@ -4,51 +4,51 @@ namespace Gengine {
 namespace JSON {
 
 Number::Number(real_t value)
-    : m_type(Number::type_t::real_type), m_realValue(value) {}
+    : m_type(Number::number_type::real_type), m_realValue(value) {}
 
 Number::Number(int8_t value)
-    : m_type(Number::type_t::signed_type),
+    : m_type(Number::number_type::signed_type),
       m_intValue(static_cast<int64_t>(value)) {}
 
 Number::Number(uint8_t value)
-    : m_type(Number::type_t::unsigned_type),
+    : m_type(Number::number_type::unsigned_type),
       m_uintValue(static_cast<uint64_t>(value)) {}
 
 Number::Number(int16_t value)
-    : m_type(Number::type_t::signed_type),
+    : m_type(Number::number_type::signed_type),
       m_intValue(static_cast<int64_t>(value)) {}
 
 Number::Number(uint16_t value)
-    : m_type(Number::type_t::unsigned_type),
+    : m_type(Number::number_type::unsigned_type),
       m_uintValue(static_cast<uint64_t>(value)) {}
 
 Number::Number(int32_t value)
-    : m_type(Number::type_t::signed_type),
+    : m_type(Number::number_type::signed_type),
       m_intValue(static_cast<int64_t>(value)) {}
 
 Number::Number(uint32_t value)
-    : m_type(Number::type_t::unsigned_type),
+    : m_type(Number::number_type::unsigned_type),
       m_uintValue(static_cast<uint64_t>(value)) {}
 
 Number::Number(int64_t value)
-    : m_type(Number::type_t::signed_type), m_intValue(value) {}
+    : m_type(Number::number_type::signed_type), m_intValue(value) {}
 
 Number::Number(uint64_t value)
-    : m_type(Number::type_t::unsigned_type), m_uintValue(value) {}
+    : m_type(Number::number_type::unsigned_type), m_uintValue(value) {}
 
 Number::~Number() {}
 
 bool Number::IsReal() const {
-  return m_type == Number::type_t::real_type;
+  return m_type == Number::number_type::real_type;
 }
 
 bool Number::IsUint64() const {
   bool result = 0;
   switch (m_type) {
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = m_intValue >= 0;
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = true;
       break;
     default:
@@ -61,13 +61,13 @@ bool Number::IsUint64() const {
 real_t Number::ToReal() const {
   real_t result = 0.0;
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       result = m_realValue;
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = static_cast<real_t>(m_intValue);
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = static_cast<real_t>(m_uintValue);
       break;
     default:
@@ -79,13 +79,13 @@ real_t Number::ToReal() const {
 uint64_t Number::ToUint64() const {
   uint64_t result = 0;
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       result = static_cast<uint64_t>(m_realValue);
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = static_cast<uint64_t>(m_intValue);
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = m_uintValue;
       break;
     default:
@@ -97,13 +97,13 @@ uint64_t Number::ToUint64() const {
 int64_t Number::ToInt64() const {
   int64_t result = 0;
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       result = static_cast<int64_t>(m_realValue);
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = m_intValue;
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = static_cast<int64_t>(m_uintValue);
       break;
     default:
@@ -115,13 +115,13 @@ int64_t Number::ToInt64() const {
 uint32_t Number::ToUint32() const {
   uint32_t result = 0;
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       result = static_cast<uint32_t>(m_realValue);
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = static_cast<uint32_t>(m_intValue);
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = static_cast<uint32_t>(m_uintValue);
       break;
     default:
@@ -133,13 +133,13 @@ uint32_t Number::ToUint32() const {
 int32_t Number::ToInt32() const {
   int32_t result = 0;
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       result = static_cast<uint32_t>(m_realValue);
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       result = static_cast<uint32_t>(m_intValue);
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       result = static_cast<uint32_t>(m_uintValue);
       break;
     default:
@@ -155,13 +155,13 @@ bool Number::operator==(const Number& that) const {
 
 void Number::Serialize(stream_t& stream) const {
   switch (m_type) {
-    case Number::type_t::real_type:
+    case Number::number_type::real_type:
       stream << std::to_string(m_realValue);
       break;
-    case Number::type_t::signed_type:
+    case Number::number_type::signed_type:
       stream << std::to_string(m_intValue);
       break;
-    case Number::type_t::unsigned_type:
+    case Number::number_type::unsigned_type:
       stream << std::to_string(m_uintValue);
       break;
     default:
