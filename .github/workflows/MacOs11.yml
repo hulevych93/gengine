@@ -1,14 +1,20 @@
 name: MacOS build.
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Configuration'     
+        required: true
+        default: 'Release' 
+        type: choice
+        options:
+        - Debug
+        - Release
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+  BUILD_TYPE: ${{ github.event.inputs.configuration }}
   BUILD_FILES_ROOT: ${{github.workspace}}/3rd-parties
 
 jobs:
@@ -34,5 +40,5 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build
       
