@@ -5,7 +5,8 @@
 
 namespace Gengine {
 template <class Interface, class Implementation, class... Args>
-class LocalConcreteCreator : public IAbstractCreator<Interface, Args...> {
+class LocalConcreteCreator
+    : public AbstractFactory::IAbstractCreator<Interface, Args...> {
  public:
   std::shared_ptr<Interface> Create(Args... args) const override {
     return std::make_shared<Implementation>();

@@ -18,8 +18,8 @@ namespace Services {
 
 class IMicroService;
 using TService = std::shared_ptr<IMicroService>;
-using TServiceCreator =
-    std::shared_ptr<IAbstractCreator<IMicroService, const std::string&>>;
+using TServiceCreator = std::shared_ptr<
+    AbstractFactory::IAbstractCreator<IMicroService, const std::string&>>;
 
 class ICompositeClient {
  public:

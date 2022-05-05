@@ -5,7 +5,9 @@ namespace Gengine {
 Blob::Blob() : m_size(0) {}
 
 Blob::Blob(size_t size)
-    : m_data(std::make_unique<std::uint8_t[]>(size)), m_size(size) {}
+    : m_data(std::make_unique<std::uint8_t[]>(size)), m_size(size) {
+  memset(m_data.get(), 0, size);
+}
 
 Blob::Blob(const void* data, size_t size)
     : m_data(std::make_unique<std::uint8_t[]>(size)), m_size(size) {
@@ -23,11 +25,17 @@ Blob::Blob(Blob&& that) : m_data(std::move(that.m_data)), m_size(that.m_size) {
 }
 
 Blob& Blob::operator=(const Blob& that) {
+  if (this == &that) {
+    return *this;
+  }
   SetData(that.m_data.get(), that.m_size);
   return *this;
 }
 
 Blob& Blob::operator=(Blob&& that) {
+  if (this == &that) {
+    return *this;
+  }
   m_data = std::move(that.m_data);
   m_size = that.m_size;
   that.m_size = 0;
@@ -35,6 +43,9 @@ Blob& Blob::operator=(Blob&& that) {
 }
 
 bool Blob::operator==(const Blob& that) const {
+  if (this == &that) {
+    return true;
+  }
   if (m_size == that.m_size) {
     return memcmp(m_data.get(), that.m_data.get(), m_size) == 0;
   } else {
@@ -100,6 +111,7 @@ void Blob::Clear() {
 }
 
 std::string Blob::ToString() const {
-  return "";
+  return "BLOB";
 }
+
 }  // namespace Gengine

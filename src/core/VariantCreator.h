@@ -7,6 +7,7 @@
 
 namespace Gengine {
 
+namespace VariantCreationDetails {
 template <class V>
 using creator_ = std::function<void(V&)>;
 template <class V>
@@ -40,14 +41,21 @@ struct build_constructors_ {
  private:
   constructors_<V>& impl;
 };
+}  // namespace VariantCreationDetails
 
+/**
+ * @brief makeVariant function constructs an object inside the given variant.
+ *
+ * @param[in] which variant type should be constructed.
+ * @param[out] object of the variant to be instanciated.
+ */
 template <class... T>
-void create_variant(std::int32_t which, boost::variant<T...>& object) {
+void makeVariant(std::int32_t which, boost::variant<T...>& object) {
   using variant_ = boost::variant<T...>;
   using types_ = typename variant_::types;
-  using builder_ = build_constructors_<variant_>;
+  using builder_ = VariantCreationDetails::build_constructors_<variant_>;
 
-  constructors_<variant_> constructors;
+  VariantCreationDetails::constructors_<variant_> constructors;
   builder_ builder = {constructors};
   boost::mpl::for_each<types_>(builder);
   builder[which](object);

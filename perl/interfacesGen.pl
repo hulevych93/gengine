@@ -102,7 +102,7 @@ sub output_interface_declaration
         printf($hFile ")=0;\n");
     }
     printf($hFile "};\n");
-    printf($hFile "using T${interface_name} = std::shared_ptr<${interface_name}>;\n}");
+    printf($hFile "using ${interface_name}Ptr = std::shared_ptr<${interface_name}>;\n}");
     close($hFile);
 }
 
@@ -119,7 +119,7 @@ sub print_forwards_impl
         {
             print($hFile "struct ".$utype.";\n") if($is_struct eq 1);
             print($hFile "class ".$utype.";\n") if($is_struct eq 0);
-            print($hFile "using T".$utype." = std::shared_ptr<".$utype.">;\n");
+            print($hFile "using ".$utype."Ptr = std::shared_ptr<".$utype.">;\n");
         }
         print($hFile "}\n");
     }

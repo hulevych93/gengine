@@ -132,7 +132,7 @@ class PluginBroker : public IPluginBroker, public Persistable<ISerializable> {
   }
 
  private:
-  std::unordered_map<PluginInfo, TIPlugin> m_plugins;
+  std::unordered_map<PluginInfo, IPluginPtr> m_plugins;
 };
 
 EXPORT_GLOBAL_SHARED_SERVICE(PluginBroker)

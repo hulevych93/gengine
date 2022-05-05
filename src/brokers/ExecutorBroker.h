@@ -12,10 +12,10 @@ namespace Services {
 
 class IMicroService;
 using TExecutor = std::shared_ptr<InterprocessCommunication::InterfaceImpl>;
-using TExecutorCreator = std::shared_ptr<
-    IAbstractCreator<InterprocessCommunication::InterfaceImpl,
-                     const InterprocessCommunication::interface_key&,
-                     IMicroService&>>;
+using TExecutorCreator = std::shared_ptr<AbstractFactory::IAbstractCreator<
+    InterprocessCommunication::InterfaceImpl,
+    const InterprocessCommunication::interface_key&,
+    IMicroService&>>;
 
 class IExecutorBroker {
  public:

@@ -68,7 +68,7 @@ std::shared_ptr<IWorkerThread> WorkerBroker::GetThread(std::uint8_t id) {
 
       heartbeatThread = context->thread;
     } else {
-      // LOGERROR
+      return nullptr;
     }
   }
 

@@ -20,7 +20,7 @@ using namespace InterprocessCommunication;
 namespace Services {
 
 namespace {
-TIServiceRouter GetServiceRouter() {
+IServiceRouterPtr GetServiceRouter() {
   return std::dynamic_pointer_cast<IServiceRouter>(GetRouter());
 }
 PipeConnection GeneratePipeConnection(const std::string& key) {
@@ -33,7 +33,7 @@ PipeConnection GeneratePipeConnection(const std::string& key) {
 }
 }  // namespace
 
-using TFactory = AbstractFactory<InterprocessCommunication::InterfaceImpl,
+using TFactory = AbstractFactory::AbstractFactory<InterprocessCommunication::InterfaceImpl,
                                  std::string,
                                  const interface_key&,
                                  IMicroService&>;
@@ -67,7 +67,7 @@ class ExecutorBroker : public IExecutorBroker, public Worker {
   };
   struct localContext : context {
     class ClientCreator
-        : public IAbstractCreator<IMicroService, const interface_key&> {
+          : public AbstractFactory::IAbstractCreator<IMicroService, const interface_key&> {
      public:
       ClientCreator(IMicroService& handler) : handler(handler) {}
       std::shared_ptr<IMicroService> Create(

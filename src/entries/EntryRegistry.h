@@ -13,10 +13,12 @@ namespace Entries {
 class EntryRegistry {
  public:
   using TEntryCreator = std::shared_ptr<
-      IAbstractCreator<IEntry, std::unique_ptr<IEntryToolsFactory>&&>>;
-  using TEntryFactory = AbstractFactory<IEntry,
-                                        std::wstring,
-                                        std::unique_ptr<IEntryToolsFactory>&&>;
+      AbstractFactory::IAbstractCreator<IEntry,
+                                        std::unique_ptr<IEntryToolsFactory>&&>>;
+  using TEntryFactory =
+      AbstractFactory::AbstractFactory<IEntry,
+                                       std::wstring,
+                                       std::unique_ptr<IEntryToolsFactory>&&>;
 
  public:
   EntryRegistry(const std::wstring& key, const TEntryCreator& creator);
@@ -36,7 +38,7 @@ class EntryRegistry {
 
 #define REGISTER_ENTRY(key, name)                                            \
   static FactoryItem<EntryRegistry> const entryRegistry##name(EntryRegistry( \
-      key, std::make_shared<ConcreteCreator<                                 \
+      key, std::make_shared<AbstractFactory::ConcreteCreator<                \
                IEntry, name, std::unique_ptr<IEntryToolsFactory>&&>>()));
 #define REGISTER_MAIN_ENTRY(name) REGISTER_ENTRY(L"default", name)
 #define REGISTER_TESTS_ENTRY(name) REGISTER_ENTRY(L"", name)

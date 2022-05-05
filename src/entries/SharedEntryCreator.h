@@ -8,7 +8,8 @@
 namespace Gengine {
 namespace Entries {
 class SharedEntryCreator
-    : public IAbstractCreator<IEntry, std::unique_ptr<IEntryToolsFactory>&&> {
+    : public AbstractFactory::
+          IAbstractCreator<IEntry, std::unique_ptr<IEntryToolsFactory>&&> {
  public:
   SharedEntryCreator(const std::wstring& moduleName);
   std::shared_ptr<IEntry> Create(

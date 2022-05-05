@@ -200,7 +200,7 @@ sub output_client_dummy_implementation
     return false;\n}\n");
     }
     printf($hFile "};\n\n");
-    printf($hFile "class ${class_name}Creator: public IAbstractCreator<IMicroService, const interface_key&>\n");
+    printf($hFile "class ${class_name}Creator: public AbstractFactory::IAbstractCreator<IMicroService, const interface_key&>\n");
     printf($hFile "{\n");
     printf($hFile "public:\n");
     printf($hFile "std::shared_ptr<IMicroService>  Create(const interface_key&) const override\n");
@@ -299,7 +299,7 @@ sub output_client_implementation
     printf($hFile "\nprivate:\n");
     printf($hFile "    interface_key m_key;\n");
     printf($hFile "};\n\n");
-    printf($hFile "class ${class_name}Creator: public IAbstractCreator<IMicroService, const interface_key&>\n");
+    printf($hFile "class ${class_name}Creator: public AbstractFactory::IAbstractCreator<IMicroService, const interface_key&>\n");
     printf($hFile "{\n");
     printf($hFile "public:\n");
     printf($hFile "std::shared_ptr<IMicroService>  Create(const interface_key& key) const override\n");
@@ -350,7 +350,7 @@ sub output_client_implementation
         printf($hFile "    std::mutex m_mutex;\n");
         printf($hFile "    std::vector<std::shared_ptr<".$namespace."::".$interface_name.">> m_clients;\n");
         printf($hFile "};\n\n");
-        printf($hFile "class ${class_name}Creator: public IAbstractCreator<IMicroService, const interface_key&>\n");
+        printf($hFile "class ${class_name}Creator: public AbstractFactory::IAbstractCreator<IMicroService, const interface_key&>\n");
         printf($hFile "{\n");
         printf($hFile "public:\n");
         printf($hFile "std::shared_ptr<IMicroService>  Create(const interface_key&) const override\n");
@@ -426,7 +426,7 @@ sub output_executer_implementation
     printf($hFile "    ${namespace}::${interface_name}& m_interface;\n");
     printf($hFile "    interface_key m_key;\n");
     printf($hFile "};\n\n");
-    printf($hFile "class ${class_name}Creator: public IAbstractCreator<InterfaceImpl, const interface_key&, IMicroService&>\n");
+    printf($hFile "class ${class_name}Creator: public AbstractFactory::IAbstractCreator<InterfaceImpl, const interface_key&, IMicroService&>\n");
     printf($hFile "{\n");
     printf($hFile "public:\n");
     printf($hFile "std::shared_ptr<InterfaceImpl>  Create(const interface_key& key, IMicroService& service) const override\n");

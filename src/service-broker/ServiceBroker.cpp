@@ -27,11 +27,11 @@ using namespace AppConfig;
 
 namespace Services {
 
-TIServiceRouter GetServiceRouter() {
+IServiceRouterPtr GetServiceRouter() {
   return std::dynamic_pointer_cast<IServiceRouter>(GetRouter());
 }
 
-using TFactory =
+using TFactory = AbstractFactory::
     AbstractFactory<IMicroService, std::string, const interface_key&>;
 using TFactories = std::unordered_map<ServiceType, TFactory>;
 using service_signal = boost::signals2::signal<void(const TService&)>;
@@ -342,7 +342,8 @@ const TService& ServiceBroker::GetRouter() {
 }
 
 template <class Interface, class Implementation, class... Args>
-class LocalConcreteCreator : public IAbstractCreator<Interface, Args...> {
+class LocalConcreteCreator
+    : public AbstractFactory::IAbstractCreator<Interface, Args...> {
  public:
   std::shared_ptr<Interface> Create(Args... args) const override {
     return std::make_shared<Implementation>();

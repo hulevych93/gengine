@@ -231,7 +231,7 @@ class OutputValue final : public boost::static_visitor<bool> {
     if (operator>>(const_cast<Object&>(variantObject))) {
       std::int32_t which{0};
       if (variantObject[VariantKey] >> which) {
-        create_variant(which, object);
+        makeVariant(which, object);
         const OutputValue output = variantObject[VariantData];
         return boost::apply_visitor(output, object);
       }
