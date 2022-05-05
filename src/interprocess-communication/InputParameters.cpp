@@ -59,7 +59,7 @@ bool InputParameters::Deserialize(void* data, std::uint32_t size) {
 
 const ParameterHeader* InputParameters::GetParameterHeader(
     std::int8_t index) const {
-  if (index < 0 || index >= m_parameters.size()) {
+  if (index < 0 || index >= GetParametersCount()) {
     assert(0);
     return nullptr;
   }
@@ -67,7 +67,7 @@ const ParameterHeader* InputParameters::GetParameterHeader(
 }
 
 std::int8_t InputParameters::GetParametersCount() const {
-  return m_parameters.size();
+  return static_cast<std::int8_t>(m_parameters.size());
 }
 
 bool InputParameters::Get(std::int8_t index, bool& value) const {
@@ -75,7 +75,7 @@ bool InputParameters::Get(std::int8_t index, bool& value) const {
 }
 
 bool InputParameters::Get(std::int8_t index, void*& value) const {
-  if (index < 0 || index >= m_parameters.size()) {
+  if (index < 0 || index >= GetParametersCount()) {
     assert(0);
     return false;
   }
@@ -192,7 +192,7 @@ template <class Type>
 bool InputParameters::Get(std::int8_t index,
                           Type& value,
                           ParametersTypes type) const {
-  if (index < 0 || index >= m_parameters.size()) {
+  if (index < 0 || index >= GetParametersCount()) {
     assert(0);
     return false;
   }
@@ -212,7 +212,7 @@ bool InputParameters::Get(std::int8_t index,
                           void** data,
                           std::uint32_t* size,
                           ParametersTypes type) const {
-  if (index < 0 || index >= m_parameters.size()) {
+  if (index < 0 || index >= GetParametersCount()) {
     assert(0);
     return false;
   }

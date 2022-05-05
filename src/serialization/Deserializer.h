@@ -82,7 +82,7 @@ class Deserializer : public boost::static_visitor<bool> {
   bool operator>>(boost::variant<T...>& object) const {
     std::int32_t which{0};
     if (operator>>(which)) {
-      create_variant(which, object);
+      makeVariant(which, object);
       return boost::apply_visitor(*this, object);
     }
     return false;

@@ -236,7 +236,7 @@ void* NamedPipeChannel::GetIOHandle() const
     return m_ioReady.GetOSHandle();
 }
 
-bool NamedPipeChannel::GetOverlapped(std::uint32_t bytesProcessed)
+bool NamedPipeChannel::GetOverlapped(std::uint32_t* bytesProcessed)
 {
     DWORD processed = 0;
     BOOL ok = GetOverlappedResult(m_socket, reinterpret_cast<OVERLAPPED*>(m_overlapped), &processed, TRUE);
