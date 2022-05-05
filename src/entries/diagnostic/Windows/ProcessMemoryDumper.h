@@ -1,6 +1,5 @@
 #pragma once
 
-#include <dbghelp.h>
 #include <windows.h>
 #include <string>
 #include <unordered_map>
@@ -12,9 +11,7 @@ namespace Gengine {
 namespace Diagnostic {
 class ProcessMemoryDumper : public IDumper {
  public:
-  ProcessMemoryDumper(const std::string& name,
-                      MINIDUMP_TYPE MinidumpType,
-                      bool blockThread);
+  ProcessMemoryDumper(const std::string& name, bool blockThread);
 
  private:
   static LONG WINAPI TopLevelFilter(struct _EXCEPTION_POINTERS* pExceptionInfo);
@@ -32,7 +29,6 @@ class ProcessMemoryDumper : public IDumper {
 
  private:
   std::string m_appName;
-  MINIDUMP_TYPE m_minidumpType;
   bool m_block;
 
  private:

@@ -1,8 +1,11 @@
 #include "ServiceExecutor.h"
 
-#include <ShellAPI.h>
+
 #include <Windows.h>
 #include <tchar.h>
+
+#include <ShellAPI.h>
+
 #include <thread>
 
 #include <api/entries/IEntry.h>

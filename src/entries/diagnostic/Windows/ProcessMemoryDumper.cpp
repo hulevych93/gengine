@@ -1,7 +1,10 @@
 #include "ProcessMemoryDumper.h"
 
-#include <tchar.h>
 #include <windows.h>
+#include <assert.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <dbghelp.h>
 
 #include <boost/format.hpp>
 #include <boost/stacktrace.hpp>
@@ -45,12 +48,10 @@ std::string return_current_time_and_date() {
 }
 
 ProcessMemoryDumper::ProcessMemoryDumper(const std::string& name,
-                                         MINIDUMP_TYPE dumpType,
                                          bool blockThread) {
   // if this assert fires then you have two instances of MiniDumper
   // which is not allowed
   assert(m_instance == nullptr);
-  m_minidumpType = dumpType;
   m_appName = name;
   m_block = blockThread;
   m_instance = this;
@@ -91,10 +92,10 @@ LONG ProcessMemoryDumper::WriteDump(
           ExInfo.ExceptionPointers = pExceptionInfo;
           ExInfo.ClientPointers = 0;
           bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
-                      m_minidumpType, &ExInfo, nullptr, nullptr);
+                      MiniDumpNormal, &ExInfo, nullptr, nullptr);
         } else {
           bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
-                      m_minidumpType, nullptr, nullptr, nullptr);
+              MiniDumpNormal, nullptr, nullptr, nullptr);
         }
 
         if (bOK) {

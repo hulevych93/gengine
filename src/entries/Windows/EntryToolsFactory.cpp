@@ -17,8 +17,8 @@ namespace Entries {
 std::vector<std::unique_ptr<Diagnostic::IDumper>>
 EntryToolsFactory::CreateDumpers(const std::wstring& module) {
   std::vector<std::unique_ptr<Diagnostic::IDumper>> dumpers;
-  dumpers.emplace_back(std::make_unique<ProcessMemoryDumper>(
-      toUtf8(module), MiniDumpNormal, false));
+  dumpers.emplace_back(
+      std::make_unique<ProcessMemoryDumper>(toUtf8(module), false));
   dumpers.emplace_back(std::make_unique<MemoryLeaksDumper>(toUtf8(module)));
   return dumpers;
 }

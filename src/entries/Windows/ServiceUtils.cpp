@@ -1,8 +1,9 @@
 #include "ServiceUtils.h"
 
-#include <ShellAPI.h>
 #include <Windows.h>
 #include <tchar.h>
+
+#include <ShellAPI.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>
