@@ -8,8 +8,8 @@ It includes such common development tasks solutions:
 * Windows service and unix daemons development.
 * Child-parent process management.
 * Inteprocess communication via local sockets or TCP/IP.
-* Custom *.rdl interface definition language perl parser for development with locked API.
-* Possibility to dynamically link interfaces and implementations via custom *.json files configs.  
+* Custom interface definition language configuration files.
+* Possibility to link interfaces and implementations via custom *.json files configs.  
 
 ## How to build?
 
