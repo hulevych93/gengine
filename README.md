@@ -1,12 +1,15 @@
 # gengine
 This is a modern C++14 and scalable cross-platfrom application development framework.
 
+[![Windows](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml)
+[![Apple MacOS](https://github.com/hulevych93/gengine/actions/workflows/MacOS.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/MacOS.yml)
+
 It includes such common development tasks solutions:
 * Windows service and unix daemons development.
 * Child-parent process management.
 * Inteprocess communication via local sockets or TCP/IP.
-* Custom *.rdl interface definition language perl parser for development with locked API.
-* Possibility to dynamically link interfaces and implementations via custom *.json files configs.  
+* Custom interface definition language configuration files.
+* Possibility to link interfaces and implementations via custom *.json files configs.  
 
 ## How to build?
 
