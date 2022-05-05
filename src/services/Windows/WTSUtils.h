@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <api/core/ISessionQuery.h>
 
@@ -11,4 +11,4 @@ namespace TerminalSessions {
 void GetActiveWTSSessionsIDs(std::vector<SessionId>& sessions);
 
 }
-}
+}  // namespace Gengine

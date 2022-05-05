@@ -24,7 +24,7 @@ template <class ServiceInterface>
 std::shared_ptr<ServiceInterface> import_symbol(const SharedConnection& data) {
   auto libPath =
       Filesystem::CombinePath(toUtf8(Filesystem::GetAppFolder()), data.path);
-  return to_std(boost::dll::import <ServiceInterface>(
+  return to_std(boost::dll::import<ServiceInterface>(
       libPath, data.symbol, boost::dll::load_mode::append_decorations));
 }
 
