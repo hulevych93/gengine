@@ -14,8 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${PROJECT_BINARY_DIR}/bin)
 # The `BUILD_FILES_ROOT` is the directory where all the
 # project 3rd parties are supposed to be build.
 if(DEFINED ENV{BUILD_FILES_ROOT})
-    set(BUILD_FILES_DIR $ENV{BUILD_FILES_ROOT})
-    file(TO_CMAKE_PATH BUILD_FILES_DIR BUILD_FILES_DIR)
+    file(TO_CMAKE_PATH $ENV{BUILD_FILES_ROOT} BUILD_FILES_DIR)
 else()
      message(FATAL_ERROR "Please, define BUILD_FILES_ROOT env variable.")
 endif()
