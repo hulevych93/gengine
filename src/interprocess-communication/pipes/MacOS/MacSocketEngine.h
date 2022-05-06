@@ -3,31 +3,32 @@
 #include <unordered_map>
 
 #include <brokers/WorkerBroker.h>
-#include <interprocess-communication/CommunicationEngine.h>
+#include <interprocess-communication/pipes/Unix/UnixSocketEngine.h>
 
 namespace Gengine {
 namespace InterprocessCommunication {
 
-class UnixSocketEngine final : public CommunicationEngine,
-                               public Services::Worker {
+class MacSocketEngine final : public UnixSocketEngine, public Services::Worker {
  public:
   enum class Mode : std::uint8_t { Read, Write };
 
  public:
-  UnixSocketEngine(std::uint32_t threadId);
-  ~UnixSocketEngine();
+  MacSocketEngine(std::uint32_t threadId);
+  ~MacSocketEngine();
 
-  UnixSocketEngine(const UnixSocketEngine&) = delete;
-  UnixSocketEngine(UnixSocketEngine&&) = delete;
+  MacSocketEngine(const UnixSocketEngine&) = delete;
+  MacSocketEngine(UnixSocketEngine&&) = delete;
 
   void RegisterConnection(const IChannel& connection,
                           engine_callback callback) override;
   void UnregisterConnection(const IChannel& connection) override;
 
-  void PostRead(const IChannel& connection, void* data, std::uint32_t size);
+  void PostRead(const IChannel& connection,
+                void* data,
+                std::uint32_t size) override;
   void PostWrite(const IChannel& connection,
                  const void* data,
-                 std::uint32_t size);
+                 std::uint32_t size) override;
 
  private:
   void Post(Mode mode,

@@ -53,6 +53,11 @@ if(WIN32)
     set(NO_EVENT_LOG -sBOOST_LOG_WITHOUT_EVENT_LOG)
 endif()
 
+set(COMPILER_FLAGS)
+if(UNIX AND NOT APPLE)
+    set(COMPILER_FLAGS cflags=${CMAKE_C_FLAGS} cxxflags=${CMAKE_CXX_FLAGS})
+endif()
+
 set(TARGET_OS)
 if(WIN32)
     set(TARGET_OS windows)
@@ -78,6 +83,7 @@ set(BUILD_COMMAND_BASE
         threading=multi
         link=${LINK_TYPE}
         address-model=${ADDRESS_MODEL}
+        ${COMPILER_FLAGS}
 )
 
 add_custom_target(boost_tools)

@@ -1,4 +1,4 @@
-#include "UnixSocketEngine.h"
+#include "MacSocketEngine.h"
 
 #include <core/Logger.h>
 #include <interprocess-communication/InterprocessCommonDefs.h>
@@ -14,7 +14,7 @@
 namespace Gengine {
 namespace InterprocessCommunication {
 
-struct UnixSocketEngine::ContextImpl : public boost::static_visitor<void> {
+struct MacSocketEngine::ContextImpl : public boost::static_visitor<void> {
  public:
   struct pending_operation final {
     void* data = nullptr;
@@ -38,28 +38,28 @@ struct UnixSocketEngine::ContextImpl : public boost::static_visitor<void> {
     std::uint32_t bytesProcessed = 0;
     auto error = false;
     switch (_mode) {
-      case UnixSocketEngine::Mode::Read:
+      case MacSocketEngine::Mode::Read:
         error = channel.Recv(op.data, op.size, &bytesProcessed);
         break;
-      case UnixSocketEngine::Mode::Write:
+      case MacSocketEngine::Mode::Write:
         error = channel.Send(op.data, op.size, &bytesProcessed);
         break;
     };
     processed(error, bytesProcessed, true);
   }
 
-  void call(const UnixSocketEngine::Mode mode) {
+  void call(const MacSocketEngine::Mode mode) {
     _mode = mode;
     boost::apply_visitor(*this, callback);
   }
 
-  UnixSocketEngine::Mode _mode = Mode::Write;
+  MacSocketEngine::Mode _mode = Mode::Write;
   IChannel& channel;
   pending_operation_opt pending;
   engine_callback callback;
 };
 
-UnixSocketEngine::UnixSocketEngine(std::uint32_t threadId)
+MacSocketEngine::MacSocketEngine(std::uint32_t threadId)
     : Worker(threadId),
       m_loopId(Services::INVALID_TIMER_ID),
       m_queue(kqueue()) {
@@ -76,7 +76,7 @@ UnixSocketEngine::UnixSocketEngine(std::uint32_t threadId)
   assert(kevent(m_queue, events, 1, 0, 0, 0) != -1);
 }
 
-UnixSocketEngine::~UnixSocketEngine() {
+MacSocketEngine::~MacSocketEngine() {
   if (m_stopSignal != InvalidHandle) {
     ::close(m_stopSignal);
   }
@@ -85,8 +85,8 @@ UnixSocketEngine::~UnixSocketEngine() {
   }
 }
 
-void UnixSocketEngine::RegisterConnection(const IChannel& connection,
-                                          engine_callback callback) {
+void MacSocketEngine::RegisterConnection(const IChannel& connection,
+                                         engine_callback callback) {
   auto& unixSocket = static_cast<const UnixDomainChannel&>(connection);
   auto handle = unixSocket.getHandle();
 
@@ -102,22 +102,22 @@ void UnixSocketEngine::RegisterConnection(const IChannel& connection,
   assert(::kevent(m_queue, events, 2, NULL, 0, NULL) != -1);
 }
 
-void UnixSocketEngine::PostWrite(const IChannel& connection,
-                                 const void* data,
-                                 std::uint32_t size) {
+void MacSocketEngine::PostWrite(const IChannel& connection,
+                                const void* data,
+                                std::uint32_t size) {
   Post(Mode::Write, connection, const_cast<void*>(data), size);
 }
 
-void UnixSocketEngine::PostRead(const IChannel& connection,
-                                void* data,
-                                std::uint32_t size) {
+void MacSocketEngine::PostRead(const IChannel& connection,
+                               void* data,
+                               std::uint32_t size) {
   Post(Mode::Read, connection, data, size);
 }
 
-void UnixSocketEngine::Post(const Mode mode,
-                            const IChannel& connection,
-                            void* data,
-                            std::uint32_t size) {
+void MacSocketEngine::Post(const Mode mode,
+                           const IChannel& connection,
+                           void* data,
+                           std::uint32_t size) {
   auto& unixSocket = static_cast<const UnixDomainChannel&>(connection);
   auto handle = unixSocket.getHandle();
 
@@ -138,7 +138,7 @@ void UnixSocketEngine::Post(const Mode mode,
   ::kevent(m_queue, events, 1, NULL, 0, NULL);
 }
 
-void UnixSocketEngine::UnregisterConnection(const IChannel& connection) {
+void MacSocketEngine::UnregisterConnection(const IChannel& connection) {
   auto& pipeChannel = static_cast<const UnixDomainChannel&>(connection);
   auto handle = pipeChannel.getHandle();
 
@@ -152,14 +152,14 @@ void UnixSocketEngine::UnregisterConnection(const IChannel& connection) {
   }
 }
 
-void UnixSocketEngine::StartInternal() {
+void MacSocketEngine::StartInternal() {
   if (m_loopId == Services::INVALID_TIMER_ID) {
     auto handler = [this] { Loop(); };
     m_loopId = GENGINE_START_TIMER(handler, 0);
   }
 }
 
-void UnixSocketEngine::StopInternal() {
+void MacSocketEngine::StopInternal() {
   if (m_loopId != Services::INVALID_TIMER_ID) {
     char byte = 0;
     assert(write(m_stopSignalTrigger, &byte, 1) != -1 || errno == EWOULDBLOCK);
@@ -170,7 +170,7 @@ void UnixSocketEngine::StopInternal() {
   Dispose();
 }
 
-void UnixSocketEngine::Loop() {
+void MacSocketEngine::Loop() {
   static struct kevent evList[32];
 
   auto nev = kevent(m_queue, NULL, 0, evList, 32, NULL);
@@ -196,7 +196,7 @@ void UnixSocketEngine::Loop() {
 }
 
 std::unique_ptr<CommunicationEngine> makeEngine(std::uint32_t threadId) {
-  return std::make_unique<UnixSocketEngine>(threadId);
+  return std::make_unique<MacSocketEngine>(threadId);
 }
 
 }  // namespace InterprocessCommunication

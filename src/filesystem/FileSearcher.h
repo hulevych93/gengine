@@ -11,7 +11,6 @@ namespace Gengine {
 class FileSeacher {
  public:
   FileSeacher() = delete;
-  using SearchResult_t = SearchResult_t;
   using SearchCallback_t = std::function<bool(const FileDetails::Ptr&)>;
 
  public:

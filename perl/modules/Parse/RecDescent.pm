@@ -484,10 +484,10 @@ eval 'undef &' . $namespace . '::' . $self->{"name"} unless $parser->{saving};
 # ARGS ARE: ($parser, $text; $repeating, $_noactions, \@args, $_itempos)
 sub ' . $namespace . '::' . $self->{"name"} .  '
 {
-	my $thisparser = $_[0];
-	use vars q{$tracelevel};
-	local $tracelevel = ($tracelevel||0)+1;
-	$ERRORS = 0;
+    my $thisparser = $_[0];
+    use vars q{$tracelevel};
+    local $tracelevel = ($tracelevel||0)+1;
+    $ERRORS = 0;
     my $thisrule = $thisparser->{"rules"}{"' . $self->{"name"} . '"};
 
     Parse::RecDescent::_trace(q{Trying rule: [' . $self->{"name"} . ']},
@@ -3162,49 +3162,49 @@ local \$SIG{__WARN__} = sub {0};
 # $Data::Dumper::VERSION == 2.158
 
 sub _dump {
-	require Data::Dumper;
+    require Data::Dumper;
 
-	#
-	# Allow the user's settings to persist for some features in case
-	# RD_TRACE is set.  These shouldn't affect the eval()-ability of
-	# the resulting parser.
-	#
+    #
+    # Allow the user's settings to persist for some features in case
+    # RD_TRACE is set.  These shouldn't affect the eval()-ability of
+    # the resulting parser.
+    #
 
-	#local $Data::Dumper::Indent = 2;
-	#local $Data::Dumper::Useqq      = 0;
-	#local $Data::Dumper::Quotekeys  = 1;
-	#local $Data::Dumper::Useperl = 0;
+    #local $Data::Dumper::Indent = 2;
+    #local $Data::Dumper::Useqq      = 0;
+    #local $Data::Dumper::Quotekeys  = 1;
+    #local $Data::Dumper::Useperl = 0;
 
-	#
-	# These may affect whether the output is valid perl code for
-	# eval(), and must be controlled. Set them to their default
-	# values.
-	#
+    #
+    # These may affect whether the output is valid perl code for
+    # eval(), and must be controlled. Set them to their default
+    # values.
+    #
 
-	local $Data::Dumper::Purity     = 0;
-	local $Data::Dumper::Pad        = "";
-	local $Data::Dumper::Varname    = "VAR";
-	local $Data::Dumper::Terse      = 0;
-	local $Data::Dumper::Freezer    = "";
-	local $Data::Dumper::Toaster    = "";
-	local $Data::Dumper::Deepcopy   = 0;
-	local $Data::Dumper::Bless      = "bless";
-	local $Data::Dumper::Maxdepth   = 0;
-	local $Data::Dumper::Pair       = ' => ';
-	local $Data::Dumper::Deparse    = 0;
-	local $Data::Dumper::Sparseseen = 0;
+    local $Data::Dumper::Purity     = 0;
+    local $Data::Dumper::Pad        = "";
+    local $Data::Dumper::Varname    = "VAR";
+    local $Data::Dumper::Terse      = 0;
+    local $Data::Dumper::Freezer    = "";
+    local $Data::Dumper::Toaster    = "";
+    local $Data::Dumper::Deepcopy   = 0;
+    local $Data::Dumper::Bless      = "bless";
+    local $Data::Dumper::Maxdepth   = 0;
+    local $Data::Dumper::Pair       = ' => ';
+    local $Data::Dumper::Deparse    = 0;
+    local $Data::Dumper::Sparseseen = 0;
 
-	#
-	# Modify the below options from their defaults.
-	#
+    #
+    # Modify the below options from their defaults.
+    #
 
-	# Sort the keys to ensure the output is reproducible
-	local $Data::Dumper::Sortkeys   = 1;
+    # Sort the keys to ensure the output is reproducible
+    local $Data::Dumper::Sortkeys   = 1;
 
-	# Don't stop recursing
-	local $Data::Dumper::Maxrecurse = 0;
+    # Don't stop recursing
+    local $Data::Dumper::Maxrecurse = 0;
 
-	return Data::Dumper->Dump(@_[1..$#_]);
+    return Data::Dumper->Dump(@_[1..$#_]);
 }
 
 # EXECUTING A PARSE....

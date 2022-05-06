@@ -39,14 +39,12 @@ function(gengine_collect_src LIST_OUT)
 
     if(UNIX)
         list(APPEND IGNORED_LIST "Windows/")
-    endif()
 
-    if(APPLE)
-        list(APPEND IGNORED_LIST "Linux/")
-    endif()
-
-    if(LINUX)
-        list(APPEND IGNORED_LIST "MacOS/")
+        if(APPLE)
+            list(APPEND IGNORED_LIST "Linux/")
+        else()
+            list(APPEND IGNORED_LIST "MacOS/")
+        endif()
     endif()
 
     if(WIN32)

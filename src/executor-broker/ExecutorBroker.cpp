@@ -33,10 +33,11 @@ PipeConnection GeneratePipeConnection(const std::string& key) {
 }
 }  // namespace
 
-using TFactory = AbstractFactory::AbstractFactory<InterprocessCommunication::InterfaceImpl,
-                                 std::string,
-                                 const interface_key&,
-                                 IMicroService&>;
+using TFactory =
+    AbstractFactory::AbstractFactory<InterprocessCommunication::InterfaceImpl,
+                                     std::string,
+                                     const interface_key&,
+                                     IMicroService&>;
 
 class ExecutorBroker : public IExecutorBroker, public Worker {
  public:
@@ -67,7 +68,8 @@ class ExecutorBroker : public IExecutorBroker, public Worker {
   };
   struct localContext : context {
     class ClientCreator
-          : public AbstractFactory::IAbstractCreator<IMicroService, const interface_key&> {
+        : public AbstractFactory::IAbstractCreator<IMicroService,
+                                                   const interface_key&> {
      public:
       ClientCreator(IMicroService& handler) : handler(handler) {}
       std::shared_ptr<IMicroService> Create(
