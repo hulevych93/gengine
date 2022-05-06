@@ -1,7 +1,7 @@
 #include <filesystem/Filesystem.h>
 
-#include <dlfcn.h>
 #include <dirent.h>
+#include <dlfcn.h>
 #include <fnmatch.h>
 #include <mach-o/dyld.h>
 #include <sys/stat.h>
