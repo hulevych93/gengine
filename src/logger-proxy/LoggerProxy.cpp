@@ -27,7 +27,9 @@ class LoggerProxy : public ILoggerProxy {
     }
   }
 
-  void Deinit() override { loggers.clear(); }
+  void Deinit() override {
+    loggers.clear();
+  }
 
   void Log(type_t type, level_t level, const std::wstring& data) override {
     if (IsAvailable(type)) {

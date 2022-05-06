@@ -35,13 +35,19 @@ if(WIN32)
     add_definitions(-D_UNICODE)
     add_definitions(-DEXPORT_SYMBOLS)
     add_definitions(-D_WIN32_WINNT=0x0601)
-	
+
 elseif(UNIX)
     find_package(X11 REQUIRED)
 
     set(AdditionalOS_LIBRARIES
-        iconv
         pthread
         ${X11_LIBRARIES}
     )
+
+    if(APPLE)
+        set(AdditionalOS_LIBRARIES ${AdditionalOS_LIBRARIES} iconv)
+    else()
+        set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-fPIC")
+        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
+    endif()
 endif()

@@ -24,15 +24,17 @@ struct is_trivially_serializable
                                  std::is_standard_layout<T>::value &&
                                  std::alignment_of<T>::value == 1> {};
 
-#define DECLARE_NO_POLYMORPHIC(TYPE)                                         \
-  static std::shared_ptr<TYPE> Create() { return std::make_shared<TYPE>(); } \
-  static std::shared_ptr<TYPE> Create(                                       \
-      Serialization::Deserializer& deserializer) {                           \
-    try {                                                                    \
-      auto instance = std::make_shared<TYPE>();                              \
-      instance->Deserialize(deserializer);                                   \
-      return instance;                                                       \
-    } catch (...) {                                                          \
-    }                                                                        \
-    return std::shared_ptr<TYPE>();                                          \
+#define DECLARE_NO_POLYMORPHIC(TYPE)               \
+  static std::shared_ptr<TYPE> Create() {          \
+    return std::make_shared<TYPE>();               \
+  }                                                \
+  static std::shared_ptr<TYPE> Create(             \
+      Serialization::Deserializer& deserializer) { \
+    try {                                          \
+      auto instance = std::make_shared<TYPE>();    \
+      instance->Deserialize(deserializer);         \
+      return instance;                             \
+    } catch (...) {                                \
+    }                                              \
+    return std::shared_ptr<TYPE>();                \
   }

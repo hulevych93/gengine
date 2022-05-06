@@ -102,6 +102,8 @@ function(gengine_3rd_party_common_cmake_options VAR)
     list(APPEND RESULT "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
     list(APPEND RESULT "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
     list(APPEND RESULT "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
+    list(APPEND RESULT "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
+    list(APPEND RESULT "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
     list(APPEND RESULT "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}")
 
     # Same as we do for our code, we must append the options to the configuration-specific variables to ensure that
@@ -118,12 +120,6 @@ function(gengine_3rd_party_common_cmake_options VAR)
     prv_add_config_specific_var(CMAKE_SHARED_LINKER_FLAGS "${LD_FLAGS}")
     prv_add_config_specific_var(CMAKE_MODULE_LINKER_FLAGS "${LD_FLAGS}")
     prv_add_config_specific_var(CMAKE_EXE_LINKER_FLAGS "${LD_FLAGS}")
-
-    # It's important to have toolset specific flags in CMAKE_<LANG>_FLAGS as cmake uses only these variables
-    # when it checks for a working compiler at its very beginning.
-    gengine_join_list(GENGINE_TOOLSET_ARCH_FLAGS " " TOOLSET_FLAGS_STR)
-    list(APPEND RESULT "-DCMAKE_C_FLAGS=${TOOLSET_FLAGS_STR}")
-    list(APPEND RESULT "-DCMAKE_CXX_FLAGS=${TOOLSET_FLAGS_STR}")
 
     list(APPEND RESULT "-DCMAKE_AR=${CMAKE_AR}")
     list(APPEND RESULT "-DCMAKE_RANLIB=${CMAKE_RANLIB}")
@@ -193,19 +189,19 @@ endmacro()
 
 if(WIN32)
     set(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} "boost-1_70")
-	gengine_join_list(Boost_INCLUDE_DIRS "/" Boost_INCLUDE_DIRS)
-	
-	prv_add_3rd_party_boost_lib_dir_suffix("-vc141")
-	prv_add_3rd_party_boost_lib_dir_suffix("mt")
-	if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
-	    prv_add_3rd_party_boost_lib_dir_suffix("gd")
-	endif()	
-	if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
-        prv_add_3rd_party_boost_lib_dir_suffix("x32")
-	else()
-	    prv_add_3rd_party_boost_lib_dir_suffix("x64")
+    gengine_join_list(Boost_INCLUDE_DIRS "/" Boost_INCLUDE_DIRS)
+
+    prv_add_3rd_party_boost_lib_dir_suffix("-vc141")
+    prv_add_3rd_party_boost_lib_dir_suffix("mt")
+    if("${CMAKE_BUILD_TYPE}" STREQUAL DEBUG)
+        prv_add_3rd_party_boost_lib_dir_suffix("gd")
     endif()
-	prv_add_3rd_party_boost_lib_dir_suffix("1_70")
+    if("${GENGINE_ARCH}" STREQUAL x86 OR "${GENGINE_ARCH}" STREQUAL arm)
+        prv_add_3rd_party_boost_lib_dir_suffix("x32")
+    else()
+        prv_add_3rd_party_boost_lib_dir_suffix("x64")
+    endif()
+    prv_add_3rd_party_boost_lib_dir_suffix("1_70")
 endif()
 
 foreach(TMP_BOOST_LIB_BASE IN LISTS Boost_COMPONENTS)
@@ -257,8 +253,8 @@ set(Log4cplus_LIBRARIES)
 
 if(WIN32)
     set(Log4cplusWin "log4cplus" "U" ${GENGINE_LIB_NAME_DEBUG_SUFFIX})
-	gengine_join_list(Log4cplusWin "" Log4cplusWin)
-	
+    gengine_join_list(Log4cplusWin "" Log4cplusWin)
+
     gengine_list_replace(Log4cplus_COMPONENTS "log4cplus" ${Log4cplusWin})
 endif()
 
