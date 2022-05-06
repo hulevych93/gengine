@@ -5,6 +5,9 @@
 #include <boost/mpl/int.hpp>
 #include <boost/variant.hpp>
 
+#include <functional>
+#include <vector>
+
 namespace Gengine {
 
 namespace VariantCreationDetails {

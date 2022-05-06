@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <cstdint>
+#include <string>
 
 namespace Gengine {
 namespace ServiceUtils {
@@ -15,5 +15,5 @@ bool StopService(const std::wstring& name);
 bool StopRequest(const std::wstring& name);
 bool TerminateService(const std::wstring& name);
 std::wstring GetServiceExePath(const std::wstring& name);
-}
-}
+}  // namespace ServiceUtils
+}  // namespace Gengine
