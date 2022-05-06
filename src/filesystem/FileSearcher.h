@@ -50,13 +50,12 @@ class FileSeacher {
                                std::uint32_t flag = 0) {
     SearchResult_t result;
     RegexFilter regexFilter(filter, flag);
-    SearchImpl<DirectoryIterator_t>(
-        path,
-        [&result](const FileDetails::Ptr& ptr) {
-          result.emplace_back(ptr);
-          return true;
-        },
-        regexFilter);
+    SearchImpl<DirectoryIterator_t>(path,
+                                    [&result](const FileDetails::Ptr& ptr) {
+                                      result.emplace_back(ptr);
+                                      return true;
+                                    },
+                                    regexFilter);
     return result;
   }
 

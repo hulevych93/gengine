@@ -25,6 +25,12 @@ add_subdirectory(json)
 add_subdirectory(serialization)
 add_subdirectory(services)
 
+if(UNIX AND NOT APPLE)
+    gengine_export_var(GENGINE_LIBRARIES ${GENGINE_LIBRARIES}
+        ${GENGINE_LIBRARIES}
+        ${GENGINE_LIBRARIES})
+endif()
+
 #binaries
 add_subdirectory(service-broker)
 add_subdirectory(executor-broker)
