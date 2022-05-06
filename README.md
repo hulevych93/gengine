@@ -2,6 +2,7 @@
 This is a modern C++14 and scalable cross-platfrom application development framework
 
 [![Windows](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml)
+[![Linux](https://github.com/hulevych93/gengine/actions/workflows/Linux.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/Linux.yml)
 [![Apple MacOS](https://github.com/hulevych93/gengine/actions/workflows/MacOS.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/MacOS.yml)
 
 It includes such common development tasks solutions:
