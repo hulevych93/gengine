@@ -16,16 +16,15 @@ std::wstring GetExecutableFilePath() {
 }
 
 std::wstring GetModuleFilePath(void* /*handle*/) {
-    char Buf[PATH_MAX+1];
-    ssize_t iRead=readlink("/proc/self/exe",Buf,PATH_MAX);
-    if(iRead==(ssize_t)-1)
-    {
-        return std::wstring();
-    }
-    //add zero terminator
-    Buf[iRead]=0;
+  char Buf[PATH_MAX + 1];
+  ssize_t iRead = readlink("/proc/self/exe", Buf, PATH_MAX);
+  if (iRead == (ssize_t)-1) {
+    return std::wstring();
+  }
+  // add zero terminator
+  Buf[iRead] = 0;
 
-    return utf8toWchar(Buf);
+  return utf8toWchar(Buf);
 }
 
 }  // namespace Filesystem

@@ -14,8 +14,8 @@ include_directories(
 gengine_add_test(core-test ${SRC})
 
 target_link_libraries(core-test
-    ${Boost_LIBRARIES}
     ${GENGINE_LIBRARIES}
+    ${Boost_LIBRARIES}
     ${AdditionalOS_LIBRARIES}
     ${GTest_LIBRARIES}
 )

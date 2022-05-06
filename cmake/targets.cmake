@@ -178,16 +178,7 @@ macro (gengine_export)
 endmacro()
 
 function (prv_gengine_patch TARGET_NAME ARGUMENT)
-    if(WIN32)
-        set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher.exe)
-    else()
-        set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher)
-    endif()
-    add_custom_command(TARGET ${TARGET_NAME}
-        POST_BUILD
-        COMMAND ${PATCHER_UTILITY} --entry=default ${ARGUMENT} --file=$<TARGET_FILE:${TARGET_NAME}> --config=${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}.json
-        COMMENT "Patching $<TARGET_FILE:${TARGET_NAME}> with ${TARGET_NAME}.json"
-    )
+
 endfunction()
 
 function (gengine_patch TARGET_NAME)

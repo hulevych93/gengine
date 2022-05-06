@@ -14,8 +14,8 @@ include_directories(
 gengine_add_test(appconfig-test ${SRC})
 
 target_link_libraries(appconfig-test
-    ${Boost_LIBRARIES}
     ${GENGINE_LIBRARIES}
+    ${Boost_LIBRARIES}
     ${AdditionalOS_LIBRARIES}
     ${GTest_LIBRARIES}
 )

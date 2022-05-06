@@ -49,5 +49,7 @@ elseif(UNIX)
     else()
         set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-fPIC")
         set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
+
+        set(AdditionalOS_LIBRARIES ${AdditionalOS_LIBRARIES} ${CMAKE_DL_LIBS})
     endif()
 endif()
