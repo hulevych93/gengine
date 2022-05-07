@@ -14,6 +14,7 @@ struct polymorphic {};
 class InputParameters final {
  public:
   InputParameters();
+  InputParameters(const InputParameters&) = delete;
 
   bool Deserialize(void* data, std::uint32_t size);
 

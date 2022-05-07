@@ -4,9 +4,9 @@
 #include <interprocess-communication/InterprocessCommonDefs.h>
 #include <interprocess-communication/pipes/Unix/UnixDomainChannel.h>
 
+#include <sys/event.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/event.h>
 
 #include <fcntl.h>
 #include <unistd.h>

@@ -12,6 +12,7 @@ struct ParameterHeader;
 class OutputParameters final {
  public:
   OutputParameters();
+  OutputParameters(const OutputParameters&) = delete;
 
   std::uint32_t GetSize() const { return m_filedSize; }
 

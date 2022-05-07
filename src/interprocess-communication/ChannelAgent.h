@@ -51,8 +51,7 @@ class ChannelAgent {
 
  private:
   void Execute();
-  void MakeResult(ResponseCodes responseCode,
-                  const std::shared_ptr<OutputParameters>& pOutputs);
+  void MakeResult(ResponseCodes responseCode, const OutputParameters& outputs);
   void MakeResult(ResponseCodes responseCode);
 
  private:

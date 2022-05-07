@@ -536,7 +536,7 @@ sub print_append_output_parameters
         my $parameter_name=$output_parameter->{"name"};
         if(GengineGen::is_supported_type($output_parameter))
         {
-            printf($hFile "        outputs->Append(".$parameter_name.");");
+            printf($hFile "        outputs.Append(".$parameter_name.");");
         }
         else
         {
@@ -576,12 +576,12 @@ sub print_get_input_parameters
         if(GengineGen::is_supported_type($input_parameter))
         {
             printf($hFile $type ." ". $parameter_name. ";
-    if(inputs->GetParameterHeader(iParameterCounter)->parameterType!=".$type_enum.")
+    if(inputs.GetParameterHeader(iParameterCounter)->parameterType!=".$type_enum.")
     {
         GLOG_WARNING_INTERNAL(\"Argument expected to be ".$type."\");
         return ResponseCodes::ParametersMismatch;
     }
-    inputs->Get(iParameterCounter, ".$parameter_name.");
+    inputs.Get(iParameterCounter, ".$parameter_name.");
     iParameterCounter++;");
         }
         else
@@ -653,8 +653,8 @@ sub print_executer_request_handler
     (my $hFile,my $interface)=@_;
     my $interface_name=$interface->{"name"};
     printf($hFile "ResponseCodes HandleRequest(std::uint8_t functionCode,
-                    const std::shared_ptr<const InputParameters>& inputs,
-                    const std::shared_ptr<OutputParameters>& outputs) override
+                    const InputParameters& inputs,
+                    OutputParameters& outputs) override
 {
     switch(functionCode)
     {\n");
@@ -664,7 +664,7 @@ sub print_executer_request_handler
     {
         my $index = get_method_index($interface, $method);
         printf($hFile "    case (int)".$interface_name."IDs::ID_".$method->{"name"}.$index.":
-        return Handle".$method->{"name"}.$index."(inputs,outputs);\n");
+        return Handle".$method->{"name"}.$index."(inputs, outputs);\n");
     }
     #handler routine end
     printf($hFile "    default:
@@ -685,10 +685,10 @@ sub print_executer_request_handlers_implementations
         my $index = get_method_index($interface, $method);
         my @input_parameters=get_parameters_by_method_new($method,"in");
         my $input_parameters_count=scalar(@input_parameters);
-        printf($hFile "ResponseCodes Handle".$method->{"name"}.$index."(const std::shared_ptr<const InputParameters>& inputs,
-                const std::shared_ptr<OutputParameters>& outputs)
+        printf($hFile "ResponseCodes Handle".$method->{"name"}.$index."(const InputParameters& inputs,
+ OutputParameters& outputs)
 {
-    if(inputs->GetParametersCount()!=$input_parameters_count)
+    if(inputs.GetParametersCount()!=$input_parameters_count)
     {
         GLOG_WARNING_INTERNAL(\"$input_parameters_count parameters expected;\");
         assert(0 && \"Input parameters count mismatch!\");
@@ -726,7 +726,7 @@ sub print_executer_event_handler
     if($event_methods_count > 0)
     {
         printf($hFile "ResponseCodes HandleEvent(std::uint8_t functionCode,
-                    const std::shared_ptr<const InputParameters>& inputs) override
+                    const InputParameters& inputs) override
 {
     switch(functionCode)
     {\n");
@@ -747,7 +747,7 @@ sub print_executer_event_handler
     else
     {
         printf($hFile "ResponseCodes HandleEvent(std::uint8_t functionCode,
-                    const std::shared_ptr<const InputParameters>& inputs) override
+                    const InputParameters& inputs) override
 {
     GLOG_ERROR(\"Unknown event %%08X\",functionCode);
     return ResponseCodes::UnknownFunction;
@@ -765,9 +765,9 @@ sub print_executer_event_handlers_implementations
         my $index = get_method_index($interface, $method);
         my @input_parameters=get_parameters_by_method_new($method,"in");
         my $input_parameters_count=scalar(@input_parameters);
-        printf($hFile "ResponseCodes Handle".$method->{"name"}.$index."(const std::shared_ptr<const InputParameters>& inputs)
+        printf($hFile "ResponseCodes Handle".$method->{"name"}.$index."(const InputParameters& inputs)
 {
-    if(inputs->GetParametersCount()!=$input_parameters_count)
+    if(inputs.GetParametersCount()!=$input_parameters_count)
     {
         GLOG_WARNING_INTERNAL(\"$input_parameters_count parameters expected;\");
         assert(0 && \"Input parameters count mismatch!\");

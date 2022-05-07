@@ -41,11 +41,11 @@ class InterprocessServer : public Runnable {
   void OnConnectionLost(const ChannelAgent* endpoint);
   ResponseCodes ProcessRequest(std::uint32_t function,
                                const interface_key& binding,
-                               std::shared_ptr<const InputParameters> inputs,
-                               std::shared_ptr<OutputParameters> outputs) const;
+                               const InputParameters& inputs,
+                               OutputParameters& outputs) const;
   void ProcessEvent(std::uint32_t function,
                     const interface_key& binding,
-                    std::shared_ptr<const InputParameters> inputs) const;
+                    const InputParameters& inputs) const;
 
  private:
   std::unique_ptr<InterprocessAcceptor> m_acceptor;

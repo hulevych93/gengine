@@ -131,8 +131,8 @@ void InterprocessServer::OnConnectionLost(const ChannelAgent* endpoint) {
 ResponseCodes InterprocessServer::ProcessRequest(
     std::uint32_t function,
     const interface_key& binding,
-    std::shared_ptr<const InputParameters> inputs,
-    std::shared_ptr<OutputParameters> outputs) const {
+    const InputParameters& inputs,
+    OutputParameters& outputs) const {
   std::lock_guard<std::mutex> lock(m_mutex);
   auto executorIter = m_executers.find(binding);
   if (executorIter != m_executers.end()) {
@@ -141,10 +141,9 @@ ResponseCodes InterprocessServer::ProcessRequest(
   return ResponseCodes::UnknownInterface;
 }
 
-void InterprocessServer::ProcessEvent(
-    std::uint32_t function,
-    const interface_key& binding,
-    std::shared_ptr<const InputParameters> inputs) const {
+void InterprocessServer::ProcessEvent(std::uint32_t function,
+                                      const interface_key& binding,
+                                      const InputParameters& inputs) const {
   std::lock_guard<std::mutex> lock(m_mutex);
   auto executorIter = m_executers.find(binding);
   if (executorIter != m_executers.end()) {

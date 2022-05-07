@@ -157,10 +157,10 @@ bool ChannelAgent::RespondingChannelState::HandleIO(
 }
 
 void ChannelAgent::Execute() {
-  auto inputs = std::make_shared<InputParameters>();
+  InputParameters inputs;
   if (m_buffer->requestHeader_->requestDataSize > 0) {
-    if (!inputs->Deserialize(m_buffer->data(),
-                             m_buffer->requestHeader_->requestDataSize)) {
+    if (!inputs.Deserialize(m_buffer->data(),
+                            m_buffer->requestHeader_->requestDataSize)) {
       GLOG_ERROR("Failed deserialize RPC request; Function code %08X",
                  m_buffer->requestHeader_->functionCode);
       MakeResult(ResponseCodes::InvalidRequest);
@@ -168,7 +168,7 @@ void ChannelAgent::Execute() {
     }
   }
   if (m_buffer->requestHeader_->request) {
-    auto outputs = std::make_shared<OutputParameters>();
+    OutputParameters outputs;
     auto result = m_server.ProcessRequest(
         m_buffer->requestHeader_->functionCode,
         m_buffer->requestHeader_->interfaceKey, inputs, outputs);
@@ -180,10 +180,9 @@ void ChannelAgent::Execute() {
   }
 }
 
-void ChannelAgent::MakeResult(
-    ResponseCodes result,
-    const std::shared_ptr<OutputParameters>& parameters) {
-  const auto size = parameters->GetSize();
+void ChannelAgent::MakeResult(ResponseCodes result,
+                              const OutputParameters& outputs) {
+  const auto size = outputs.GetSize();
   const auto sizeRequired = size + sizeof(ResponseHeader);
   m_buffer->allocate(sizeRequired);
 
@@ -191,8 +190,7 @@ void ChannelAgent::MakeResult(
   responseHeader->responseDataSize = size;
   responseHeader->responseCode = result;
   if (size > 0u) {
-    memcpy(m_buffer->data() + sizeof(ResponseHeader), parameters->GetData(),
-           size);
+    memcpy(m_buffer->data() + sizeof(ResponseHeader), outputs.GetData(), size);
   }
 }
 
