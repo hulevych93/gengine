@@ -49,6 +49,8 @@ elseif(UNIX)
     else()
         set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-fPIC")
         set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
+        gengine_join_list(CMAKE_C_FLAGS " " CMAKE_C_FLAGS)
+        gengine_join_list(CMAKE_CXX_FLAGS " " CMAKE_CXX_FLAGS)
 
         set(AdditionalOS_LIBRARIES ${AdditionalOS_LIBRARIES} ${CMAKE_DL_LIBS} icuuc)
     endif()

@@ -4,6 +4,7 @@
 #include <json/Object.h>
 
 #include <boost/algorithm/string/replace.hpp>
+#include <unordered_map>
 
 namespace Gengine {
 namespace JSON {
@@ -41,17 +42,17 @@ bool StringValue::operator==(const StringValue& that) const {
 }
 
 string_t details::StringValue::HandleUnescapedChars(const string_t& value) {
+  static const std::unordered_map<string_t, string_t> Chars = {
+      {"\b", "\\b"}, {"\\", "\\\\"}, {"\f", "\\f"}, {"\r", "\\r"},
+      {"\n", "\\n"}, {"\t", "\\t"},  {"\"", "\\\""}};
+
   auto handledValue(value);
-  for (const auto& escapeSymbolIter : EspaceChars) {
+  for (const auto& escapeSymbolIter : Chars) {
     boost::replace_all(handledValue, escapeSymbolIter.first,
                        escapeSymbolIter.second);
   }
   return handledValue;
 }
-
-const std::unordered_map<string_t, string_t> details::StringValue::EspaceChars =
-    {{"\b", "\\b"}, {"\\", "\\\\"}, {"\f", "\\f"}, {"\r", "\\r"},
-     {"\n", "\\n"}, {"\t", "\\t"},  {"\"", "\\\""}};
 
 NumberValue::NumberValue(const Number& value) : m_value(value) {}
 

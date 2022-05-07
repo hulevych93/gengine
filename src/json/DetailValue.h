@@ -5,8 +5,6 @@
 
 #include <boost/variant.hpp>
 
-#include <unordered_map>
-
 namespace Gengine {
 namespace JSON {
 namespace details {
@@ -37,7 +35,6 @@ class StringValue final {
 
  private:
   static string_t HandleUnescapedChars(const string_t& value);
-  static const std::unordered_map<string_t, string_t> EspaceChars;
 };
 
 class NumberValue final {
