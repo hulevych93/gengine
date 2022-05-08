@@ -22,21 +22,18 @@ bool InputParameters::Deserialize(void* data, std::uint32_t size) {
 
     while (left > 0) {
       if (left < sizeof(ParameterHeader)) {
-        assert(0);  // invalid data
         success = false;
         break;
       }
       auto* header = (ParameterHeader*)data;
       left -= sizeof(ParameterHeader);
       data += sizeof(ParameterHeader);
-      if (left < header->parameterSize) {
-        assert(0);
+      // validate parameter type and size
+      if (!IsParameterHeaderValid(header)) {
         success = false;
         break;
       }
-      // validate parameter type and size
-      if (!IsParameterHeaderValid(header)) {
-        assert(0);
+      if (left < header->parameterSize) {
         success = false;
         break;
       }

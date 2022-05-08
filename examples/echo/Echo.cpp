@@ -1,15 +1,4 @@
-
-#include <brokers/ExecutorBroker.h>
-#include <brokers/ServiceBroker.h>
-#include <brokers/WorkerBroker.h>
-#include <entries/EntryBase.h>
-#include <memory>
-
-#include <entries/EntryRegistry.h>
-#include <entries/Main.h>
-#include <entries/SimpleExecutor.h>
-
-#include <core/Logger.h>
+#include <gengine/gengine.h>
 
 #include <api/echo/IEcho.h>
 
