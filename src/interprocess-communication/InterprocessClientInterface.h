@@ -2,6 +2,8 @@
 
 #include <interprocess-communication/InterprocessCommonDefs.h>
 
+#include <boost/optional.hpp>
+
 namespace Gengine {
 namespace InterprocessCommunication {
 class InputParameters;

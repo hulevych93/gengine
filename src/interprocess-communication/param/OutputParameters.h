@@ -1,7 +1,8 @@
 #pragma once
 
 #include <core/Blob.h>
-#include <interprocess-communication/InterprocessCommonDefs.h>
+#include <interprocess-communication/param/Parameter.h>
+
 #include <json/JSON.h>
 #include <serialization/ISerializable.h>
 #include <string>
@@ -37,11 +38,17 @@ class OutputParameters final {
 
   template <class T>
   void Append(const std::shared_ptr<T>& type) {
+    if (!type) {
+      throw std::runtime_error{"Append std::shared_ptr<T> null value."};
+    }
     Append(*type);
   }
 
   template <class T>
   void Append(const std::unique_ptr<T>& type) {
+    if (!type) {
+      throw std::runtime_error{"Append std::unique_ptr<T> null value."};
+    }
     Append(*type);
   }
 

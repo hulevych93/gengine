@@ -1,14 +1,7 @@
+#include <entries/TestEntry.h>
 #include <gtest/gtest.h>
 
-#include <entries/EntryRegistry.h>
-#include <entries/Main.h>
-#include <entries/TestEntry.h>
-
-#include <core/Logger.h>
-
-#if defined(BUILD_WINDOWS)
-#include <Windows.h>
-#endif
+#include <gengine/gengine.h>
 
 #include <api/services/ServiceType.h>
 
@@ -22,7 +15,7 @@ using namespace Entries;
 using namespace AppConfig;
 using namespace JSON;
 
-class GTest : public testing::Test {
+class AppconfigTest : public testing::Test {
  protected:
   void SetUp() {}
 
@@ -73,7 +66,7 @@ EntryConfig makeEntryConfig() {
   return config;
 }
 
-TEST_F(GTest, bufferConfigReader) {
+TEST_F(AppconfigTest, bufferConfigReader) {
   auto config = makeEntryConfig();
 
   BufferConfigReader engine(config);

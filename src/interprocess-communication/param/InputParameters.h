@@ -1,24 +1,59 @@
 #pragma once
 
-#include <interprocess-communication/InterprocessCommonDefs.h>
+#include <interprocess-communication/param/Parameter.h>
+
 #include <json/JSON.h>
 #include <serialization/ISerializable.h>
+
 #include <memory>
 #include <vector>
 
 namespace Gengine {
 class Blob;
 namespace InterprocessCommunication {
-struct ParameterHeader;
-struct polymorphic {};
+
+/**
+ * InputParameters is the buffer for interprocess-communication.
+ * The data in memory is going simultaneously.
+ * /-----------------------------------------------/
+ * / header / data / header / data / header / data /
+ * / int8   / 23   / string / "ab" / bool   / true /
+ * /-----------------------------------------------/
+ */
 class InputParameters final {
  public:
   InputParameters();
+  InputParameters(InputParameters&& that);
   InputParameters(const InputParameters&) = delete;
 
-  bool Deserialize(void* data, std::uint32_t size);
+  InputParameters& operator=(InputParameters&& that);
 
-  const ParameterHeader* GetParameterHeader(std::int8_t index) const;
+  /**
+   * @brief Deserialize the data from the binary buffer and make an
+   * InputParameters object.
+   *
+   * @param[in] the pointer to the buffer.
+   * @param[in] the size to be deserialized.
+   *
+   * The data is copied into an internal buffer and then parsed.
+   * @returns optional InputParameters object.
+   */
+  static InputParameters makeParameters(const void* data, std::uint32_t size);
+
+  /**
+   * @brief Get a parameter's type by index.
+   *
+   * @param[in] index of the parameter.
+   *
+   * @return ParametersType of the param.
+   * @throw If the parameter with given index doesn't exist the error is thrown.
+   */
+  ParametersTypes GetParameterType(std::int8_t index) const;
+
+  /**
+   * @brief Get a parameter's count.
+   * @return params count.
+   */
   std::int8_t GetParametersCount() const;
 
   bool Get(std::int8_t index, bool& value) const;
@@ -38,9 +73,15 @@ class InputParameters final {
   bool Get(std::int8_t index, Serialization::ISerializable& value) const;
   bool Get(std::int8_t index, JSON::IJsonSerializable& value) const;
 
-  template <class T>
+  template <class T, std::enable_if_t<std::is_class<T>::value, void*> = nullptr>
   bool Get(std::int8_t index, std::shared_ptr<T>& value) const {
     return Get(index, value, std::is_final<T>{});
+  }
+
+  template <class T,
+            std::enable_if_t<!std::is_class<T>::value, void*> = nullptr>
+  bool Get(std::int8_t index, std::shared_ptr<T>& value) const {
+    return Get(index, value, std::true_type{});
   }
 
   template <class T>
@@ -137,10 +178,10 @@ class InputParameters final {
 
   template <class Type>
   bool UnsafeGet(std::int8_t index, Type& value) const {
-    if (index < 0 || index >= m_parameters.size()) {
-      assert(0);
+    if (CheckInBounds(index)) {
       return false;
     }
+
     ParameterHeader* header = m_parameters[index];
     auto buf = reinterpret_cast<::uint8_t*>(header);
     buf += sizeof(ParameterHeader);
@@ -148,10 +189,10 @@ class InputParameters final {
     return true;
   }
 
+  bool CheckInBounds(std::int8_t index) const noexcept;
+
  private:
   std::vector<ParameterHeader*> m_parameters;
-  bool IsParameterHeaderValid(ParameterHeader* header);
-
   std::unique_ptr<std::uint8_t[]> m_buffer;
   std::uint32_t m_size;
 };

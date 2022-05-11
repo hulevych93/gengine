@@ -8,59 +8,100 @@ namespace Gengine {
 using namespace JSON;
 using namespace Serialization;
 namespace InterprocessCommunication {
+
+namespace {
+
+bool IsParameterHeaderValid(ParameterHeader* header) {
+  switch (header->parameterType) {
+    case ParametersTypes::WideString:
+      return ((header->parameterSize % sizeof(wchar_t)) == 0);
+    case ParametersTypes::Int8:
+      return header->parameterSize == sizeof(std::int8_t);
+    case ParametersTypes::Int16:
+      return header->parameterSize == sizeof(std::int16_t);
+    case ParametersTypes::Int32:
+      return header->parameterSize == sizeof(std::int32_t);
+    case ParametersTypes::Int64:
+      return header->parameterSize == sizeof(std::int64_t);
+    case ParametersTypes::UInt8:
+      return header->parameterSize == sizeof(std::uint8_t);
+    case ParametersTypes::UInt16:
+      return header->parameterSize == sizeof(std::uint16_t);
+    case ParametersTypes::UInt32:
+      return header->parameterSize == sizeof(std::uint32_t);
+    case ParametersTypes::UInt64:
+      return header->parameterSize == sizeof(std::uint64_t);
+    case ParametersTypes::Boolean:
+      return header->parameterSize == sizeof(bool);
+    case ParametersTypes::RawPtr:
+      return header->parameterSize == sizeof(void*);
+    case ParametersTypes::Blob:
+    case ParametersTypes::String:
+    case ParametersTypes::Container:
+    case ParametersTypes::Map:
+    case ParametersTypes::BinarySerializable:
+    case ParametersTypes::JsonSerializable:
+      return true;
+    default:
+      return false;
+  }
+}
+}  // namespace
+
 InputParameters::InputParameters() : m_size(0) {}
 
-bool InputParameters::Deserialize(void* data, std::uint32_t size) {
-  if (size > 0) {
-    m_buffer = std::make_unique<std::uint8_t[]>(size);
-    memcpy(m_buffer.get(), data, size);
-    m_size = size;
+InputParameters::InputParameters(InputParameters&& that) {
+  *this = std::move(that);
+}
 
-    auto data = m_buffer.get();
-    auto left = m_size;
-    auto success = true;
+InputParameters& InputParameters::operator=(InputParameters&& that) {
+  if (this != &that) {
+    m_parameters = std::move(that.m_parameters);
+    m_buffer = std::move(that.m_buffer);
+    m_size = that.m_size;
+    that.m_size = 0;
+  }
+
+  return *this;
+}
+
+InputParameters InputParameters::makeParameters(const void* data,
+                                                std::uint32_t size) {
+  if (size > 0) {
+    InputParameters params;
+    params.m_size = size;
+    params.m_buffer = std::make_unique<std::uint8_t[]>(size);
+    memcpy(params.m_buffer.get(), data, size);
+
+    auto data = params.m_buffer.get();
+    auto left = size;
 
     while (left > 0) {
       if (left < sizeof(ParameterHeader)) {
-        success = false;
-        break;
+        return InputParameters{};
       }
-      auto* header = (ParameterHeader*)data;
+
+      auto* header = reinterpret_cast<ParameterHeader*>(data);
       left -= sizeof(ParameterHeader);
       data += sizeof(ParameterHeader);
-      // validate parameter type and size
-      if (!IsParameterHeaderValid(header)) {
-        success = false;
-        break;
+
+      if (!IsParameterHeaderValid(header) || left < header->parameterSize) {
+        return InputParameters{};
       }
-      if (left < header->parameterSize) {
-        success = false;
-        break;
-      }
-      // parameter ok
-      m_parameters.push_back(header);
+
+      params.m_parameters.push_back(header);
       left -= header->parameterSize;
       data += header->parameterSize;
     }
-    if (!success) {
-      // error during request parsing;
-      // cleanup and return false
-      m_parameters.clear();
-      m_size = 0;
-      return false;
-    }
-    return true;
+
+    return params;
   }
-  return true;
+
+  return InputParameters{};
 }
 
-const ParameterHeader* InputParameters::GetParameterHeader(
-    std::int8_t index) const {
-  if (index < 0 || index >= GetParametersCount()) {
-    assert(0);
-    return nullptr;
-  }
-  return m_parameters[index];
+ParametersTypes InputParameters::GetParameterType(std::int8_t index) const {
+  return m_parameters.at(index)->parameterType;
 }
 
 std::int8_t InputParameters::GetParametersCount() const {
@@ -72,14 +113,13 @@ bool InputParameters::Get(std::int8_t index, bool& value) const {
 }
 
 bool InputParameters::Get(std::int8_t index, void*& value) const {
-  if (index < 0 || index >= GetParametersCount()) {
-    assert(0);
+  if (!CheckInBounds(index)) {
     return false;
   }
+
   ParameterHeader* header = m_parameters[index];
   if (header->parameterType != ParametersTypes::RawPtr) {
-    assert(0);
-    return false;
+      return false;
   }
 
   auto buf = reinterpret_cast<std::uint8_t*>(header);
@@ -189,14 +229,13 @@ template <class Type>
 bool InputParameters::Get(std::int8_t index,
                           Type& value,
                           ParametersTypes type) const {
-  if (index < 0 || index >= GetParametersCount()) {
-    assert(0);
+  if (!CheckInBounds(index)) {
     return false;
   }
+
   ParameterHeader* header = m_parameters[index];
   if (header->parameterType != type) {
-    assert(0);
-    return false;
+      return false;
   }
 
   auto buf = reinterpret_cast<std::uint8_t*>(header);
@@ -209,13 +248,12 @@ bool InputParameters::Get(std::int8_t index,
                           void** data,
                           std::uint32_t* size,
                           ParametersTypes type) const {
-  if (index < 0 || index >= GetParametersCount()) {
-    assert(0);
+  if (!CheckInBounds(index)) {
     return false;
   }
+
   ParameterHeader* header = m_parameters[index];
   if (header->parameterType != type) {
-    assert(0);
     return false;
   }
 
@@ -226,42 +264,9 @@ bool InputParameters::Get(std::int8_t index,
   return true;
 }
 
-bool InputParameters::IsParameterHeaderValid(ParameterHeader* header) {
-  switch (header->parameterType) {
-    case ParametersTypes::WideString:
-      return ((header->parameterSize % sizeof(wchar_t)) == 0);
-    case ParametersTypes::Int8:
-      return header->parameterSize == sizeof(std::int8_t);
-    case ParametersTypes::Int16:
-      return header->parameterSize == sizeof(std::int16_t);
-    case ParametersTypes::Int32:
-      return header->parameterSize == sizeof(std::int32_t);
-    case ParametersTypes::Int64:
-      return header->parameterSize == sizeof(std::int64_t);
-    case ParametersTypes::UInt8:
-      return header->parameterSize == sizeof(std::uint8_t);
-    case ParametersTypes::UInt16:
-      return header->parameterSize == sizeof(std::uint16_t);
-    case ParametersTypes::UInt32:
-      return header->parameterSize == sizeof(std::uint32_t);
-    case ParametersTypes::UInt64:
-      return header->parameterSize == sizeof(std::uint64_t);
-    case ParametersTypes::Boolean:
-      return header->parameterSize == sizeof(bool);
-    case ParametersTypes::RawPtr:
-      return header->parameterSize == sizeof(void*);
-    case ParametersTypes::Blob:
-    case ParametersTypes::String:
-    case ParametersTypes::Container:
-    case ParametersTypes::Map:
-    case ParametersTypes::BinarySerializable:
-    case ParametersTypes::JsonSerializable:
-      return true;
-    default:
-      // unknown parameter type
-      assert(0);
-      return false;
-  }
+bool InputParameters::CheckInBounds(std::int8_t index) const noexcept {
+  return index >= 0 && index < GetParametersCount();
 }
+
 }  // namespace InterprocessCommunication
 }  // namespace Gengine

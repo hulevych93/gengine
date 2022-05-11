@@ -1,4 +1,4 @@
-#include <interprocess-communication/ChannelConnector.h>
+#include "ChannelConnector.h"
 
 #include <interprocess-communication/IChannel.h>
 

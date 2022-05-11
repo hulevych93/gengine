@@ -2,9 +2,9 @@
 
 #include <interprocess-communication/CommunicationEngine.h>
 #include <interprocess-communication/IChannel.h>
-#include <interprocess-communication/InputParameters.h>
 #include <interprocess-communication/InterprocessServer.h>
-#include <interprocess-communication/OutputParameters.h>
+#include <interprocess-communication/param/InputParameters.h>
+#include <interprocess-communication/param/OutputParameters.h>
 
 #include <core/Logger.h>
 
@@ -157,15 +157,13 @@ bool ChannelAgent::RespondingChannelState::HandleIO(
 }
 
 void ChannelAgent::Execute() {
-  InputParameters inputs;
-  if (m_buffer->requestHeader_->requestDataSize > 0) {
-    if (!inputs.Deserialize(m_buffer->data(),
-                            m_buffer->requestHeader_->requestDataSize)) {
-      GLOG_ERROR("Failed deserialize RPC request; Function code %08X",
-                 m_buffer->requestHeader_->functionCode);
-      MakeResult(ResponseCodes::InvalidRequest);
-      return;
-    }
+  auto inputs = InputParameters::makeParameters(
+      m_buffer->data(), m_buffer->requestHeader_->requestDataSize);
+  if (inputs.GetParametersCount() == 0) {
+    GLOG_ERROR("Failed deserialize RPC request; Function code %08X",
+               m_buffer->requestHeader_->functionCode);
+    MakeResult(ResponseCodes::InvalidRequest);
+    return;
   }
   if (m_buffer->requestHeader_->request) {
     OutputParameters outputs;

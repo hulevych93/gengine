@@ -1,0 +1,8 @@
+
+{
+  "appName": "ipc",
+  "consoleLogger": true,
+  "workers": [],
+  "inServices": [],
+  "outServices": []
+}

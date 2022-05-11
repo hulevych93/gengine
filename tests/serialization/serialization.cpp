@@ -1,16 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <entries/EntryRegistry.h>
-#include <entries/Main.h>
 #include <entries/TestEntry.h>
+#include <gengine/gengine.h>
 
-#include <core/Logger.h>
-
-#if defined(BUILD_WINDOWS)
-#include <Windows.h>
-#endif
-
-class GTest : public testing::Test {
+class SerializationTest : public testing::Test {
  protected:
   void SetUp() {}
 
@@ -24,7 +17,7 @@ using namespace Gengine;
 using namespace Entries;
 using namespace Serialization;
 
-TEST_F(GTest, NumbersSerialization) {
+TEST_F(SerializationTest, NumbersSerialization) {
   Serializer serializer;
 
   uint8_t inBytes8 = 8;
@@ -99,7 +92,7 @@ TEST_F(GTest, NumbersSerialization) {
   }
 }
 
-TEST_F(GTest, BooleanSerialization) {
+TEST_F(SerializationTest, BooleanSerialization) {
   Serializer serializer;
 
   bool boolean = true;
@@ -115,7 +108,7 @@ TEST_F(GTest, BooleanSerialization) {
   }
 }
 
-TEST_F(GTest, EnumSerialization) {
+TEST_F(SerializationTest, EnumSerialization) {
   Serializer serializer;
 
   enum class Types { First, Second, Third } enumType = Types::First;
@@ -132,7 +125,7 @@ TEST_F(GTest, EnumSerialization) {
   }
 }
 
-TEST_F(GTest, StringSerialization) {
+TEST_F(SerializationTest, StringSerialization) {
   Serializer serializer;
 
   std::wstring inString = L"Some readable data";
@@ -148,7 +141,7 @@ TEST_F(GTest, StringSerialization) {
   }
 }
 
-TEST_F(GTest, VectorsSerialization) {
+TEST_F(SerializationTest, VectorsSerialization) {
   Serializer serializer;
 
   std::vector<int16_t> inVector = {3, 5, 15, 355, 654};
@@ -182,7 +175,7 @@ TEST_F(GTest, VectorsSerialization) {
   }
 }
 
-TEST_F(GTest, SetsSerialization) {
+TEST_F(SerializationTest, SetsSerialization) {
   Serializer serializer;
 
   std::set<int16_t> inSet = {3, 15, 35, 544, 92};
@@ -207,7 +200,7 @@ TEST_F(GTest, SetsSerialization) {
   }
 }
 
-TEST_F(GTest, MapsSerialization) {
+TEST_F(SerializationTest, MapsSerialization) {
   Serializer serializer;
 
   std::map<int16_t, int8_t> inMap = {{3, 5}, {15, 35}, {544, 92}};
@@ -232,7 +225,7 @@ TEST_F(GTest, MapsSerialization) {
   }
 }
 
-TEST_F(GTest, PointersSerialization) {
+TEST_F(SerializationTest, PointersSerialization) {
   Serializer serializer;
 
   std::shared_ptr<int> inSPointer = std::make_shared<int>(111);
@@ -266,7 +259,7 @@ TEST_F(GTest, PointersSerialization) {
   }
 }
 
-TEST_F(GTest, PairsSerialization) {
+TEST_F(SerializationTest, PairsSerialization) {
   Serializer serializer;
 
   std::pair<int, int> inPair = {11, 2};
@@ -282,7 +275,7 @@ TEST_F(GTest, PairsSerialization) {
   }
 }
 
-TEST_F(GTest, VariantSerialization) {
+TEST_F(SerializationTest, VariantSerialization) {
   Serializer serializer;
 
   boost::variant<std::int32_t, std::string> inVariant = "string variant value";

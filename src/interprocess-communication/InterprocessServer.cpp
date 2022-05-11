@@ -2,11 +2,11 @@
 
 #include <interprocess-communication/ChannelAgent.h>
 #include <interprocess-communication/CommunicationEngine.h>
-#include <interprocess-communication/InputParameters.h>
 #include <interprocess-communication/InterfaceExecutor.h>
 #include <interprocess-communication/InterprocessAcceptor.h>
-#include <interprocess-communication/OutputParameters.h>
-#include <interprocess-communication/ServerInitializer.h>
+#include <interprocess-communication/common/ServerInitializer.h>
+#include <interprocess-communication/param/InputParameters.h>
+#include <interprocess-communication/param/OutputParameters.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>
@@ -118,7 +118,7 @@ void InterprocessServer::Accept() {
 
 void InterprocessServer::OnConnectionLost(const ChannelAgent* endpoint) {
   auto iter = std::find_if(m_clients.begin(), m_clients.end(),
-                           [endpoint](const TRPCClients::value_type& client) {
+                           [endpoint](const Clients::value_type& client) {
                              return client.get() == endpoint;
                            });
   if (iter != m_clients.end()) {

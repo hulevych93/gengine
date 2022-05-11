@@ -1,14 +1,6 @@
-#include <gtest/gtest.h>
-
-#include <entries/EntryRegistry.h>
-#include <entries/Main.h>
 #include <entries/TestEntry.h>
-
-#include <core/Logger.h>
-
-#if defined(BUILD_WINDOWS)
-#include <Windows.h>
-#endif
+#include <gengine/gengine.h>
+#include <gtest/gtest.h>
 
 #include <string>
 
@@ -19,7 +11,7 @@
 
 #include <core/Blob.h>
 
-class GTest : public testing::Test {
+class BlobTest : public testing::Test {
  protected:
   void SetUp() {}
 
@@ -31,33 +23,33 @@ constexpr const char* Data = "data";
 using namespace Gengine;
 using namespace Entries;
 
-TEST_F(GTest, defaultContructedBlob) {
+TEST_F(BlobTest, defaultContructedBlob) {
   Blob object;
   EXPECT_TRUE(object.GetSize() == 0);
   EXPECT_TRUE(object.GetData() == nullptr);
 }
 
-TEST_F(GTest, allocatedBlob) {
+TEST_F(BlobTest, allocatedBlob) {
   Blob object(10);
   EXPECT_TRUE(object.GetSize() == 10);
   EXPECT_TRUE(object.GetData() != nullptr);
 }
 
-TEST_F(GTest, dataConstructedBlob) {
+TEST_F(BlobTest, dataConstructedBlob) {
   Blob object(Data, strlen(Data));
   EXPECT_TRUE(object.GetSize() == strlen(Data));
   EXPECT_TRUE(std::string(reinterpret_cast<char*>(object.GetData()),
                           strlen(Data)) == Data);
 }
 
-TEST_F(GTest, copyConstructedBlob) {
+TEST_F(BlobTest, copyConstructedBlob) {
   Blob object(Data, strlen(Data));
   Blob object2(object);
 
   EXPECT_TRUE(object == object2);
 }
 
-TEST_F(GTest, assignedBlob) {
+TEST_F(BlobTest, assignedBlob) {
   Blob object(Data, strlen(Data));
   Blob object2;
 
@@ -65,7 +57,7 @@ TEST_F(GTest, assignedBlob) {
   EXPECT_TRUE(object == object2);
 }
 
-TEST_F(GTest, moveConstructedBlob) {
+TEST_F(BlobTest, moveConstructedBlob) {
   Blob object(Data, strlen(Data));
   Blob object2(std::move(object));
 
@@ -74,7 +66,7 @@ TEST_F(GTest, moveConstructedBlob) {
                           strlen(Data)) == Data);
 }
 
-TEST_F(GTest, moveAssignedBlob) {
+TEST_F(BlobTest, moveAssignedBlob) {
   Blob object(Data, strlen(Data));
   Blob object2;
 
@@ -84,14 +76,14 @@ TEST_F(GTest, moveAssignedBlob) {
                           strlen(Data)) == Data);
 }
 
-TEST_F(GTest, resizeBlob) {
+TEST_F(BlobTest, resizeBlob) {
   Blob object;
   object.Resize(100);
   EXPECT_TRUE(object.GetSize() == 100);
   EXPECT_TRUE(object.GetData() != nullptr);
 }
 
-TEST_F(GTest, resizeWithPreserveBlob) {
+TEST_F(BlobTest, resizeWithPreserveBlob) {
   Blob object;
   object.SetData(Data, strlen(Data));
 
@@ -104,7 +96,7 @@ TEST_F(GTest, resizeWithPreserveBlob) {
                           strlen(Data)) == Data);
 }
 
-TEST_F(GTest, resizeWithNoPreserveBlob) {
+TEST_F(BlobTest, resizeWithNoPreserveBlob) {
   Blob object;
   object.SetData(Data, strlen(Data));
 
@@ -117,7 +109,7 @@ TEST_F(GTest, resizeWithNoPreserveBlob) {
                           strlen(Data) * 2) != Data);
 }
 
-TEST_F(GTest, clearDataBlob) {
+TEST_F(BlobTest, clearDataBlob) {
   Blob object;
   object.SetData(Data, strlen(Data));
 
@@ -129,7 +121,7 @@ TEST_F(GTest, clearDataBlob) {
   EXPECT_TRUE(object.GetData() == nullptr);
 }
 
-TEST_F(GTest, addDataBlob) {
+TEST_F(BlobTest, addDataBlob) {
   const auto data2 = std::string("bbbbb");
 
   Blob object;

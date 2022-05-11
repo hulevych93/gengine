@@ -1,9 +1,10 @@
 #include "InterprocessClient.h"
 
-#include <interprocess-communication/ChannelConnector.h>
 #include <interprocess-communication/IChannel.h>
-#include <interprocess-communication/InputParameters.h>
-#include <interprocess-communication/OutputParameters.h>
+
+#include <interprocess-communication/common/ChannelConnector.h>
+#include <interprocess-communication/param/InputParameters.h>
+#include <interprocess-communication/param/OutputParameters.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>
@@ -42,16 +43,15 @@ bool InterprocessClient::SendRequest(const interface_key& interfaceKey,
           auto buffer = std::make_unique<std::uint8_t[]>(
               response_header.responseDataSize);
           if (m_impl->Recv(buffer.get(), response_header.responseDataSize)) {
-            if (!results.Deserialize(buffer.get(),
-                                     response_header.responseDataSize)) {
+            results = InputParameters::makeParameters(
+                buffer.get(), response_header.responseDataSize);
+            if (!results.GetParametersCount())
               GLOG_ERROR("Failed deserialize server response");
-              assert(0);
-              return false;
-            }
-          } else {
-            GLOG_ERROR("Failed get response data");
             return false;
           }
+        } else {
+          GLOG_ERROR("Failed get response data");
+          return false;
         }
 
         return true;

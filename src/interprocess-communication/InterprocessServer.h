@@ -51,17 +51,18 @@ class InterprocessServer : public Runnable {
   std::unique_ptr<InterprocessAcceptor> m_acceptor;
   std::shared_ptr<CommunicationEngine> m_engine;
 
-  using TRPCClients = std::vector<std::unique_ptr<ChannelAgent>>;
-  TRPCClients m_clients;
+  using Clients = std::vector<std::unique_ptr<ChannelAgent>>;
+  Clients m_clients;
 
   mutable std::mutex m_mutex;
-  using TExecuters =
+  using ExecutersType =
       std::unordered_map<interface_key, std::shared_ptr<InterfaceExecutor>>;
-  mutable TExecuters m_executers;
-  using TListeners =
+  mutable ExecutersType m_executers;
+
+  using ListenersType =
       std::unordered_map<interface_key,
                          std::vector<std::shared_ptr<InterfaceListener>>>;
-  mutable TListeners m_listeners;
+  mutable ListenersType m_listeners;
 };
 }  // namespace InterprocessCommunication
 }  // namespace Gengine

@@ -1,4 +1,4 @@
-#include <interprocess-communication/ServerInitializer.h>
+#include "ServerInitializer.h"
 
 #include <interprocess-communication/CommunicationEngine.h>
 #include <interprocess-communication/InterprocessAcceptor.h>

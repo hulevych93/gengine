@@ -229,8 +229,8 @@ sub output_client_implementation
     #header
     printf($hFile "#include <core/AbstractFactory.h>\n");
     printf($hFile "#include <brokers/ServiceBroker.h>\n");
-    printf($hFile "#include <interprocess-communication/InputParameters.h>\n");
-    printf($hFile "#include <interprocess-communication/OutputParameters.h>\n");
+    printf($hFile "#include <interprocess-communication/param/InputParameters.h>\n");
+    printf($hFile "#include <interprocess-communication/param/OutputParameters.h>\n");
     printf($hFile "#include <interprocess-communication/InterprocessClient.h>\n");
     printf($hFile "#include <serialization/Serializer.h>\n");
     printf($hFile "#include <serialization/Deserializer.h>\n");
@@ -381,8 +381,8 @@ sub output_executer_implementation
     printf($hFile "#include <${decl_file_name}>\n");
     printf($hFile "#include <core/AbstractFactory.h>\n");
     printf($hFile "#include <interprocess-communication/InterfaceExecutor.h>\n");
-    printf($hFile "#include <interprocess-communication/InputParameters.h>\n");
-    printf($hFile "#include <interprocess-communication/OutputParameters.h>\n");
+    printf($hFile "#include <interprocess-communication/param/InputParameters.h>\n");
+    printf($hFile "#include <interprocess-communication/param/OutputParameters.h>\n");
     printf($hFile "#include <brokers/ExecutorBroker.h>\n");
     printf($hFile "#include <serialization/Serializer.h>\n");
     printf($hFile "#include <serialization/Deserializer.h>\n");
@@ -576,7 +576,7 @@ sub print_get_input_parameters
         if(GengineGen::is_supported_type($input_parameter))
         {
             printf($hFile $type ." ". $parameter_name. ";
-    if(inputs.GetParameterHeader(iParameterCounter)->parameterType!=".$type_enum.")
+    if(inputs.GetParameterType(iParameterCounter)!=".$type_enum.")
     {
         GLOG_WARNING_INTERNAL(\"Argument expected to be ".$type."\");
         return ResponseCodes::ParametersMismatch;
@@ -623,7 +623,7 @@ sub print_get_output_parameters
     my $output_parameter;
     foreach $output_parameter(@output_parameters)
     {
-        printf($hFile "    int iCurrentOutArgument=0;");
+        printf($hFile "    int argNum = 0;");
         my $parameter_type=$output_parameter->{"type"};
         my $parameter_name=$output_parameter->{"name"};
         my $type = GengineGen::get_parameter_from_type($output_parameter);
@@ -631,13 +631,13 @@ sub print_get_output_parameters
 
         if(GengineGen::is_supported_type($output_parameter))
         {
-            printf($hFile "if(results.GetParameterHeader(iCurrentOutArgument)->parameterType!="."$type_enum".")
+            printf($hFile "if(results.GetParameterType(argNum)!="."$type_enum".")
     {
         assert(0 && \"Argument is not ".$type."\");
         return false;
     }
-    results.Get(iCurrentOutArgument, *".$parameter_name.");
-    iCurrentOutArgument++;");
+    results.Get(argNum, *".$parameter_name.");
+    argNum++;");
         }
         else
         {

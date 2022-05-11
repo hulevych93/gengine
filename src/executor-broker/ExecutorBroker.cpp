@@ -1,8 +1,8 @@
 #include <brokers/ExecutorBroker.h>
 
 #include <brokers/ServiceBroker.h>
-#include <interprocess-communication/ConnectionValidator.h>
 #include <interprocess-communication/InterprocessServer.h>
+#include <interprocess-communication/common/ConnectionValidator.h>
 
 #include <shared-services/SharedServiceExport.h>
 
