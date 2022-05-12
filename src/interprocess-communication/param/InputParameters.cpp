@@ -119,7 +119,7 @@ bool InputParameters::Get(std::int8_t index, void*& value) const {
 
   ParameterHeader* header = m_parameters[index];
   if (header->parameterType != ParametersTypes::RawPtr) {
-      return false;
+    return false;
   }
 
   auto buf = reinterpret_cast<std::uint8_t*>(header);
@@ -235,7 +235,7 @@ bool InputParameters::Get(std::int8_t index,
 
   ParameterHeader* header = m_parameters[index];
   if (header->parameterType != type) {
-      return false;
+    return false;
   }
 
   auto buf = reinterpret_cast<std::uint8_t*>(header);

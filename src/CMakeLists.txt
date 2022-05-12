@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
-project (gengine)
+project (gengine-core)
 
 include(${PROJECT_SOURCE_DIR}/../cmake/main.cmake)
+include(${PROJECT_SOURCE_DIR}/../cmake/doxygen.cmake)
 
 include_directories(${PROJECT_SOURCE_DIR})
 

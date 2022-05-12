@@ -22,10 +22,26 @@ namespace InterprocessCommunication {
  */
 class InputParameters final {
  public:
+  /**
+   * @brief The default constructor.
+   */
   InputParameters();
+
+  /**
+   * @brief The move constructor.
+   */
   InputParameters(InputParameters&& that);
+
+  /**
+   * @brief The copy constructor is deleted.
+   */
   InputParameters(const InputParameters&) = delete;
 
+  /**
+   * @brief The move operator.
+   * @param that
+   * @return *this
+   */
   InputParameters& operator=(InputParameters&& that);
 
   /**
@@ -56,6 +72,10 @@ class InputParameters final {
    */
   std::int8_t GetParametersCount() const;
 
+  /**
+   * @brief Get value functions.
+   * @return params count.
+   */
   bool Get(std::int8_t index, bool& value) const;
   bool Get(std::int8_t index, void*& value) const;
   bool Get(std::int8_t index, std::uint8_t& value) const;
@@ -69,83 +89,44 @@ class InputParameters final {
   bool Get(std::int8_t index, std::wstring& value) const;
   bool Get(std::int8_t index, std::string& value) const;
   bool Get(std::int8_t index, Blob& value) const;
-
   bool Get(std::int8_t index, Serialization::ISerializable& value) const;
   bool Get(std::int8_t index, JSON::IJsonSerializable& value) const;
 
   template <class T, std::enable_if_t<std::is_class<T>::value, void*> = nullptr>
-  bool Get(std::int8_t index, std::shared_ptr<T>& value) const {
-    return Get(index, value, std::is_final<T>{});
-  }
+  bool Get(std::int8_t index, std::shared_ptr<T>& value) const;
 
   template <class T,
             std::enable_if_t<!std::is_class<T>::value, void*> = nullptr>
-  bool Get(std::int8_t index, std::shared_ptr<T>& value) const {
-    return Get(index, value, std::true_type{});
-  }
+  bool Get(std::int8_t index, std::shared_ptr<T>& value) const;
 
   template <class T>
-  bool Get(std::int8_t index, std::shared_ptr<T>& value, std::true_type) const {
-    value = std::make_shared<T>();
-    return Get(index, *value);
-  }
+  bool Get(std::int8_t index, std::unique_ptr<T>& value) const;
 
   template <class T>
-  bool Get(std::int8_t index,
-           std::shared_ptr<T>& value,
-           std::false_type) const {
-    std::uint32_t type = 0;
-    if (UnsafeGet(index, type)) {
-      value = T::Create(type);
-      return Get(index, *value);
-    }
-    return false;
-  }
+  bool Get(std::int8_t index, std::vector<T>& container) const;
 
   template <class T>
-  bool Get(std::int8_t index, std::unique_ptr<T>& value) const {
-    value = std::make_unique<T>();
-    return Get(index, *value);
-  }
+  bool Get(std::int8_t index, std::deque<T>& container) const;
 
   template <class T>
-  bool Get(std::int8_t index, std::vector<T>& container) const {
-    return GetContainerSingle(index, container);
-  }
+  bool Get(std::int8_t index, std::list<T>& container) const;
 
   template <class T>
-  bool Get(std::int8_t index, std::deque<T>& container) const {
-    return GetContainerSingle(index, container);
-  }
+  bool Get(std::int8_t index, std::set<T>& container) const;
 
   template <class T>
-  bool Get(std::int8_t index, std::list<T>& container) const {
-    return GetContainerSingle(index, container);
-  }
-
-  template <class T>
-  bool Get(std::int8_t index, std::set<T>& container) const {
-    return GetContainerSingle(index, container);
-  }
-
-  template <class T>
-  bool Get(std::int8_t index, std::unordered_set<T>& container) const {
-    return GetContainerSingle(index, container);
-  }
+  bool Get(std::int8_t index, std::unordered_set<T>& container) const;
 
   template <class T, class V>
-  bool Get(std::int8_t index, std::map<T, V>& container) const {
-    return GetContainerPaired(index, container);
-  }
+  bool Get(std::int8_t index, std::map<T, V>& container) const;
 
   template <class T, class V>
-  bool Get(std::int8_t index, std::unordered_map<T, V>& container) const {
-    return GetContainerPaired(index, container);
-  }
+  bool Get(std::int8_t index, std::unordered_map<T, V>& container) const;
 
  private:
   template <class Type>
   bool Get(std::int8_t index, Type& value, ParametersTypes type) const;
+
   bool Get(std::int8_t index,
            void** data,
            std::uint32_t* size,
@@ -154,48 +135,143 @@ class InputParameters final {
   template <class T>
   bool GetContainer(std::int8_t index,
                     T& container,
-                    ParametersTypes containerType) const {
-    std::uint8_t* data = nullptr;
-    std::uint32_t size = 0;
-    if (Get(index, reinterpret_cast<void**>(&data), &size, containerType)) {
-      Serialization::Deserializer deserializer(data, size);
-      deserializer >> container;
-      return true;
-    }
-
-    return false;
-  }
+                    ParametersTypes containerType) const;
 
   template <class T>
-  bool GetContainerSingle(std::int8_t index, T& container) const {
-    return GetContainer(index, container, ParametersTypes::Container);
-  }
+  bool GetContainerSingle(std::int8_t index, T& container) const;
 
   template <class T>
-  bool GetContainerPaired(std::int8_t index, T& container) const {
-    return GetContainer(index, container, ParametersTypes::Map);
-  }
+  bool GetContainerPaired(std::int8_t index, T& container) const;
 
   template <class Type>
-  bool UnsafeGet(std::int8_t index, Type& value) const {
-    if (CheckInBounds(index)) {
-      return false;
-    }
-
-    ParameterHeader* header = m_parameters[index];
-    auto buf = reinterpret_cast<::uint8_t*>(header);
-    buf += sizeof(ParameterHeader);
-    value = *reinterpret_cast<Type*>(buf);
-    return true;
-  }
+  bool UnsafeGet(std::int8_t index, Type& value) const;
 
   bool CheckInBounds(std::int8_t index) const noexcept;
+
+  template <class T>
+  bool Get(std::int8_t index, std::shared_ptr<T>& value, std::true_type) const;
+
+  template <class T>
+  bool Get(std::int8_t index, std::shared_ptr<T>& value, std::false_type) const;
 
  private:
   std::vector<ParameterHeader*> m_parameters;
   std::unique_ptr<std::uint8_t[]> m_buffer;
   std::uint32_t m_size;
 };
+
+template <class T, std::enable_if_t<std::is_class<T>::value, void*>>
+bool InputParameters::Get(std::int8_t index, std::shared_ptr<T>& value) const {
+  return Get(index, value, std::is_final<T>{});
+}
+
+template <class T, std::enable_if_t<!std::is_class<T>::value, void*>>
+bool InputParameters::Get(std::int8_t index, std::shared_ptr<T>& value) const {
+  return Get(index, value, std::true_type{});
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index,
+                          std::shared_ptr<T>& value,
+                          std::true_type) const {
+  value = std::make_shared<T>();
+  return Get(index, *value);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index,
+                          std::shared_ptr<T>& value,
+                          std::false_type) const {
+  std::uint32_t type = 0;
+  if (UnsafeGet(index, type)) {
+    value = T::Create(type);
+    return Get(index, *value);
+  }
+  return false;
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index, std::unique_ptr<T>& value) const {
+  value = std::make_unique<T>();
+  return Get(index, *value);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index, std::vector<T>& container) const {
+  return GetContainerSingle(index, container);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index, std::deque<T>& container) const {
+  return GetContainerSingle(index, container);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index, std::list<T>& container) const {
+  return GetContainerSingle(index, container);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index, std::set<T>& container) const {
+  return GetContainerSingle(index, container);
+}
+
+template <class T>
+bool InputParameters::Get(std::int8_t index,
+                          std::unordered_set<T>& container) const {
+  return GetContainerSingle(index, container);
+}
+
+template <class T, class V>
+bool InputParameters::Get(std::int8_t index, std::map<T, V>& container) const {
+  return GetContainerPaired(index, container);
+}
+
+template <class T, class V>
+bool InputParameters::Get(std::int8_t index,
+                          std::unordered_map<T, V>& container) const {
+  return GetContainerPaired(index, container);
+}
+
+template <class T>
+bool InputParameters::GetContainer(std::int8_t index,
+                                   T& container,
+                                   ParametersTypes containerType) const {
+  std::uint8_t* data = nullptr;
+  std::uint32_t size = 0;
+  if (Get(index, reinterpret_cast<void**>(&data), &size, containerType)) {
+    Serialization::Deserializer deserializer(data, size);
+    deserializer >> container;
+    return true;
+  }
+
+  return false;
+}
+
+template <class T>
+bool InputParameters::GetContainerSingle(std::int8_t index,
+                                         T& container) const {
+  return GetContainer(index, container, ParametersTypes::Container);
+}
+
+template <class T>
+bool InputParameters::GetContainerPaired(std::int8_t index,
+                                         T& container) const {
+  return GetContainer(index, container, ParametersTypes::Map);
+}
+
+template <class Type>
+bool InputParameters::UnsafeGet(std::int8_t index, Type& value) const {
+  if (CheckInBounds(index)) {
+    return false;
+  }
+
+  ParameterHeader* header = m_parameters[index];
+  auto buf = reinterpret_cast<::uint8_t*>(header);
+  buf += sizeof(ParameterHeader);
+  value = *reinterpret_cast<Type*>(buf);
+  return true;
+}
 
 }  // namespace InterprocessCommunication
 }  // namespace Gengine
