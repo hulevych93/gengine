@@ -79,6 +79,10 @@ function (gengine_add_test)
     add_executable(${ARGV})
     add_dependencies(${ARGV0} patcher ${GENGINE_TARGET_NAME})
     gengine_patch(${ARGV0})
+
+    add_test(NAME run-${ARGV0}
+             COMMAND ${ARGV0}
+             WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}/../bin)
 endfunction()
 
 function (gengine_add_executable)
