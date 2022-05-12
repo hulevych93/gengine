@@ -48,8 +48,6 @@ void UnixSocketAcceptor::AcceptConnection(connected_callback callback) {
                 listeningHandle,
                 std::static_pointer_cast<UnixSocketEngine>(m_engine));
             m_engine->RegisterConnection(*m_channel, [=] {
-              GLOG_INFO("TRACE: Getting overlapped result...");
-
               auto acceptedSocket = accept(listeningHandle, NULL, NULL);
               if (acceptedSocket != InvalidHandle) {
                 if (fcntl(acceptedSocket, F_SETFL,

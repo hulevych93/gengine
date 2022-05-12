@@ -7,6 +7,9 @@ namespace Gengine {
 namespace InterprocessCommunication {
 class InterprocessServer;
 
+using connected_callback =
+    std::function<void(bool success, std::unique_ptr<IChannel>&& channel)>;
+
 class InterprocessAcceptor {
  public:
   virtual ~InterprocessAcceptor() = default;

@@ -4,6 +4,8 @@
 
 namespace Gengine {
 namespace InterprocessCommunication {
+class IChannel;
+
 struct ChannelConnector : boost::static_visitor<bool> {
   ChannelConnector(std::uint32_t threadId, std::unique_ptr<IChannel>& impl);
 

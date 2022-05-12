@@ -4,11 +4,12 @@
 
 namespace Gengine {
 namespace InterprocessCommunication {
+class IChannel;
 
 class InterprocessClient : public InterprocessClientInterface {
  public:
   InterprocessClient();
-  virtual ~InterprocessClient();
+  ~InterprocessClient() override;
 
  public:
   bool Connect(const ipc_connection& data) override;

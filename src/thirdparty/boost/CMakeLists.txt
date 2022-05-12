@@ -86,13 +86,8 @@ set(BUILD_COMMAND_BASE
         ${COMPILER_FLAGS}
 )
 
-add_custom_target(boost_tools)
-set(BCP_COMMAND "${SRC_DIR}/dist/bin/bcp${GENGINE_HOST_EXECUTABLE_SUFFIX}")
-set(BCP_NATIVE_BUILD_COMMAND COMMAND ${BUILD_COMMAND_BASE} tools/bcp)
-
 ExternalProject_Add(
     boost
-    DEPENDS             boost_tools
     PREFIX              ${GENGINE_BOOST_INSTALL_PREFIX}
     TMP_DIR             ${TMP_DIR}
     STAMP_DIR           ${GENGINE_BOOST_INSTALL_PREFIX}/stamp
@@ -105,7 +100,6 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ${BOOTSTRAP_COMMAND}
     # Build
     BUILD_COMMAND       ${BUILD_COMMAND_BASE} --prefix=${GENGINE_BOOST_INSTALL_PREFIX} -j8 -d2 ${LIB_OPTS} install
-                        ${BCP_NATIVE_BUILD_COMMAND}
         # Install
     INSTALL_COMMAND     ""
     BUILD_IN_SOURCE     1
