@@ -41,7 +41,7 @@ TEST_F(SerializationTest, NumbersSerialization) {
   serializer << iniBytes64;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     uint8_t outBytes8 = 0;
@@ -99,7 +99,7 @@ TEST_F(SerializationTest, BooleanSerialization) {
   serializer << boolean;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     bool outBoolean = false;
@@ -116,7 +116,7 @@ TEST_F(SerializationTest, EnumSerialization) {
   serializer << enumType;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(enumType) outEnumType = Types::Third;
@@ -132,7 +132,7 @@ TEST_F(SerializationTest, StringSerialization) {
   serializer << inString;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inString) outString;
@@ -154,7 +154,7 @@ TEST_F(SerializationTest, VectorsSerialization) {
   serializer << inDeque;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inVector) outVector;
@@ -185,7 +185,7 @@ TEST_F(SerializationTest, SetsSerialization) {
   serializer << inUSet;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inSet) outSet;
@@ -210,7 +210,7 @@ TEST_F(SerializationTest, MapsSerialization) {
   serializer << inUMap;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inMap) outMap;
@@ -238,7 +238,7 @@ TEST_F(SerializationTest, PointersSerialization) {
   serializer << inOptional;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inSPointer) outPointer;
@@ -266,7 +266,7 @@ TEST_F(SerializationTest, PairsSerialization) {
   serializer << inPair;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inPair) outPair;
@@ -282,7 +282,7 @@ TEST_F(SerializationTest, VariantSerialization) {
   serializer << inVariant;
 
   auto blob = serializer.GetBlob();
-  Deserializer deserializer(blob);
+  Deserializer deserializer(*blob);
 
   {
     decltype(inVariant) outVariant;

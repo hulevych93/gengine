@@ -166,7 +166,7 @@ bool InputParameters::Get(std::int8_t index,
   std::uint32_t size = 0;
   if (Get(index, &data, &size, ParametersTypes::BinarySerializable)) {
     auto blob = std::make_shared<Blob>(data, size);
-    Serialization::Deserializer deserializer(blob);
+    Serialization::Deserializer deserializer(*blob);
     value.Deserialize(deserializer);
     return true;
   }

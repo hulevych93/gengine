@@ -1,7 +1,7 @@
 #include "SslSocket.h"
 #include <boost/lexical_cast.hpp>
 
-namespace Core {
+namespace Gengine {
 namespace Network {
 boost::asio::ssl::context SslSocket::ClientContext(
     boost::asio::ssl::context::sslv23);
@@ -108,4 +108,4 @@ void SslSocket::Close() {
   }
 }
 }  // namespace Network
-}  // namespace Core
+}  // namespace Gengine

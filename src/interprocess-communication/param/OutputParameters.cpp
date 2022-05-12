@@ -8,7 +8,6 @@ namespace Gengine {
 using namespace JSON;
 using namespace Serialization;
 namespace InterprocessCommunication {
-OutputParameters::OutputParameters() : m_allocatedSize(0), m_filedSize(0) {}
 
 void OutputParameters::AllocateBufferSpace(std::uint32_t size,
                                            ParameterHeader** header,

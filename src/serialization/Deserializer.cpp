@@ -20,15 +20,6 @@ Deserializer::Deserializer(const void* data, size_t size)
   }
 }
 
-Deserializer::Deserializer(const std::shared_ptr<Blob>& blob)
-    : m_base(static_cast<const std::uint8_t* const>(blob->GetData())),
-      m_data(static_cast<std::uint8_t*>(blob->GetData())),
-      m_size(blob->GetSize()) {
-  if (!m_data || !m_size) {
-    throw std::invalid_argument("invalid_argument");
-  }
-}
-
 size_t Deserializer::Used() const {
   return m_data - m_base;
 }
@@ -92,8 +83,8 @@ bool Deserializer::operator>>(bool& data_) const {
 }
 
 bool Deserializer::GetSize(size_t& size) const {
-  if (Used() + sizeof(TSize) <= m_size) {
-    auto sizeRaw = *reinterpret_cast<const TSize*>(m_data);
+  if (Used() + sizeof(t_size) <= m_size) {
+    auto sizeRaw = *reinterpret_cast<const t_size*>(m_data);
     size = static_cast<size_t>(sizeRaw);
     m_data += sizeof(sizeRaw);
     return true;
@@ -102,7 +93,7 @@ bool Deserializer::GetSize(size_t& size) const {
   }
 }
 
-bool Deserializer::GetSized(TGetter getter) const {
+bool Deserializer::GetSized(t_getter getter) const {
   size_t size;
   GetSize(size);
 

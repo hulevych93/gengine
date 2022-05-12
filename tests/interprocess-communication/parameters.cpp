@@ -152,5 +152,33 @@ TEST_F(InputOutputParamTest, uniquePtr) {
   EXPECT_EQ(false, *out);
 }
 
+TEST_F(InputOutputParamTest, vector) {
+  testInputOutput(std::vector<int>{24, 55, 921});
+}
+
+TEST_F(InputOutputParamTest, list) {
+  testInputOutput(std::list<std::int8_t>{'b', '2', 'c'});
+}
+
+TEST_F(InputOutputParamTest, deque) {
+  testInputOutput(std::deque<int>{1, 543, -8});
+}
+
+TEST_F(InputOutputParamTest, set) {
+  testInputOutput(std::set<int>{1, 543, -8});
+}
+
+TEST_F(InputOutputParamTest, unorderedSet) {
+  testInputOutput(std::unordered_set<int>{1, 543, -8});
+}
+
+TEST_F(InputOutputParamTest, map) {
+  testInputOutput(std::map<int, int>{{1, 2}, {543, -543}, {8, -8}});
+}
+
+TEST_F(InputOutputParamTest, unorderedMap) {
+  testInputOutput(std::unordered_map<int, int>{{1, 2}, {543, -543}, {8, -8}});
+}
+
 REGISTER_TESTS_ENTRY(GTestModule)
 IMPLEMENT_CONSOLE_ENTRY

@@ -172,7 +172,7 @@ class PersistencyBroker : public IPersistencyBroker {
 
     void operator()(Serialization::ISerializable& object) const override {
       if (data) {
-        Deserializer deserializer(data);
+        Deserializer deserializer(*data);
         object.Deserialize(deserializer);
       }
     }

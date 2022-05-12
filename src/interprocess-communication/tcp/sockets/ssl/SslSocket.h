@@ -3,7 +3,7 @@
 #include <boost/asio/ssl.hpp>
 #include "Socket.h"
 
-namespace Core {
+namespace Gengine {
 namespace Network {
 class SslSocket
     : public Socket<boost::asio::ssl::stream<boost::asio::ip::tcp::socket>> {
@@ -28,4 +28,4 @@ class SslSocket
   static boost::asio::ssl::context ClientContext;
 };
 }  // namespace Network
-}  // namespace Core
+}  // namespace Gengine

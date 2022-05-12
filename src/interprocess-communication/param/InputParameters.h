@@ -13,6 +13,8 @@ class Blob;
 namespace InterprocessCommunication {
 
 /**
+ * @brief The InputParameters class
+ *
  * InputParameters is the buffer for interprocess-communication.
  * The data in memory is going simultaneously.
  * /-----------------------------------------------/
@@ -73,8 +75,12 @@ class InputParameters final {
   std::int8_t GetParametersCount() const;
 
   /**
-   * @brief Get value functions.
-   * @return params count.
+   * @name GetFunctions
+   * @brief Get value from params list.
+   * @param[in] index of the value to get.
+   * @param[out] retrun value.
+   * @return true on success.
+   * @{
    */
   bool Get(std::int8_t index, bool& value) const;
   bool Get(std::int8_t index, void*& value) const;
@@ -122,6 +128,7 @@ class InputParameters final {
 
   template <class T, class V>
   bool Get(std::int8_t index, std::unordered_map<T, V>& container) const;
+  /** @} */
 
  private:
   template <class Type>

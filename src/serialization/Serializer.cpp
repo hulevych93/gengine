@@ -84,7 +84,7 @@ bool Serializer::operator<<(bool data_) {
 }
 
 bool Serializer::AddSize(size_t size_) {
-  auto size = static_cast<TSize>(size_);
+  auto size = static_cast<t_size>(size_);
   return AddFixed(&size, sizeof(size));
 }
 
