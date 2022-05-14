@@ -9,7 +9,7 @@ namespace Diagnostic {
 class LinuxCallstackDumper : public IDumper {
  public:
   LinuxCallstackDumper();
-  ~LinuxCallstackDumper() = default;
+  ~LinuxCallstackDumper();
 
  public:
   void WriteDump() override;
