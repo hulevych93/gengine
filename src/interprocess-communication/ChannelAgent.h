@@ -14,14 +14,43 @@ class OutputParameters;
 struct RequestHeader;
 class IChannel;
 
-class ChannelAgent {
+/**
+ * @brief The ChannelAgent class
+ *
+ * Class which implements request/responce server side protocol.
+ * Channel agents are hold by the InteprocessServer class instance.
+ */
+class ChannelAgent final {
  public:
+  /**
+   * @brief ChannelAgent constuctor
+   * @param[in] the data channel
+   * @param the parent server
+   */
   ChannelAgent(std::unique_ptr<IChannel>&& impl, InterprocessServer& server);
+
+  /**
+   * The destructor.
+   */
   ~ChannelAgent();
 
+  /**
+   * @brief QueueIO for the async processing.
+   * @return true if succesfull.
+   */
   bool QueueIO();
+
+  /**
+   * @brief HandleIO for the async processing.
+   * @param[in] bytesProcessed
+   * @return true if successfull.
+   */
   bool HandleIO(std::uint32_t bytesProcessed = 0);
 
+  /**
+   * @brief GetChannel
+   * @return underlying channel.
+   */
   IChannel& GetChannel() { return *m_impl; }
 
  private:

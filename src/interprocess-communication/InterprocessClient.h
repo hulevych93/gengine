@@ -6,13 +6,25 @@ namespace Gengine {
 namespace InterprocessCommunication {
 class IChannel;
 
+/**
+ * @brief The InterprocessClient class
+ */
 class InterprocessClient : public InterprocessClientInterface {
  public:
   InterprocessClient();
   ~InterprocessClient() override;
 
  public:
+  /**
+   * @brief Connect to the server
+   * @param data to connect is either local or tcp/ip endpoint.
+   * @return success or not
+   */
   bool Connect(const ipc_connection& data) override;
+
+  /**
+   * @brief Dispose and disconnect from the server.
+   */
   void Dispose() override;
 
  protected:

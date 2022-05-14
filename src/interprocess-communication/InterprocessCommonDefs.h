@@ -24,13 +24,17 @@
 namespace Gengine {
 namespace InterprocessCommunication {
 
+/**
+ * Using request client and server can map the interface client and
+ * implementation on the server side.
+ */
 using interface_key = std::string;
-using ipc_connection = boost::variant<PipeConnection, TcpConnection>;
 
-using accepted_callback = std::function<void()>;
-using readwrite_callback =
-    std::function<void(bool success, std::uint32_t bytesProcessed, bool)>;
-using engine_callback = boost::variant<accepted_callback, readwrite_callback>;
+/**
+ * The gengine provides two types of ipc. One is for local communication on the
+ * same host and the secong one is over network TCP/IP.
+ */
+using ipc_connection = boost::variant<PipeConnection, TcpConnection>;
 
 }  // namespace InterprocessCommunication
 }  // namespace Gengine

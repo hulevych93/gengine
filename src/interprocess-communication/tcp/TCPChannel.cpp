@@ -72,8 +72,8 @@ bool TCPChannel::Recv(void* data,
 
 bool TCPChannel::SendAsync(const void* data, std::uint32_t size) {
   if (IsConnected()) {
-    auto callback =
-        boost::get<readwrite_callback>(m_engine->GetCallback(*this));
+    auto callback = boost::get<CommunicationEngine::readwrite_callback>(
+        m_engine->GetCallback(*this));
     m_socket->AsyncWrite(
         boost::asio::buffer(data, size),
         [callback](const boost::system::error_code& ec, size_t processed) {
@@ -87,8 +87,8 @@ bool TCPChannel::SendAsync(const void* data, std::uint32_t size) {
 
 bool TCPChannel::RecvAsync(void* data, std::uint32_t size) {
   if (IsConnected()) {
-    auto callback =
-        boost::get<readwrite_callback>(m_engine->GetCallback(*this));
+    auto callback = boost::get<CommunicationEngine::readwrite_callback>(
+        m_engine->GetCallback(*this));
     auto buff = std::make_shared<boost::asio::streambuf>(size);
     m_socket->AsyncReadAtLeast(
         *buff,

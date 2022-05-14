@@ -9,10 +9,23 @@ namespace InterprocessCommunication {
 class InputParameters;
 class OutputParameters;
 
+/**
+ * @brief The InterprocessClientInterface class
+ */
 class InterprocessClientInterface {
  public:
   virtual ~InterprocessClientInterface() = default;
+
+  /**
+   * @brief Connect to the server
+   * @param data to connect is either local or tcp/ip endpoint.
+   * @return success or not
+   */
   virtual bool Connect(const ipc_connection& data) = 0;
+
+  /**
+   * @brief Dispose and disconnect from the server.
+   */
   virtual void Dispose() = 0;
 
  protected:

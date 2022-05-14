@@ -40,7 +40,7 @@ void TCPCommunicationEngine::UnregisterConnection(const IChannel& connection) {
   m_engineImpl->callbacks.erase(const_cast<IChannel*>(&connection));
 }
 
-engine_callback TCPCommunicationEngine::GetCallback(
+CommunicationEngine::engine_callback TCPCommunicationEngine::GetCallback(
     const IChannel& connection) const {
   engine_callback callback;
   auto key = const_cast<IChannel*>(&connection);

@@ -21,13 +21,40 @@ class InterfaceImpl;
 class InterprocessAcceptor;
 class CommunicationEngine;
 
-class InterprocessServer : public Runnable {
+/**
+ * @brief The InterprocessServer class
+ *
+ * The server class implementation.
+ */
+class InterprocessServer final : public Runnable {
  public:
+  /**
+   * @brief InterprocessServer
+   * @param connection of the server's acceptor.
+   * @param threadId is the workrt thread in which the server is run.
+   */
   InterprocessServer(const ipc_connection& connection, std::uint32_t threadId);
+
+  /**
+   * @brief ~InterprocessServer
+   */
   virtual ~InterprocessServer();
 
+  /**
+   * @brief Dispose the server
+   */
   void Dispose();
+
+  /**
+   * @brief AddExecutor
+   * @param object of the server listener or executor.
+   */
   void AddExecutor(const std::shared_ptr<InterfaceImpl>& object);
+
+  /**
+   * @brief RemoveExecutor
+   * @param object of the server listener or executor.
+   */
   void RemoveExecutor(const std::shared_ptr<InterfaceImpl>& object);
 
  protected:
