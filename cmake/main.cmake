@@ -17,6 +17,10 @@ endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${PROJECT_BINARY_DIR}/bin)
 
+if(NOT DEFINED GENGINE_ROOT_DIR)
+    message(FATAL_ERROR "Please, define GENGINE_ROOT_DIR cmake variable.")
+endif()
+
 # The `BUILD_FILES_ROOT` is the directory where all the
 # project 3rd parties are supposed to be build.
 if(DEFINED ENV{BUILD_FILES_ROOT})
@@ -30,7 +34,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE DEBUG)
 endif()
 
-set(GENGINE_CMAKE_DIR ${PROJECT_SOURCE_DIR}/../cmake)
+set(GENGINE_CMAKE_DIR ${GENGINE_ROOT_DIR}/cmake)
 
 include(${GENGINE_CMAKE_DIR}/common.cmake)
 

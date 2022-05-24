@@ -64,12 +64,16 @@ endif()
 
 string(REPLACE " " "" TMP_GENERATOR_DESC "${CMAKE_GENERATOR}")
 
-prv_add_3rd_party_lib_dir_suffix("${CMAKE_BUILD_TYPE}")
-prv_add_3rd_party_lib_dir_suffix("${GENGINE_ARCH}")
-prv_add_3rd_party_lib_dir_suffix("${TMP_LINK_TYPE}")
-prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_ID}")
-prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_VERSION}")
-prv_add_3rd_party_lib_dir_suffix("${TMP_GENERATOR_DESC}")
+if(NOT DEFINED GENGINE_3RD_PARTY_LIB_DIR_SUFFIX)
+  prv_add_3rd_party_lib_dir_suffix("${CMAKE_BUILD_TYPE}")
+  prv_add_3rd_party_lib_dir_suffix("${GENGINE_ARCH}")
+  prv_add_3rd_party_lib_dir_suffix("${TMP_LINK_TYPE}")
+  prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_ID}")
+  prv_add_3rd_party_lib_dir_suffix("${CMAKE_CXX_COMPILER_VERSION}")
+  prv_add_3rd_party_lib_dir_suffix("${TMP_GENERATOR_DESC}")
+endif()
+
+gengine_export_var(GENGINE_3RD_PARTY_LIB_DIR_SUFFIX ${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX})
 
 # The `prv_def_3rd_party_lib_name` contructs a full static lib name
 # with respect to platform-dependent suffix/prefix.
@@ -153,6 +157,29 @@ function(gengine_3rd_party_common_cmake_options VAR)
     list(APPEND RESULT "-DGENGINE_ARCH=${GENGINE_ARCH}")
 
     set(${VAR} ${RESULT} PARENT_SCOPE)
+endfunction()
+
+function(gengine_3rd_party_common_autotools_options PREFIX SHARED VAR)
+    set(RESULT)
+    list(APPEND RESULT "--prefix=${PREFIX}")
+    list(APPEND RESULT "CC=${CMAKE_C_COMPILER}")
+    list(APPEND RESULT "CXX=${CMAKE_CXX_COMPILER}")
+    list(APPEND RESULT "AR=${CMAKE_AR}")
+    list(APPEND RESULT "RANLIB=${CMAKE_RANLIB}")
+    list(APPEND RESULT "CFLAGS=${CMAKE_C_FLAGS}")
+    list(APPEND RESULT "CXXFLAGS=${CMAKE_CXX_FLAGS}")
+    list(APPEND RESULT "LDFLAGS=${LD_FLAGS}")
+    if(WIN32)
+        list(APPEND RESULT "CONFIG_SITE=${CO_MSYS_CONFIG_SITE}")
+    endif()
+
+    if(SHARED)
+        list(APPEND RESULT --enable-shared=yes --enable-static=no)
+    else()
+        list(APPEND RESULT --enable-shared=no --enable-static=yes)
+    endif()
+
+    set("${VAR}" "${RESULT}" PARENT_SCOPE)
 endfunction()
 
 # Set 3rd-parties directories
