@@ -1,5 +1,33 @@
 gengine_project(log4cplus)
 
+set(GENGINE_LOG4CPLUS_VERSION            1.2.1)
+set(GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME    log4cplus-${GENGINE_LOG4CPLUS_VERSION}-${GENGINE_3RD_PARTY_LIB_DIR_SUFFIX})
+set(GENGINE_LOG4CPLUS_PREFIX             ${GENGINE_3RD_PARTY_INSTALL_DIR}/${GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME})
+set(GENGINE_LOG4CPLUS_BUILD_DIR          ${GENGINE_3RD_PARTY_BUILD_DIR}/${GENGINE_LOG4CPLUS_UNIQUE_DIR_NAME})
+set(Log4cplus_INCLUDE_DIRS               ${GENGINE_LOG4CPLUS_PREFIX}/include)
+set(Log4cplus_LIB_DIR                    ${GENGINE_LOG4CPLUS_PREFIX}/lib)
+set(Log4cplus_COMPONENTS                 log4cplus)
+set(Log4cplus_LIBRARIES)
+
+if(WIN32)
+    set(Log4cplusWin "log4cplus" "U" ${GENGINE_LIB_NAME_DEBUG_SUFFIX})
+    gengine_join_list(Log4cplusWin "" Log4cplusWin)
+
+    gengine_list_replace(Log4cplus_COMPONENTS "log4cplus" ${Log4cplusWin})
+endif()
+
+foreach(TMP_LOG4CPLUS_LIB_BASE IN LISTS Log4cplus_COMPONENTS)
+    string(TOUPPER "${TMP_LOG4CPLUS_LIB_BASE}" TMP_LOG4CPLUS_LIB_BASE_UPPER)
+    prv_def_3rd_party_lib_name("Log4cplus"
+                               ${TMP_LOG4CPLUS_LIB_BASE}
+                               GENGINE_LOG4CPLUS_${TMP_LOG4CPLUS_LIB_BASE_UPPER}_LIB)
+
+    list(APPEND Log4cplus_LIBRARIES "${GENGINE_LOG4CPLUS_${TMP_LOG4CPLUS_LIB_BASE_UPPER}_LIB}")
+endforeach()
+
+gengine_export_var(Log4cplus_INCLUDE_DIRS ${Log4cplus_INCLUDE_DIRS})
+gengine_export_var(Log4cplus_LIBRARIES ${Log4cplus_LIBRARIES})
+
 set(TMP_DIR         ${GENGINE_3RD_PARTY_TMP_DIR})
 set(SRC_DIR         ${GENGINE_LOG4CPLUS_BUILD_DIR})
 
