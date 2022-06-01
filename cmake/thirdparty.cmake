@@ -4,6 +4,7 @@ include(ExternalProject)
 
 if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
     set(GENGINE_ARCH x86_64)
+    add_definitions(-Dx64)
 elseif("${CMAKE_SIZEOF_VOID_P}" EQUAL 4)
     set(GENGINE_ARCH x86)
 endif()
