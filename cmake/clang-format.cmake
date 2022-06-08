@@ -9,7 +9,11 @@ endif()
 
 function(gengine_run_clang_format)
     if(CLANGFORMAT_EXECUTABLE)
-        gengine_collect_only_cpp(ALL_SRC)
+        if(APPLE)
+            gengine_collect_only_cpp(ALL_SRC)
+        else()
+            gengine_collect_only_platform_cpp(ALL_SRC)
+        endif()
 
         foreach(SFILE ${ALL_SRC})
             execute_process(COMMAND ${CLANGFORMAT_EXECUTABLE} -style=Chromium -i ${SFILE})

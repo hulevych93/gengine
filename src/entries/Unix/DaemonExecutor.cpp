@@ -86,8 +86,6 @@ void DaemonExecutor::OnSignal(int signum) {
     case SIGABRT: {
       m_terminationInProgress = 1;
 
-      m_terminationInProgress = 1;
-
       m_lastSigNum = signum;
 
       m_crashAddressesNum = backtrace(m_crashBuff, m_crashBuffSize);

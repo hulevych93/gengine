@@ -62,6 +62,42 @@ function(gengine_collect_only_cpp LIST_OUT)
     set(${LIST_OUT} ${TMP_SRC_LIST} PARENT_SCOPE)
 endfunction()
 
+function(gengine_collect_only_platform_cpp LIST_OUT)
+    set(SRC_LIST)
+
+    file(GLOB_RECURSE SRC_LIST
+            "${SOURCE_FOLDER}/*.cpp"
+            "${SOURCE_FOLDER}/*.h")
+
+    set(APPEND_LIST)
+
+    if(UNIX AND NOT APPLE)
+        list(APPEND APPEND_LIST "Linux/")
+    endif()
+
+    if(WIN32)
+        list(APPEND APPEND_LIST "Windows/")
+    endif()
+
+    set(LIST_FILTERED)
+    foreach(SOURCE ${SRC_LIST})
+      set(FOUND "-1")
+      foreach(INCLUDE ${APPEND_LIST})
+        string(FIND ${SOURCE} ${INCLUDE} FOUND)
+        if(NOT("${FOUND}" STREQUAL "-1"))
+            list(APPEND LIST_FILTERED ${SOURCE})
+            break()
+        endif()
+      endforeach()
+    endforeach()
+
+    # Note: at least in the unity build mode the order in which source files are added to targets is important.
+    # So, we sort them to make sure that the order stays the same on different runs of CMake.
+    list(SORT LIST_FILTERED)
+
+    set(${SRC_LIST_OUT} ${LIST_FILTERED} PARENT_SCOPE)
+endfunction()
+
 function(gengine_collect_rdls LIST_OUT)
     prv_collect_sources(${GENGINE_RDLS_DIR} TMP_SRC_LIST)
     set(${LIST_OUT} ${TMP_SRC_LIST} PARENT_SCOPE)

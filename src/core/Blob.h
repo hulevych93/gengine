@@ -79,10 +79,19 @@ class Blob final {
   size_t GetSize() const;
 
   /**
-   * @brief Return a size of the internal data buffer.
+   * @brief Replace the content of the blob with given data.
+   *
+   * @param[in] data to be set. The data is copied into internal buffer.
+   * @param[in] size of the data buffer.
    */
   void SetData(const void* data, size_t size);
 
+  /**
+   * @brief Append new data to the content of the blob.
+   *
+   * @param[in] data to be append. The data is copied into internal buffer.
+   * @param[in] size of the data buffer.
+   */
   void AddData(const void* data, size_t size);
 
   /**

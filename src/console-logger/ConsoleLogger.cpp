@@ -50,7 +50,9 @@ class ConsoleLoggerModule : public Gengine::Entries::SlaveEntry {
   bool Initialize() override {
     std::wstring name;
     GetAppName(&name);
-    // SetConsoleTitleA(toUtf8(name).c_str());
+#ifdef _WIN32
+    SetConsoleTitleW(name.c_str());
+#endif
     return SlaveEntry::Initialize();
   }
 
