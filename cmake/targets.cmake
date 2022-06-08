@@ -69,6 +69,7 @@ function (prv_gengine_add_includes)
         ${X11_INCLUDE_DIR}
         ${GENGINE_ROOT_DIR}
         ${GENGINE_BINARY_DIR}
+        ${GENGINE_INCLUDE_DIR}
         ${GTest_INCLUDE_DIRS}
     )
 endfunction()

@@ -52,3 +52,12 @@ add_subdirectory(console-logger)
 gengine_export_includes()
 gengine_export_var(GENGINE_LIBRARIES ${GENGINE_LIBRARIES} ${AdditionalOS_LIBRARIES})
 
+gengine_export_var(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+gengine_export_var(Boost_LIBRARIES ${Boost_LIBRARIES})
+
+gengine_export_var(GTest_INCLUDE_DIRS ${GTest_INCLUDE_DIRS})
+gengine_export_var(GTest_LIBRARIES ${GTest_LIBRARIES})
+
+gengine_export_var(Log4cplus_INCLUDE_DIRS ${Log4cplus_INCLUDE_DIRS})
+gengine_export_var(Log4cplus_LIBRARIES ${Log4cplus_LIBRARIES})
+

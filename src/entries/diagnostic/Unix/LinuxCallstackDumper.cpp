@@ -16,7 +16,7 @@ LinuxCallstackDumper::LinuxCallstackDumper() {
 }
 
 LinuxCallstackDumper::~LinuxCallstackDumper() {
-    m_instance = nullptr;
+  m_instance = nullptr;
 }
 
 void LinuxCallstackDumper::WriteDump() {
@@ -40,13 +40,12 @@ void LinuxCallstackDumper::WriteDump() {
 }
 
 // If the ExitHandler is called after Gengine::Main class has been destructed,
-// then it's not an emergency exit, it's a regular one. So, the m_instance is null
-// in this case. No need to write a dump.
+// then it's not an emergency exit, it's a regular one. So, the m_instance is
+// null in this case. No need to write a dump.
 void LinuxCallstackDumper::ExitHandler() {
-    if(m_instance)
-    {
-       m_instance->WriteDump();
-    }
+  if (m_instance) {
+    m_instance->WriteDump();
+  }
 }
 }  // namespace Diagnostic
 }  // namespace Gengine
