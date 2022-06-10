@@ -22,7 +22,6 @@ const std::uint32_t WorkerThread::InvalidNearestTimerTime(-1);
 WorkerThread::WorkerThread(const std::wstring& name, bool canRun)
     : m_canRun(canRun), m_name(std::make_pair(name, false)) {
   if (m_canRun) {
-    m_tasksCondition.Create(false, false);
     Initialize();
   }
 }
@@ -95,7 +94,7 @@ void WorkerThread::PostTaskAndWait(task_t task) {
 
     auto pResult = PostTask(std::move(task));
     if (pResult) {
-      pResult->Wait(Event::WAIT_INFINITE);
+      pResult->Wait(Event::WaitInfinite);
     }
   }
 }
@@ -142,7 +141,7 @@ std::shared_ptr<IFuture> WorkerThread::StopTimer(std::int32_t timerId) {
 void WorkerThread::StopAndWaitTimer(std::int32_t timerId) {
   auto result = StopTimer(timerId);
   if (result) {
-    result->Wait(Event::WAIT_INFINITE);
+    result->Wait(Event::WaitInfinite);
   }
 }
 

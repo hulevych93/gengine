@@ -29,9 +29,9 @@ DaemonExecutor::DaemonExecutor(IEntry& entry)
       m_canHandleSignals(false),
       m_lastSigNum(0),
       m_crashBuffSize(200),
-      m_crashAddressesNum(0) {
+      m_crashAddressesNum(0),
+      m_stopEvent(Multithreading::ManualResetTag{}) {
   m_instance = this;
-  m_stopEvent.Create(true, false);
 }
 
 void DaemonExecutor::StartSignalThread() {

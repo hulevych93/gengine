@@ -11,6 +11,7 @@ add_subdirectory(appconfig)
 add_subdirectory(core)
 add_subdirectory(serialization)
 add_subdirectory(interprocess-communication)
+add_subdirectory(multithreading)
 
 add_custom_target(run_tests COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS appconfig-test

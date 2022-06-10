@@ -2,9 +2,10 @@
 
 namespace Gengine {
 namespace Multithreading {
-Future::Future(bool processing) : m_canceled(false), m_processing(processing) {
-  m_completed.Create(true, false);
-}
+Future::Future(bool processing)
+    : m_canceled(false),
+      m_processing(processing),
+      m_completed(ManualResetTag{}) {}
 
 Future::~Future() {}
 

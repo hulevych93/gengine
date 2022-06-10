@@ -12,7 +12,7 @@ class Future : public Services::IFuture {
   explicit Future(bool processing);
   virtual ~Future();
 
-  void Wait(std::uint32_t timeout = Event::WAIT_INFINITE) override;
+  void Wait(std::uint32_t timeout = Event::WaitInfinite) override;
   bool IsCanceled() const override;
   void Cancel() override;
   void Complete() override;
