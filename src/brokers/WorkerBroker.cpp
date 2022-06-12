@@ -13,13 +13,12 @@ Worker::Worker(std::uint32_t id) : m_id(id) {}
 Worker::~Worker() = default;
 
 void Worker::Cancel() {
-  if (m_thread)
-    m_thread->ClearTasks();
+  Dispose();
 }
 
 void Worker::Dispose() {
   if (m_thread)
-    m_thread->Dispose();
+    m_thread->Dispose(std::chrono::seconds{0});
 }
 
 namespace {

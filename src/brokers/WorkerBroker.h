@@ -1,6 +1,7 @@
 #pragma once
 
 #include <appconfig/AppConfig.h>
+#include <chrono>
 #include <functional>
 #include <memory>
 
@@ -8,32 +9,36 @@ namespace Gengine {
 namespace Services {
 
 using task_t = std::function<void()>;
+using calcelled_callback = std::function<bool()>;
+using cancelable_task_t = std::function<void(calcelled_callback)>;
+
+constexpr std::chrono::system_clock::duration WaitInfinite =
+    std::chrono::hours(24);
 
 class IFuture {
  public:
   virtual ~IFuture() = default;
-  virtual void Wait(std::uint32_t timeout) = 0;
-  virtual void Cancel() = 0;
-  virtual bool IsCanceled() const = 0;
-  virtual void Complete() = 0;
-  virtual void Reset() = 0;
+  virtual void Wait(std::chrono::system_clock::duration timeout) = 0;
 };
 
 class IWorkerThread {
  public:
   virtual ~IWorkerThread() = default;
-  virtual void PostDeinializationTask(task_t task) = 0;
+
   virtual std::shared_ptr<IFuture> PostTask(task_t task) = 0;
   virtual void PostTaskAndWait(task_t task) = 0;
 
-  virtual std::int32_t StartTimer(task_t task,
-                                  std::uint32_t intervalMS,
-                                  std::uint32_t firstDelayMS = 0) = 0;
-  virtual std::shared_ptr<IFuture> StopTimer(std::int32_t timerId) = 0;
-  virtual void StopAndWaitTimer(std::int32_t timerId) = 0;
+  virtual std::shared_ptr<IFuture> PostTask(cancelable_task_t task) = 0;
+  virtual void PostTaskAndWait(cancelable_task_t task) = 0;
 
-  virtual void ClearTasks() = 0;
-  virtual void Dispose() = 0;
+  virtual std::int32_t StartTimer(
+      task_t task,
+      std::chrono::system_clock::duration interval,
+      std::chrono::system_clock::duration firstDelay =
+          std::chrono::milliseconds(0)) = 0;
+  virtual std::shared_ptr<IFuture> StopTimer(std::int32_t timerId) = 0;
+
+  virtual void Dispose(std::chrono::system_clock::duration timeout) = 0;
 };
 
 class IWorkerBroker {
@@ -61,7 +66,7 @@ class Worker {
 void InitializeConcurrency(const std::set<ThreadConfig>& config);
 void ShutdownConcurrency();
 
-static const std::int32_t INVALID_TIMER_ID = -1;
+static const std::int32_t InvalidTimerID = -1;
 
 #define GENGINE_INTIALIZE_CONCURRENCY(config) InitializeConcurrency(config)
 #define GENGINE_SHUTDOWN_CONCURRENCY ShutdownConcurrency();
@@ -83,17 +88,28 @@ static const std::int32_t INVALID_TIMER_ID = -1;
 #define GENGINE_START_TIMER(HANDLER, PERIOD)            \
   GetWorkingThread() != nullptr                         \
       ? GetWorkingThread()->StartTimer(HANDLER, PERIOD) \
-      : Services::INVALID_TIMER_ID;
+      : Services::InvalidTimerID;
+#define GENGINE_START_LOOP(HANDLER)                                           \
+  GetWorkingThread() != nullptr                                               \
+      ? GetWorkingThread()->StartTimer(HANDLER, std::chrono::milliseconds{0}) \
+      : Services::InvalidTimerID;
 #define GENGINE_START_TIMER_WITH_DELAY(HANDLER, PERIOD, OFFSET) \
   GetWorkingThread() != nullptr                                 \
       ? GetWorkingThread()->StartTimer(HANDLER, PERIOD, OFFSET) \
-      : Services::INVALID_TIMER_ID;
+      : Services::InvalidTimerID;
 #define GENGINE_STOP_TIMER(TIMER_ID) GetWorkingThread()->StopTimer(TIMER_ID);
-#define GENGINE_STOP_TIMER_WITH_WAIT(TIMER_ID) \
-  GetWorkingThread()->StopAndWaitTimer(TIMER_ID);
-#define GENGINE_POST_DEINITIALIZATION_TASK(HANDLER) \
-  if (GetWorkingThread() != nullptr)                \
-    GetWorkingThread()->PostDeinializationTask(HANDLER);
+#define GENGINE_STOP_TIMER_WITH_WAIT(TIMER_ID)           \
+  {                                                      \
+    auto wait = GetWorkingThread()->StopTimer(TIMER_ID); \
+    if (wait)                                            \
+      wait->Wait(Services::WaitInfinite);                \
+  }
+
+#define GENGINE_POST_DEINITIALIZATION_TASK(HANDLER)      \
+  if (GetWorkingThread() != nullptr) {                   \
+    GetWorkingThread()->PostTask(HANDLER);               \
+    GetWorkingThread()->Dispose(Services::WaitInfinite); \
+  }
 
 }  // namespace Services
 }  // namespace Gengine

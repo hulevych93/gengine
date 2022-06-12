@@ -20,6 +20,7 @@ using namespace Gengine;
 using namespace Entries;
 using namespace Multithreading;
 
+namespace {
 struct TimeMeassurement final {
   TimeMeassurement() { m_start = std::chrono::system_clock::now(); }
 
@@ -45,6 +46,8 @@ struct FireThread final {
   std::thread m_thr;
 };
 
+}  // namespace
+
 template <typename Func>
 void waitTimeTest(Func&& function,
                   std::uint32_t lowBound,
@@ -59,7 +62,9 @@ void waitTimeTest(Func&& function,
 TEST_F(MultithreadingTest, eventWaitTimeout) {
   Event event;
 
-  waitTimeTest([&]() { EXPECT_FALSE(event.Wait(100)); }, 100, 110);
+  waitTimeTest(
+      [&]() { EXPECT_FALSE(event.Wait(std::chrono::milliseconds{100})); }, 100,
+      110);
 }
 
 TEST_F(MultithreadingTest, eventWait) {

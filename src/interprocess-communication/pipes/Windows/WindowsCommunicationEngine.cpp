@@ -28,7 +28,7 @@ struct WindowsCommunicationEngine::CallingContext
 };
 
 WindowsCommunicationEngine::WindowsCommunicationEngine(std::uint32_t threadId)
-    : Worker(threadId), m_eventPool(1), m_loopId(Services::INVALID_TIMER_ID) {
+    : Worker(threadId), m_eventPool(1), m_loopId(Services::InvalidTimerID) {
   m_StopEvent.Create(true, false);
   m_eventPool[0] = reinterpret_cast<HANDLE>(m_StopEvent.GetOSHandle());
 }
@@ -66,17 +66,17 @@ void WindowsCommunicationEngine::UnregisterConnection(
 }
 
 void WindowsCommunicationEngine::StartInternal() {
-  if (m_loopId == Services::INVALID_TIMER_ID) {
+  if (m_loopId == Services::InvalidTimerID) {
     auto handler = [this] { Loop(); };
     m_loopId = GENGINE_START_TIMER(handler, 0);
   }
 }
 
 void WindowsCommunicationEngine::StopInternal() {
-  if (m_loopId != Services::INVALID_TIMER_ID) {
+  if (m_loopId != Services::InvalidTimerID) {
     m_StopEvent.Set();
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
-    m_loopId = Services::INVALID_TIMER_ID;
+    m_loopId = Services::InvalidTimerID;
   }
   Dispose();
 }

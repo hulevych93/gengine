@@ -22,7 +22,7 @@ class TestService final : public Entries::EntryBase, public Worker {
 
     auto handler = [&]() { GLOG_INFO("I'm alive"); };
 
-    GENGINE_START_TIMER(std::move(handler), 5000);
+    GENGINE_START_TIMER(std::move(handler), std::chrono::seconds{5});
 
     return true;
   }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
@@ -24,7 +25,8 @@ class Event final {
   /**
    * @brief WaitInfinite
    */
-  static const std::uint32_t WaitInfinite = -1;
+  static constexpr std::chrono::system_clock::duration WaitInfinite =
+      std::chrono::hours(24);
 
  public:
   /**
@@ -36,6 +38,9 @@ class Event final {
    * Event constructor with manual-reset.
    */
   explicit Event(ManualResetTag);
+
+  Event(Event&&) = delete;
+  Event(const Event&) = delete;
 
   /**
    * @brief Set event ready.
@@ -52,7 +57,7 @@ class Event final {
    * @param mills is time in milliseconds.
    * @return true if wait succeded.
    */
-  bool Wait(std::uint32_t mills);
+  bool Wait(std::chrono::system_clock::duration timeout);
 
  private:
   std::mutex m_mutex;

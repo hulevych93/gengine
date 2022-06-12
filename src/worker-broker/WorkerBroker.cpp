@@ -31,7 +31,7 @@ class WorkerBroker : public IWorkerBroker {
  private:
   struct ThreadContext {
     std::uint32_t id;
-    std::wstring name;
+    std::string name;
     std::shared_ptr<IWorkerThread> thread;
   };
   std::unordered_map<std::uint32_t, std::unique_ptr<ThreadContext>> m_contexts;
@@ -49,7 +49,7 @@ void WorkerBroker::Configure(const std::set<ThreadConfig>& config) {
   for (const auto& conf : config) {
     auto context = std::make_unique<ThreadContext>();
     context->id = conf.id;
-    context->name = utf8toWchar(conf.name);
+    context->name = conf.name;
     m_contexts.emplace(std::make_pair(conf.id, std::move(context)));
   }
 }
@@ -80,7 +80,7 @@ void WorkerBroker::Shutdown() {
   for (const auto& contextIter : m_contexts) {
     auto thread = contextIter.second->thread;
     if (thread)
-      thread->Dispose();
+      thread->Dispose(std::chrono::seconds{0});
   }
   m_contexts.clear();
 }

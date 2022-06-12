@@ -61,7 +61,7 @@ class ExecutorBroker : public IExecutorBroker, public Worker {
     std::string id;
     std::string key;
     ExecutorBroker& parent;
-    std::uint32_t connectionTimerId = INVALID_TIMER_ID;
+    std::uint32_t connectionTimerId = InvalidTimerID;
 
     virtual bool Run(const std::string& id, IMicroService& handler) = 0;
     virtual void Stop() = 0;
@@ -229,7 +229,7 @@ ExecutorBroker::ExecutorBroker() : Worker(13) {
 
 ExecutorBroker::~ExecutorBroker() {
   for (const auto& signalIter : signals) {
-    if (signalIter.second->connectionTimerId != INVALID_TIMER_ID) {
+    if (signalIter.second->connectionTimerId != InvalidTimerID) {
       GENGINE_STOP_TIMER(signalIter.second->connectionTimerId);
     }
   }
@@ -292,8 +292,9 @@ bool ExecutorBroker::Run(const std::string& id, IMicroService& handler) {
     auto task = [&context, id, &handler] { return context->Run(id, handler); };
 
     if (!task()) {
-      if (context->connectionTimerId == INVALID_TIMER_ID) {
-        context->connectionTimerId = GENGINE_START_TIMER(task, 1000);
+      if (context->connectionTimerId == InvalidTimerID) {
+        context->connectionTimerId =
+            GENGINE_START_TIMER(task, std::chrono::seconds{1});
       }
     }
     return true;
@@ -306,7 +307,7 @@ void ExecutorBroker::Stop(const std::string& id) {
   if (iter != signals.end()) {
     iter->second->Stop();
 
-    if (iter->second->connectionTimerId != INVALID_TIMER_ID)
+    if (iter->second->connectionTimerId != InvalidTimerID)
       GENGINE_STOP_TIMER_WITH_WAIT(iter->second->connectionTimerId);
   }
 }

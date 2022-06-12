@@ -13,7 +13,7 @@ ExecutableLauncherImpl::ExecutableLauncherImpl()
     : ExecutableLauncher(),
       m_serviceObj("AAA", *this),
       m_eventPool(2),
-      m_loopId(INVALID_TIMER_ID) {
+      m_loopId(InvalidTimerID) {
   m_StopEvent.Create(true, false);
   m_ChangeEvent.Create(true, false);
   m_eventPool[0] = reinterpret_cast<HANDLE>(m_StopEvent.GetOSHandle());
@@ -40,7 +40,7 @@ void ExecutableLauncherImpl::StartInternal() {
   auto handler = [this] { CheckAppsRoutine(); };
   GENGINE_POST_TASK(handler);
 
-  if (m_loopId == INVALID_TIMER_ID) {
+  if (m_loopId == InvalidTimerID) {
     auto handler = [this] { Loop(); };
     m_loopId = GENGINE_START_TIMER(handler, 500);
   }
@@ -49,10 +49,10 @@ void ExecutableLauncherImpl::StartInternal() {
 void ExecutableLauncherImpl::StopInternal() {
   m_serviceObj.Hide();
 
-  if (m_loopId != INVALID_TIMER_ID) {
+  if (m_loopId != InvalidTimerID) {
     m_StopEvent.Set();
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
-    m_loopId = INVALID_TIMER_ID;
+    m_loopId = InvalidTimerID;
   }
 
   ExecutableLauncher::StopInternal();

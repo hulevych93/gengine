@@ -95,7 +95,7 @@ class ServiceBroker : public IServiceBroker,
 
   struct ServiceContext : ServiceContextBase, public IProcessClient {
     ~ServiceContext() {
-      if (connectionTimerId != INVALID_TIMER_ID) {
+      if (connectionTimerId != InvalidTimerID) {
         GENGINE_STOP_TIMER(connectionTimerId);
       }
     }
@@ -122,7 +122,7 @@ class ServiceBroker : public IServiceBroker,
     }
 
     void Kill() override {
-      if (connectionTimerId != INVALID_TIMER_ID)
+      if (connectionTimerId != InvalidTimerID)
         GENGINE_STOP_TIMER_WITH_WAIT(connectionTimerId);
 
       if (processHolder)
@@ -191,9 +191,9 @@ class ServiceBroker : public IServiceBroker,
       auto task = [this]() mutable {
         if (boost::apply_visitor(ServiceConnector(*this), data)) {
           connected(service);
-          if (connectionTimerId != INVALID_TIMER_ID) {
+          if (connectionTimerId != InvalidTimerID) {
             GENGINE_STOP_TIMER(connectionTimerId);
-            connectionTimerId = INVALID_TIMER_ID;
+            connectionTimerId = InvalidTimerID;
           }
           return true;
         } else if (!required) {
@@ -217,8 +217,9 @@ class ServiceBroker : public IServiceBroker,
       };
 
       if (!task()) {
-        if (connectionTimerId == INVALID_TIMER_ID) {
-          connectionTimerId = GENGINE_START_TIMER(task, 1000);
+        if (connectionTimerId == InvalidTimerID) {
+          connectionTimerId =
+              GENGINE_START_TIMER(task, std::chrono::milliseconds{1000});
         }
 
         return false;
@@ -230,7 +231,7 @@ class ServiceBroker : public IServiceBroker,
     ServiceType type;
     service_connection data;
     std::unique_ptr<ProcessHolder> processHolder;
-    std::uint32_t connectionTimerId = INVALID_TIMER_ID;
+    std::uint32_t connectionTimerId = InvalidTimerID;
     std::uint32_t triesCount = 0;
     bool required = false;
   };
@@ -476,7 +477,7 @@ void ServiceBroker::Deconfigure() {
     }
     signals.clear();
   };
-  GENGINE_POST_DEINITIALIZATION_TASK(task);
+  GENGINE_POST_DEINITIALIZATION_TASK(task)
   GENGINE_DISABLE_SERVICES
 }
 

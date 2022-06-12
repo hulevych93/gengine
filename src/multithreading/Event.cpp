@@ -3,6 +3,9 @@
 
 namespace Gengine {
 namespace Multithreading {
+
+constexpr std::chrono::system_clock::duration Event::WaitInfinite;
+
 Event::Event() : m_manualReset(false), m_signaled(false) {}
 
 Event::Event(ManualResetTag) : m_manualReset(true), m_signaled(false) {}
@@ -20,15 +23,14 @@ void Event::Reset() {
   m_signaled = false;
 }
 
-bool Event::Wait(const std::uint32_t mills) {
+bool Event::Wait(const std::chrono::system_clock::duration timeout) {
   bool signaled = true;
 
   std::unique_lock<std::mutex> lock(m_mutex);
 
   if (!m_signaled) {
-    if (mills != WaitInfinite) {
-      signaled = m_cond.wait_for(lock, std::chrono::milliseconds(mills),
-                                 [&]() { return m_signaled; });
+    if (timeout != std::chrono::system_clock::duration::max()) {
+      signaled = m_cond.wait_for(lock, timeout, [&]() { return m_signaled; });
     } else {
       m_cond.wait(lock, [&]() { return m_signaled; });
     }
@@ -39,10 +41,6 @@ bool Event::Wait(const std::uint32_t mills) {
   }
 
   return signaled;
-}
-
-bool ThreadUtils::SetThreadName(std::thread&, const std::wstring&) {
-  return false;
 }
 
 }  // namespace Multithreading

@@ -5,10 +5,6 @@
 
 namespace Gengine {
 namespace Multithreading {
-class ThreadUtils {
- public:
-  ThreadUtils() = delete;
-  static bool SetThreadName(std::thread&, const std::wstring&);
-};
+bool SetThreadName(std::thread& thread, const std::string& name);
 }  // namespace Multithreading
 }  // namespace Gengine

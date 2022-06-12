@@ -60,9 +60,7 @@ struct MacSocketEngine::ContextImpl : public boost::static_visitor<void> {
 };
 
 MacSocketEngine::MacSocketEngine(std::uint32_t threadId)
-    : Worker(threadId),
-      m_loopId(Services::INVALID_TIMER_ID),
-      m_queue(kqueue()) {
+    : Worker(threadId), m_loopId(Services::InvalidTimerID), m_queue(kqueue()) {
   int pipe_fds[2];
   assert(pipe(pipe_fds) == 0);
 
@@ -153,19 +151,19 @@ void MacSocketEngine::UnregisterConnection(const IChannel& connection) {
 }
 
 void MacSocketEngine::StartInternal() {
-  if (m_loopId == Services::INVALID_TIMER_ID) {
+  if (m_loopId == Services::InvalidTimerID) {
     auto handler = [this] { Loop(); };
-    m_loopId = GENGINE_START_TIMER(handler, 0);
+    m_loopId = GENGINE_START_LOOP(handler);
   }
 }
 
 void MacSocketEngine::StopInternal() {
-  if (m_loopId != Services::INVALID_TIMER_ID) {
+  if (m_loopId != Services::InvalidTimerID) {
     char byte = 0;
     assert(write(m_stopSignalTrigger, &byte, 1) != -1 || errno == EWOULDBLOCK);
 
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
-    m_loopId = Services::INVALID_TIMER_ID;
+    m_loopId = Services::InvalidTimerID;
   }
   Dispose();
 }

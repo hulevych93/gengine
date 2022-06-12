@@ -23,7 +23,7 @@ const std::uint32_t ExecutableLauncher::TryCounterMax(10);
 ExecutableLauncher::ExecutableLauncher()
     : Worker(1),
       m_sessionQuery("3514D35D"),
-      m_checkAppsTimerId(INVALID_TIMER_ID) {}
+      m_checkAppsTimerId(InvalidTimerID) {}
 
 void ExecutableLauncher::AddExecutable(const executable_params& params,
                                        IExecutableLauncherListener& listener) {
@@ -97,16 +97,17 @@ std::vector<SessionId> ExecutableLauncher::GetActiveSessionKeys() const {
 }
 
 void ExecutableLauncher::StartInternal() {
-  if (m_checkAppsTimerId == INVALID_TIMER_ID) {
+  if (m_checkAppsTimerId == InvalidTimerID) {
     auto handler = boost::bind(&ExecutableLauncher::CheckAppsRoutine, this);
-    m_checkAppsTimerId = GENGINE_START_TIMER(handler, CheckTimeout);
+    m_checkAppsTimerId =
+        GENGINE_START_TIMER(handler, std::chrono::milliseconds{CheckTimeout});
   }
 }
 
 void ExecutableLauncher::StopInternal() {
-  if (m_checkAppsTimerId != INVALID_TIMER_ID) {
+  if (m_checkAppsTimerId != InvalidTimerID) {
     GENGINE_STOP_TIMER_WITH_WAIT(m_checkAppsTimerId);
-    m_checkAppsTimerId = INVALID_TIMER_ID;
+    m_checkAppsTimerId = InvalidTimerID;
   }
 
   for (const auto& executableIter : m_executablesMap) {

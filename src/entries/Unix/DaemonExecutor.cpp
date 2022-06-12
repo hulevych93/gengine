@@ -241,7 +241,7 @@ bool DaemonExecutor::Execute(void* args) {
 
   if (GetEntry().Initialize()) {
     GetEntry().Execute(args);
-    m_stopEvent.Wait(-1);
+    m_stopEvent.Wait(Multithreading::Event::WaitInfinite);
 
     std::int32_t code;
     GetEntry().Exit(&code);

@@ -60,7 +60,7 @@ struct LinuxSocketEngine::ContextImpl : public boost::static_visitor<void> {
 };
 
 LinuxSocketEngine::LinuxSocketEngine(std::uint32_t threadId)
-    : Worker(threadId), m_loopId(Services::INVALID_TIMER_ID) {
+    : Worker(threadId), m_loopId(Services::InvalidTimerID) {
   m_queue = epoll_create1(0);
   assert(m_queue >= 0);
 
@@ -157,19 +157,19 @@ void LinuxSocketEngine::UnregisterConnection(const IChannel& connection) {
 }
 
 void LinuxSocketEngine::StartInternal() {
-  if (m_loopId == Services::INVALID_TIMER_ID) {
+  if (m_loopId == Services::InvalidTimerID) {
     auto handler = [this] { Loop(); };
     m_loopId = GENGINE_START_TIMER(handler, 0);
   }
 }
 
 void LinuxSocketEngine::StopInternal() {
-  if (m_loopId != Services::INVALID_TIMER_ID) {
+  if (m_loopId != Services::InvalidTimerID) {
     char byte = 0;
     assert(write(m_stopSignalTrigger, &byte, 1) != -1 || errno == EWOULDBLOCK);
 
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
-    m_loopId = Services::INVALID_TIMER_ID;
+    m_loopId = Services::InvalidTimerID;
   }
   Dispose();
 }
