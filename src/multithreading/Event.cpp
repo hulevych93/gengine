@@ -1,10 +1,7 @@
-#include "Event.h"
-#include "ThreadUtils.h"
+#include <multithreading/Event.h>
 
 namespace Gengine {
 namespace Multithreading {
-
-constexpr std::chrono::system_clock::duration Event::WaitInfinite;
 
 Event::Event() : m_manualReset(false), m_signaled(false) {}
 

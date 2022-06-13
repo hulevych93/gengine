@@ -104,7 +104,7 @@ void WorkerThread::RunLoop() {
           m_tasksCondition.Wait(nearestTimerTime.get() - now);
         }
       } else {
-        m_tasksCondition.Wait(Event::WaitInfinite);
+        m_tasksCondition.Wait(WaitInfinite);
       }
     }
   }
@@ -118,14 +118,25 @@ std::string WorkerThread::GetID() const {
 }
 
 void WorkerThread::Dispose(const std::chrono::system_clock::duration timeout) {
-  m_disposeTime = std::chrono::system_clock::now() + timeout;
-  m_canRun.store(false);
   if (m_executorThread.joinable()) {
+    m_disposeTime = std::chrono::system_clock::now() + timeout;
+    m_canRun.store(false);
+
     if (std::this_thread::get_id() != m_executorThread.get_id()) {
       m_tasksCondition.Set();
       m_executorThread.join();
     }
-    ClearTasks();
+
+    for (const auto& task : m_postedTasks) {
+      if (auto future = task.future.lock())
+        future->Complete();
+    }
+    m_postedTasks.clear();
+
+    for (const auto& timer : m_timers) {
+      timer->future->Complete();
+    }
+    m_timers.clear();
   }
 }
 
@@ -153,19 +164,19 @@ void WorkerThread::PostTaskAndWait(task_t task) {
 
   auto future = PostTask(std::move(task));
   if (future) {
-    future->Wait(Event::WaitInfinite);
+    future->Wait(WaitInfinite);
   }
 }
 
 std::shared_ptr<IFuture> WorkerThread::PostTask(cancelable_task_t task) {
-  return PostTask([thread = this, task = std::move(task)]() {
-    task([thread]() { return thread->m_canRun.load(); });
+  return PostTask([this, task = std::move(task)]() {
+    task([this]() { return !m_canRun.load(); });
   });
 }
 
 void WorkerThread::PostTaskAndWait(cancelable_task_t task) {
-  PostTaskAndWait([thread = this, task = std::move(task)]() {
-    task([thread]() { return thread->m_canRun.load(); });
+  PostTaskAndWait([this, task = std::move(task)]() {
+    task([this]() { return !m_canRun.load(); });
   });
 }
 
@@ -218,19 +229,6 @@ std::shared_ptr<IFuture> WorkerThread::StopTimer(const std::int32_t timerId) {
     return future;
   }
   return std::shared_ptr<Future>();
-}
-
-void WorkerThread::ClearTasks() {
-  std::lock_guard<std::mutex> locker(m_mutex);
-  for (const auto& task : m_postedTasks) {
-    if (auto future = task.future.lock())
-      future->Complete();
-  }
-  m_postedTasks.clear();
-  for (const auto& timer : m_timers) {
-    timer->future->Complete();
-  }
-  m_timers.clear();
 }
 
 }  // namespace Multithreading

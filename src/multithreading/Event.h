@@ -8,6 +8,11 @@
 namespace Gengine {
 namespace Multithreading {
 
+constexpr std::chrono::system_clock::duration WaitInfinite =
+    std::chrono::hours(24);
+constexpr std::chrono::system_clock::duration DontWait =
+    std::chrono::seconds(0);
+
 /**
  * @brief The ManualResetTag struct
  *
@@ -21,13 +26,6 @@ struct ManualResetTag final {};
  * The synchronization primitive with basic event set/reset semantics.
  */
 class Event final {
- public:
-  /**
-   * @brief WaitInfinite
-   */
-  static constexpr std::chrono::system_clock::duration WaitInfinite =
-      std::chrono::hours(24);
-
  public:
   /**
    * @brief Event constructor with auto-reset.

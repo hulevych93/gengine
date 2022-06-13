@@ -40,6 +40,17 @@ struct FireThread final {
   std::thread m_thr;
 };
 
+struct TaskStartedEnsurer final {
+  TaskStartedEnsurer() { m_future = m_trigger.get_future(); }
+  ~TaskStartedEnsurer() { m_future.wait(); }
+
+  void IAmStarted() { m_trigger.set_value(); }
+
+ private:
+  std::promise<void> m_trigger;
+  std::future<void> m_future;
+};
+
 }  // namespace
 
 namespace UnitTests {
@@ -72,21 +83,25 @@ TEST_F(WorkerThreadTest, postTaskAndWait) {
     value = 354u;
   });
 
-  future->Wait(Event::WaitInfinite);
+  future->Wait(WaitInfinite);
   EXPECT_EQ(354u, value);
 
   EXPECT_EQ(0u, getTasksCount());
 }
 
 TEST_F(WorkerThreadTest, postCancelableTask) {
-  auto future = worker.PostTask([&](Services::calcelled_callback is_cancelled) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    if (is_cancelled())
-      return;
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  });
+  {
+    TaskStartedEnsurer ensurer;
+    worker.PostTask([&](Services::calcelled_callback is_cancelled) {
+      ensurer.IAmStarted();
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      if (is_cancelled())
+        return;
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    });
+  }
 
-  waitTimeTest([&]() { future->Wait(std::chrono::hours{24}); }, 90, 200);
+  waitTimeTest([&]() { worker.Dispose(DontWait); }, 90, 200);
 }
 
 TEST_F(WorkerThreadTest, stopTimer) {
@@ -96,7 +111,7 @@ TEST_F(WorkerThreadTest, stopTimer) {
 
   auto future = worker.StopTimer(id);
   if (future)
-    future->Wait(std::chrono::hours{24});
+    future->Wait(WaitInfinite);
 
   const auto oldValue = value;
   std::this_thread::sleep_for(std::chrono::milliseconds(30));
@@ -105,22 +120,21 @@ TEST_F(WorkerThreadTest, stopTimer) {
 }
 
 TEST_F(WorkerThreadTest, waitTimer) {
-  std::promise<void> trigger;
-  auto waiter = trigger.get_future();
-
-  const auto id = worker.StartTimer(
-      [&]() {
-        trigger.set_value();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      },
-      std::chrono::milliseconds{10});
-
-  waiter.wait();
+  std::int32_t id = WorkerThread::InvalidTimerID;
+  {
+    TaskStartedEnsurer ensurer;
+    id = worker.StartTimer(
+        [&]() {
+          ensurer.IAmStarted();
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        },
+        std::chrono::milliseconds{10});
+  }
   waitTimeTest(
       [&]() {
         auto future = worker.StopTimer(id);
         if (future)
-          future->Wait(std::chrono::hours{24});
+          future->Wait(WaitInfinite);
       },
       90, 110);
 }
@@ -134,7 +148,7 @@ TEST_F(WorkerThreadTest, multipleTasksOrder) {
     expected[i] = i;
   }
 
-  worker.Dispose(Event::WaitInfinite);
+  worker.Dispose(WaitInfinite);
 
   EXPECT_EQ(expected, actual);
 }
@@ -150,7 +164,7 @@ TEST_F(WorkerThreadTest, multipleTimers) {
   for (const auto& id : ids) {
     auto future = worker.StopTimer(id);
     if (future)
-      future->Wait(std::chrono::hours{24});
+      future->Wait(WaitInfinite);
   }
 
   EXPECT_EQ(0u, getTimersCount());
@@ -160,8 +174,8 @@ TEST_F(WorkerThreadTest, stopTimerReverseCheck) {
   auto id1 = worker.StartTimer([]() {}, std::chrono::milliseconds{10});
   auto id2 = worker.StartTimer([]() {}, std::chrono::milliseconds{10});
 
-  worker.StopTimer(id1)->Wait(std::chrono::hours{24});
-  worker.StopTimer(id2)->Wait(std::chrono::hours{24});
+  worker.StopTimer(id1)->Wait(WaitInfinite);
+  worker.StopTimer(id2)->Wait(WaitInfinite);
 
   EXPECT_EQ(0u, getTimersCount());
 }

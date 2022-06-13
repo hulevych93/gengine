@@ -14,6 +14,8 @@ using cancelable_task_t = std::function<void(calcelled_callback)>;
 
 constexpr std::chrono::system_clock::duration WaitInfinite =
     std::chrono::hours(24);
+constexpr std::chrono::system_clock::duration DontWait =
+    std::chrono::seconds(0);
 
 class IFuture {
  public:

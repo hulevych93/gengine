@@ -72,8 +72,7 @@ TEST_F(MultithreadingTest, eventWait) {
 
   FireThread fireThread(event, 100);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 100,
-               110);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 100, 110);
 }
 
 TEST_F(MultithreadingTest, eventWaitManualReset) {
@@ -81,17 +80,15 @@ TEST_F(MultithreadingTest, eventWaitManualReset) {
 
   FireThread fireThread(event, 100);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 100,
-               110);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 100, 110);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 0, 10);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 0, 10);
 
   event.Reset();
 
   FireThread fireThread2(event, 100);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 100,
-               110);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 100, 110);
 }
 
 TEST_F(MultithreadingTest, eventWaitAutoReset) {
@@ -99,13 +96,11 @@ TEST_F(MultithreadingTest, eventWaitAutoReset) {
 
   FireThread fireThread(event, 100);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 100,
-               110);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 100, 110);
 
   FireThread fireThread2(event, 100);
 
-  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(Event::WaitInfinite)); }, 100,
-               110);
+  waitTimeTest([&]() { EXPECT_TRUE(event.Wait(WaitInfinite)); }, 100, 110);
 }
 
 REGISTER_TESTS_ENTRY(GTestModule)

@@ -35,17 +35,15 @@ class WorkerThread final : public Services::IWorkerThread {
       Services::cancelable_task_t task) override;
   void PostTaskAndWait(Services::cancelable_task_t task) override;
 
-  std::int32_t StartTimer(Services::task_t task,
-                          std::chrono::system_clock::duration interval,
-                          std::chrono::system_clock::duration firstDelay =
-                              std::chrono::milliseconds(0)) override;
+  std::int32_t StartTimer(
+      Services::task_t task,
+      std::chrono::system_clock::duration interval,
+      std::chrono::system_clock::duration firstDelay = DontWait) override;
   std::shared_ptr<Services::IFuture> StopTimer(std::int32_t timerId) override;
 
   void Dispose(std::chrono::system_clock::duration timeout) override;
 
  private:
-  void ClearTasks();
-
   void RunLoop();
 
  private:
