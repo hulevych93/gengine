@@ -55,13 +55,6 @@ macro(gengine_set_global_var)
     endif()
 endmacro()
 
-MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES)
-    STRING(REPLACE "/" "\\\\" source_group_path ${SOURCE_PATH}  )
-    source_group(${source_group_path} FILES ${HEADERS} ${SOURCES})
-ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
-
-#some macroses to preserve list of all binary files, whiuch should be stored on symbol server
-
 function (prv_gengine_add_includes)
     include_directories(
         .
@@ -93,7 +86,6 @@ function (gengine_add_executable)
     add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
     add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
     gengine_patch(${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
 endfunction()
 
 function(gengine_add_shared_library)
@@ -107,7 +99,6 @@ function(gengine_add_shared_library)
     add_library(${ADD_SHARED_LIBRARY_COMMAND})
     add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
     add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
 endfunction(gengine_add_shared_library)
 
 macro (gengine_add_library)
@@ -118,7 +109,6 @@ macro (gengine_add_library)
     add_library(${ARGV})
     add_dependencies(${ARGV0} ${GENGINE_THIRDPARTY_TARGET_NAME})
     add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_LIB_DIR})
 endmacro()
 
 function (gengine_add_shared_entry)
@@ -133,7 +123,6 @@ function (gengine_add_shared_entry)
     add_dependencies(${ARGV0} patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
     add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
     gengine_patch(${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
 endfunction(gengine_add_shared_entry)
 
 function (gengine_add_plugin_entry)
@@ -146,7 +135,6 @@ function (gengine_add_plugin_entry)
 
     add_library(${ADD_SHARED_LIBRARY_COMMAND})
     gengine_patch_plugin(${ARGV0})
-    gengine_export(${ARGV0} ${GENGINE_BIN_DIR})
     add_dependencies("${ARGV0}" patcher ${GENGINE_THIRDPARTY_TARGET_NAME})
     add_dependencies(${GENGINE_TARGET_NAME} ${ARGV0})
 endfunction(gengine_add_plugin_entry)
@@ -173,20 +161,11 @@ macro (gengine_service_build)
                        COMMENT "Stopping services...${ARGV0}")
 endmacro()
 
-macro (gengine_export)
-    add_custom_command(TARGET ${ARGV0}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${ARGV1}
-        COMMAND ${CMAKE_COMMAND} -E copy \"$<TARGET_FILE:${ARGV0}>\" \"${ARGV1}\"
-        COMMENT "Exporting $<TARGET_FILE:${ARGV0}> to ${ARGV1}/$<TARGET_FILE_NAME:${ARGV0}>"
-    )
-endmacro()
-
 function (prv_gengine_patch TARGET_NAME ARGUMENT)
     if(WIN32)
-        set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher.exe)
+        set(PATCHER_UTILITY ${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/patcher.exe)
     else()
-        set(PATCHER_UTILITY ${GENGINE_BIN_DIR}/patcher)
+        set(PATCHER_UTILITY ${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/patcher)
     endif()
     add_custom_command(TARGET ${TARGET_NAME}
         POST_BUILD
@@ -203,21 +182,13 @@ function (gengine_patch_plugin TARGET_NAME)
     prv_gengine_patch(${TARGET_NAME} "--plugin")
 endfunction()
 
-function(gengine_export_includes)
-    file(GLOB_RECURSE include_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/" "*.h" "*.hpp")
-    foreach(include_file ${include_files})
-        #message("Include ${include_file}")
-        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${include_file}" "${GENGINE_INCLUDE_DIR}/${include_file}" COPYONLY)
-    endforeach(include_file)
-endfunction(gengine_export_includes)
-
 function (gengine_import_binaries)
-    file(GLOB shared_files RELATIVE "${GENGINE_BIN_DIR}/" "${GENGINE_BIN_DIR}/*.exe" "${GENGINE_BIN_DIR}/*.dll" "${GENGINE_BIN_DIR}/*.so")
+    file(GLOB shared_files RELATIVE "${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/" "${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/*.exe" "${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/*.dll" "${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/*.so")
     foreach(dll_file ${shared_files})
         add_custom_command(TARGET ${ARGV0}
         PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy \"${GENGINE_BIN_DIR}/${dll_file}\" \"$<TARGET_FILE_DIR:${ARGV0}>\"
-        COMMENT "Importing ${GENGINE_BIN_DIR}/${dll_file} to ${ARGV0} location...>"
+        COMMAND ${CMAKE_COMMAND} -E copy \"${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/${dll_file}\" \"$<TARGET_FILE_DIR:${ARGV0}>\"
+        COMMENT "Importing ${GENGINE_RUNTIME_OUTPUT_DIRECTORY}/${dll_file} to ${ARGV0} location...>"
        )
     endforeach(dll_file)
 endfunction(gengine_import_binaries)

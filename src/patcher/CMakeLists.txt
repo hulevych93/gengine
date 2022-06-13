@@ -11,7 +11,6 @@ include_directories(
 )
 
 add_executable(patcher ${EXECUTABLE_TYPE} ${SRC})
-gengine_export(patcher ${GENGINE_BIN_DIR})
 
 set_target_properties (patcher PROPERTIES
     FOLDER gengine/bins

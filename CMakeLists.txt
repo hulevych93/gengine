@@ -4,6 +4,13 @@ project (gengine)
 set(GENGINE_ROOT_DIR ${PROJECT_SOURCE_DIR})
 set(GENGINE_BINARY_DIR ${PROJECT_BINARY_DIR}/src)
 
+# If Gengine is being bundled in another project we don't want to install anything.
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    set(GENGINE_BUNDLED_MODE OFF)
+  else()
+    set(GENGINE_BUNDLED_MODE ON)
+  endif()
+
 add_subdirectory(src)
 add_subdirectory(examples)
 add_subdirectory(tests)

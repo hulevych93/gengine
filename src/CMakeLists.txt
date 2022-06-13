@@ -49,7 +49,8 @@ endif()
 
 add_subdirectory(console-logger)
 
-gengine_export_includes()
+include(${GENGINE_CMAKE_DIR}/install.cmake)
+
 gengine_export_var(GENGINE_LIBRARIES ${GENGINE_LIBRARIES} ${AdditionalOS_LIBRARIES})
 
 gengine_export_var(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})

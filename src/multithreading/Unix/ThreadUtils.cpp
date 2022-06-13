@@ -9,7 +9,7 @@ bool SetThreadName(std::thread&, const std::string&) {
 }
 
 std::uint32_t WaitForEventsEx(void*, std::uint32_t) {
-    return -1;
+  return -1;
 }
 
 }  // namespace Multithreading
