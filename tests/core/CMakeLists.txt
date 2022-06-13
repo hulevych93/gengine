@@ -1,4 +1,4 @@
-project(core-test)
+gengine_project(core-test)
 
 gengine_collect_src(SRC)
 

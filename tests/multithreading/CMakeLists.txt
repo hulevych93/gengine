@@ -1,4 +1,4 @@
-project(multithreading-test)
+gengine_project(multithreading-test)
 
 gengine_collect_src(SRC)
 

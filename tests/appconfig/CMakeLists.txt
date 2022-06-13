@@ -1,4 +1,4 @@
-project(appconfig-test)
+gengine_project(appconfig-test)
 
 gengine_collect_src(SRC)
 

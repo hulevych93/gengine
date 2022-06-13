@@ -1,4 +1,4 @@
-project(serialization-test)
+gengine_project(serialization-test)
 
 gengine_collect_src(SRC)
 

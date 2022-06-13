@@ -67,7 +67,7 @@ function (prv_gengine_add_includes)
     )
 endfunction()
 
-function (gengine_add_test)
+macro (gengine_add_test)
     prv_gengine_add_includes()
 
     add_executable(${ARGV})
@@ -75,9 +75,9 @@ function (gengine_add_test)
     gengine_patch(${ARGV0})
 
     add_test(NAME run-${ARGV0}
-             COMMAND ${ARGV0}
-             WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}/../bin)
-endfunction()
+             COMMAND ${ARGV0})
+    gengine_export_var(GENGINE_TESTS ${GENGINE_TESTS} ${ARGV0})
+endmacro()
 
 function (gengine_add_executable)
     prv_gengine_add_includes()

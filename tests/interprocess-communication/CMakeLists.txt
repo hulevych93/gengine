@@ -1,4 +1,4 @@
-project(interprocess-communication-test)
+gengine_project(interprocess-communication-test)
 
 gengine_collect_src(SRC)
 
