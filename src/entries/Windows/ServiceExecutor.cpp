@@ -53,7 +53,11 @@ ServiceExecutor* ServiceExecutor::m_instance = nullptr;
 ServiceExecutor::ServiceExecutor(IEntry& entry)
     : SimpleExecutor(entry), m_controlListener("AAAA") {
   m_instance = this;
-  m_stopEvent.Create(true, false);
+  m_stopEvent = CreateEvent(NULL, true, false, NULL);
+}
+
+ServiceExecutor::~ServiceExecutor() {
+	::CloseHandle(m_stopEvent);
 }
 
 bool ServiceExecutor::Execute(void* args) {
@@ -108,7 +112,7 @@ void ServiceExecutor::ServiceMain(std::uint32_t argc, wchar_t** argv) {
     GetEntry().Execute(nullptr);
     m_status.Update(SERVICE_RUNNING);
     GLOG_DEBUG("Executed");
-    m_stopEvent.Wait(-1);
+    WaitForSingleObject(m_stopEvent, INFINITE);
 
     std::int32_t code;
     GetEntry().Exit(&code);
@@ -156,7 +160,7 @@ std::uint32_t ServiceExecutor::HandlerEx(std::uint32_t control,
 void ServiceExecutor::OnStop() {
   GLOG_INFO("Stop");
   m_status.Update(SERVICE_STOP_PENDING);
-  m_stopEvent.Set();
+  SetEvent(m_stopEvent);
 }
 
 void ServiceExecutor::OnPause() {
@@ -174,7 +178,7 @@ void ServiceExecutor::OnInterrogate() {
 void ServiceExecutor::OnShutdown() {
   GLOG_INFO("Shutdown");
   m_status.Update(SERVICE_STOP_PENDING);
-  m_stopEvent.Set();
+  SetEvent(m_stopEvent);
 }
 
 void ServiceExecutor::OnHardwareProfileChange() {

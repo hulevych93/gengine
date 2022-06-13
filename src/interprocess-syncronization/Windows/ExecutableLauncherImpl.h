@@ -3,7 +3,6 @@
 #include <api/core/IServiceControlListener.h>
 #include <brokers/ExecutorBroker.h>
 #include <interprocess-syncronization/ExecutableLauncher.h>
-#include <multithreading/Event.h>
 
 namespace Gengine {
 
@@ -12,7 +11,11 @@ class ExecutableLauncherImpl : public ExecutableLauncher,
                                public IServiceControlListener {
  public:
   ExecutableLauncherImpl();
-  virtual ~ExecutableLauncherImpl() = default;
+
+  ExecutableLauncherImpl(const ExecutableLauncherImpl&) = delete;
+  ExecutableLauncherImpl(ExecutableLauncherImpl&&) = delete;
+
+  virtual ~ExecutableLauncherImpl();
 
   void AddExecutable(const executable_params& params,
                      IExecutableLauncherListener& listener) override;
@@ -35,8 +38,8 @@ class ExecutableLauncherImpl : public ExecutableLauncher,
  private:
   Services::ServiceObjectProxy<IServiceControlListener&> m_serviceObj;
 
-  Multithreading::Event m_StopEvent;
-  Multithreading::Event m_ChangeEvent;
+  void* m_stopEvent;
+  void* m_changeEvent;
 
   using TWaitEvents = std::vector<void*>;
   TWaitEvents m_eventPool;

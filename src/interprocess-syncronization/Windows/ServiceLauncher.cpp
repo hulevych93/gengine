@@ -9,8 +9,6 @@ namespace InterprocessSynchronization {
 using namespace AppConfig;
 using namespace Services;
 
-const std::uint32_t ServiceLauncher::CheckTimeout(3000);  // 3 sec
-
 ServiceLauncher::ServiceLauncher(const std::wstring& serviceName)
     : Worker(1),
       m_serviceName(serviceName),
@@ -19,7 +17,7 @@ ServiceLauncher::ServiceLauncher(const std::wstring& serviceName)
 void ServiceLauncher::StartInternal() {
   if (m_checkAppsTimerId == Services::InvalidTimerID) {
     auto handler = boost::bind(&ServiceLauncher::CheckServicesRoutine, this);
-    m_checkAppsTimerId = GENGINE_START_TIMER(handler, CheckTimeout);
+	m_checkAppsTimerId = GENGINE_START_TIMER(handler, std::chrono::seconds{ 3 });
   }
 }
 

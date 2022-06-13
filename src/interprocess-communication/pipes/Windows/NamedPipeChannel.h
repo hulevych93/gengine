@@ -1,7 +1,6 @@
 #pragma once
 
 #include <interprocess-communication/IChannel.h>
-#include <multithreading/Event.h>
 #include <atomic>
 
 namespace Gengine {
@@ -11,6 +10,9 @@ class NamedPipeChannel : public IChannel {
   NamedPipeChannel();
   NamedPipeChannel(HandleType handle);
   ~NamedPipeChannel();
+
+  NamedPipeChannel(const NamedPipeChannel&) = delete;
+  NamedPipeChannel(NamedPipeChannel&&) = delete;
 
   bool Connect(const std::wstring& data);
   void* GetIOHandle() const;
@@ -31,8 +33,8 @@ class NamedPipeChannel : public IChannel {
  private:
   HandleType m_socket;
   std::atomic<bool> m_stopped;
-  mutable Multithreading::Event m_ioReady;
-  Multithreading::Event m_evtStopped;
+  mutable void* m_ioReady;
+  void* m_stopSignal;
   std::vector<void*> m_changeHandles;
   void* m_overlapped;
 };

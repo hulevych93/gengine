@@ -9,6 +9,8 @@ class ServiceTrackerImpl : public ServiceTracker {
  public:
   ServiceTrackerImpl(const std::wstring& mappingFileName,
                      ServiceTracker::terminate_handler handler);
+  ServiceTrackerImpl(const ServiceTrackerImpl&) = delete;
+  ServiceTrackerImpl(ServiceTrackerImpl&&) = delete;
   virtual ~ServiceTrackerImpl();
 
  protected:
@@ -24,7 +26,7 @@ class ServiceTrackerImpl : public ServiceTracker {
   std::wstring m_mappingFileName;
   void* m_fileMappingHandle;
   void* m_fileMappingData;
-  Multithreading::Event m_stopEvent;
+  void* m_stopEvent;
 };
 }  // namespace InterprocessSynchronization
 }  // namespace Gengine

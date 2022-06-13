@@ -4,7 +4,6 @@
 #include <brokers/ServiceBroker.h>
 #include <entries/CmdProcessorBase.h>
 #include <entries/SimpleExecutor.h>
-#include <multithreading/Event.h>
 
 struct _SERVICE_STATUS;
 typedef _SERVICE_STATUS SERVICE_STATUS;
@@ -17,7 +16,7 @@ class ServiceExecutor : public SimpleExecutor {
  public:
   ServiceExecutor(const ServiceExecutor&) = delete;
   ServiceExecutor(IEntry& entry);
-  ~ServiceExecutor() = default;
+  ~ServiceExecutor();
 
   bool Execute(void* args) override;
   bool CreateProcessors(
@@ -90,7 +89,7 @@ class ServiceExecutor : public SimpleExecutor {
 
  private:
   StatusContext m_status;
-  Multithreading::Event m_stopEvent;
+  void* m_stopEvent;
   Services::ServiceClientProxy<IServiceControlListener> m_controlListener;
 
  private:

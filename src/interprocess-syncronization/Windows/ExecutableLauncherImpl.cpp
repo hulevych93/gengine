@@ -1,11 +1,12 @@
 #include "ExecutableLauncherImpl.h"
 
 #include <Windows.h>
+
+#include <multithreading/ThreadUtils.h>
 #include <core/Logger.h>
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-using namespace Multithreading;
 using namespace Services;
 using namespace AppConfig;
 
@@ -14,24 +15,30 @@ ExecutableLauncherImpl::ExecutableLauncherImpl()
       m_serviceObj("AAA", *this),
       m_eventPool(2),
       m_loopId(InvalidTimerID) {
-  m_StopEvent.Create(true, false);
-  m_ChangeEvent.Create(true, false);
-  m_eventPool[0] = reinterpret_cast<HANDLE>(m_StopEvent.GetOSHandle());
-  m_eventPool[1] = reinterpret_cast<HANDLE>(m_ChangeEvent.GetOSHandle());
+  m_stopEvent = CreateEvent(NULL, true, false, NULL);
+  m_changeEvent = CreateEvent(NULL, true, false, NULL);
+
+  m_eventPool[0] = reinterpret_cast<HANDLE>(m_stopEvent);
+  m_eventPool[1] = reinterpret_cast<HANDLE>(m_changeEvent);
+}
+
+ExecutableLauncherImpl::~ExecutableLauncherImpl() {
+	::CloseHandle(m_stopEvent);
+	::CloseHandle(m_changeEvent);
 }
 
 void ExecutableLauncherImpl::AddExecutable(
     const executable_params& params,
     IExecutableLauncherListener& listener) {
-  m_ChangeEvent.Set();
+  SetEvent(m_changeEvent);
   ExecutableLauncher::AddExecutable(params, listener);
-  m_ChangeEvent.Reset();
+  ResetEvent(m_changeEvent);
 }
 
 void ExecutableLauncherImpl::RemoveExecutable(const executable_params& params) {
-  m_ChangeEvent.Set();
+  SetEvent(m_changeEvent);
   ExecutableLauncher::RemoveExecutable(params);
-  m_ChangeEvent.Reset();
+  ResetEvent(m_changeEvent);
 }
 
 void ExecutableLauncherImpl::StartInternal() {
@@ -42,7 +49,7 @@ void ExecutableLauncherImpl::StartInternal() {
 
   if (m_loopId == InvalidTimerID) {
     auto handler = [this] { Loop(); };
-    m_loopId = GENGINE_START_TIMER(handler, 500);
+    m_loopId = GENGINE_START_TIMER(handler, std::chrono::milliseconds(500));
   }
 }
 
@@ -50,7 +57,7 @@ void ExecutableLauncherImpl::StopInternal() {
   m_serviceObj.Hide();
 
   if (m_loopId != InvalidTimerID) {
-    m_StopEvent.Set();
+    SetEvent(m_stopEvent);
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
     m_loopId = InvalidTimerID;
   }
@@ -59,7 +66,7 @@ void ExecutableLauncherImpl::StopInternal() {
 }
 
 void ExecutableLauncherImpl::Loop() {
-  auto waitStatus = Event::WaitForEventsEx(&m_eventPool[0], m_eventPool.size());
+  auto waitStatus = Multithreading::WaitForEventsEx(&m_eventPool[0], m_eventPool.size());
   switch (waitStatus) {
     case WAIT_OBJECT_0:
       break;

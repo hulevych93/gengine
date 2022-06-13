@@ -2,8 +2,6 @@
 
 #include <brokers/WorkerBroker.h>
 #include <interprocess-communication/CommunicationEngine.h>
-#include <multithreading/Event.h>
-#include <thread>
 #include <unordered_map>
 
 namespace Gengine {
@@ -23,7 +21,7 @@ class WindowsCommunicationEngine : public CommunicationEngine,
   void Loop();
 
  private:
-  Multithreading::Event m_StopEvent;
+  void* m_stopEvent;
 
   using TWaitEvents = std::vector<void*>;
   TWaitEvents m_eventPool;

@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 #include <core/Logger.h>
-#include <multithreading/Event.h>
+#include <multithreading/ThreadUtils.h>
 
 namespace Gengine {
 namespace InterprocessCommunication {
@@ -29,11 +29,13 @@ struct WindowsCommunicationEngine::CallingContext
 
 WindowsCommunicationEngine::WindowsCommunicationEngine(std::uint32_t threadId)
     : Worker(threadId), m_eventPool(1), m_loopId(Services::InvalidTimerID) {
-  m_StopEvent.Create(true, false);
-  m_eventPool[0] = reinterpret_cast<HANDLE>(m_StopEvent.GetOSHandle());
+	m_stopEvent = CreateEvent(NULL, true, false, NULL);
+  m_eventPool[0] = reinterpret_cast<HANDLE>(m_stopEvent);
 }
 
-WindowsCommunicationEngine::~WindowsCommunicationEngine() = default;
+WindowsCommunicationEngine::~WindowsCommunicationEngine() {
+	::CloseHandle(m_stopEvent);
+}
 
 void WindowsCommunicationEngine::RegisterConnection(const IChannel& connection,
                                                     engine_callback callback) {
@@ -68,13 +70,13 @@ void WindowsCommunicationEngine::UnregisterConnection(
 void WindowsCommunicationEngine::StartInternal() {
   if (m_loopId == Services::InvalidTimerID) {
     auto handler = [this] { Loop(); };
-    m_loopId = GENGINE_START_TIMER(handler, 0);
+    m_loopId = GENGINE_START_LOOP(handler);
   }
 }
 
 void WindowsCommunicationEngine::StopInternal() {
   if (m_loopId != Services::InvalidTimerID) {
-    m_StopEvent.Set();
+    SetEvent(m_stopEvent);
     GENGINE_STOP_TIMER_WITH_WAIT(m_loopId);
     m_loopId = Services::InvalidTimerID;
   }
@@ -82,8 +84,8 @@ void WindowsCommunicationEngine::StopInternal() {
 }
 
 void WindowsCommunicationEngine::Loop() {
-  auto waitStatus = Multithreading::Event::WaitForEventsEx(&m_eventPool[0],
-                                                           m_eventPool.size());
+	auto waitStatus = Multithreading::WaitForEventsEx(&m_eventPool[0], m_eventPool.size());
+
   switch (waitStatus) {
     case WAIT_OBJECT_0:
       break;

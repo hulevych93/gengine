@@ -7,11 +7,12 @@ namespace Gengine {
 namespace InterprocessCommunication {
 NamedPipeChannel::NamedPipeChannel()
     : m_socket(InvalidHandle), m_changeHandles(2), m_stopped(false) {
-  m_ioReady.Create(true, false);
+  m_stopSignal = CreateEvent(NULL, true, false, NULL);
+  m_ioReady = CreateEvent(NULL, true, false, NULL);
+
   m_overlapped = new OVERLAPPED;
   memset(reinterpret_cast<OVERLAPPED*>(m_overlapped), 0, sizeof(OVERLAPPED));
-  reinterpret_cast<OVERLAPPED*>(m_overlapped)->hEvent = m_ioReady.GetOSHandle();
-  m_evtStopped.Create(true, false);
+  reinterpret_cast<OVERLAPPED*>(m_overlapped)->hEvent = m_ioReady;
 }
 
 NamedPipeChannel::NamedPipeChannel(HandleType handle) : NamedPipeChannel() {
@@ -24,6 +25,9 @@ NamedPipeChannel::~NamedPipeChannel() {
   }
   if (m_overlapped != nullptr) {
     delete reinterpret_cast<OVERLAPPED*>(m_overlapped);
+
+	::CloseHandle(m_ioReady);
+	::CloseHandle(m_stopSignal);
   }
 }
 
@@ -57,7 +61,7 @@ bool NamedPipeChannel::Connect(const std::wstring& data) {
 void NamedPipeChannel::Disconnect() {
   if (IsConnected()) {
     m_stopped.store(true);
-    m_evtStopped.Set();
+	::SetEvent(m_stopSignal);
 
     ::CloseHandle(m_socket);
     m_socket = InvalidHandle;
@@ -73,7 +77,7 @@ bool NamedPipeChannel::Send(const void* data,
                             std::uint32_t* bytesProccessed) {
   if (!m_stopped.load()) {
     if (SendAsync(data, size)) {
-      m_changeHandles[0] = m_evtStopped.GetOSHandle();
+      m_changeHandles[0] = m_stopSignal;
       m_changeHandles[1] = reinterpret_cast<HANDLE>(GetIOHandle());
       auto waitStatus = ::WaitForMultipleObjects(
           m_changeHandles.size(), &m_changeHandles[0], FALSE, INFINITE);
@@ -119,7 +123,7 @@ bool NamedPipeChannel::Recv(void* data,
                             std::uint32_t* bytesProccessed) {
   if (!m_stopped.load()) {
     if (RecvAsync(data, size)) {
-      m_changeHandles[0] = m_evtStopped.GetOSHandle();
+      m_changeHandles[0] = m_stopSignal;
       m_changeHandles[1] = reinterpret_cast<HANDLE>(GetIOHandle());
       auto waitStatus = ::WaitForMultipleObjects(
           m_changeHandles.size(), &m_changeHandles[0], FALSE, INFINITE);
@@ -205,7 +209,7 @@ bool NamedPipeChannel::RecvAsync(void* data, std::uint32_t size) {
 }
 
 void* NamedPipeChannel::GetIOHandle() const {
-  return m_ioReady.GetOSHandle();
+  return m_ioReady;
 }
 
 bool NamedPipeChannel::GetOverlapped(std::uint32_t* bytesProcessed) {

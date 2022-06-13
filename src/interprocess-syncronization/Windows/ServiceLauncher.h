@@ -23,7 +23,6 @@ class ServiceLauncher : public Runnable, public Services::Worker {
 
  private:
   std::uint32_t m_checkAppsTimerId;
-  static const std::uint32_t CheckTimeout;
 };
 }  // namespace InterprocessSynchronization
 }  // namespace Gengine

@@ -13,7 +13,7 @@ ServiceTrackerImpl::ServiceTrackerImpl(
       m_mappingFileName(mappingFileName),
       m_fileMappingHandle(nullptr),
       m_fileMappingData(nullptr) {
-  m_stopEvent.Create(true, false);
+  m_stopEvent = CreateEvent(NULL, true, false, NULL);
 }
 
 ServiceTrackerImpl::~ServiceTrackerImpl() {
@@ -21,6 +21,7 @@ ServiceTrackerImpl::~ServiceTrackerImpl() {
     m_thread->join();
     UnmapViewOfFile(reinterpret_cast<LPVOID>(m_fileMappingData));
     CloseHandle(reinterpret_cast<HANDLE>(m_fileMappingHandle));
+	CloseHandle(m_stopEvent);
   }
 }
 
@@ -29,12 +30,11 @@ void ServiceTrackerImpl::StartInternal() {
       MapViewOfFile(m_fileMappingHandle, FILE_MAP_READ, 0, 0, sizeof(DWORD));
   m_thread = std::make_unique<std::thread>(
       &ServiceTrackerImpl::TrackerThreadProc, this);
-  Multithreading::ThreadUtils::SetThreadName(*m_thread,
-                                             L"ServiceTrackerThread");
+  Multithreading::SetThreadName(*m_thread, "ServiceTrackerThread");
 }
 
 void ServiceTrackerImpl::StopInternal() {
-  m_stopEvent.Set();
+  SetEvent(m_stopEvent);
 }
 
 bool ServiceTrackerImpl::IsCanStart() {
@@ -49,7 +49,7 @@ void ServiceTrackerImpl::TrackerThreadProc() {
   HANDLE serviceProcess = ::OpenProcess(SYNCHRONIZE, FALSE, processId);
 
   std::vector<HANDLE> changeHandles(2);
-  changeHandles[0] = m_stopEvent.GetOSHandle();
+  changeHandles[0] = m_stopEvent;
   changeHandles[1] = serviceProcess;
 
   auto waitStatus = ::WaitForMultipleObjects(
