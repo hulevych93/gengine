@@ -1,6 +1,7 @@
 [Dir(plugins)]
 namespace Gengine
 {
+    [B]
     struct PluginInfo
     {
         String path;

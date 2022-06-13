@@ -9,7 +9,7 @@ namespace fs = boost::filesystem;
 
 namespace Gengine {
 namespace AppConfig {
-FileConfigReader::FileConfigReader(const std::wstring& path, const config& conf)
+FileConfigReader::FileConfigReader(const config& conf, const std::wstring& path)
     : BufferConfigReader(conf), m_path(path) {}
 
 bool FileConfigReader::Load() {

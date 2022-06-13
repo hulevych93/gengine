@@ -52,6 +52,7 @@ class Serializer final : public boost::static_visitor<bool> {
   bool operator<<(bool data);
   bool operator<<(const Blob& blob);
   bool operator<<(const ISerializable& serializable);
+  bool operator<<(boost::blank) { return true; }
 
   template <class T>
   typename std::enable_if<std::is_enum<T>::value, bool>::type operator<<(

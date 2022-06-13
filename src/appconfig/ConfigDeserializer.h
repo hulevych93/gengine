@@ -5,9 +5,10 @@
 namespace Gengine {
 namespace AppConfig {
 
-struct ConfigDeserilizer : public boost::static_visitor<bool> {
+struct ConfigDeserilizer final : public boost::static_visitor<bool> {
   ConfigDeserilizer(const std::string& buffer);
   bool operator()(JSON::IJsonSerializable& config) const;
+  bool operator()(Serialization::ISerializable& config) const;
   const std::string& buffer;
 };
 

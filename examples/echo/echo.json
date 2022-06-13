@@ -1,6 +1,6 @@
 
 {
-  "appName": "TestEcho",
+  "name": "TestEcho",
   "consoleLogger": true,
   "workers": [
     {

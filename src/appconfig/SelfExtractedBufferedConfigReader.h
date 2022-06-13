@@ -5,7 +5,7 @@
 namespace Gengine {
 namespace AppConfig {
 
-class SelfExtractedBufferedConfigReader : public BufferConfigReader {
+class SelfExtractedBufferedConfigReader final : public BufferConfigReader {
  public:
   SelfExtractedBufferedConfigReader(const config& conf);
 

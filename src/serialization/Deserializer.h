@@ -59,6 +59,7 @@ class Deserializer final : public boost::static_visitor<bool> {
   bool operator>>(bool& data) const;
   bool operator>>(Blob& blob) const;
   bool operator>>(ISerializable& serializable) const;
+  bool operator>>(boost::blank) const { return true; }
 
   template <class T>
   typename std::enable_if<std::is_enum<T>::value, bool>::type operator>>(

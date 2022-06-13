@@ -1,14 +1,14 @@
 [Dir(appconfig)]
 namespace Gengine
 {
-    [J]
+    [J][B]
     struct ThreadConfig 
     { 
         uint32 id;
         String name;
     };
 
-    [J]
+    [J][B]
     struct ProcessConfig 
     { 
         uint32 id;
@@ -18,7 +18,7 @@ namespace Gengine
         String lifetimeRef;
     };
 
-    [J]
+    [J][B]
     struct ServiceConfig 
     { 
         String id;
@@ -31,7 +31,7 @@ namespace Gengine
         bool required;[O]
     };
 
-    [J]
+    [J][B]
     struct PluginConfig 
     { 
         String name;[O]
@@ -41,7 +41,7 @@ namespace Gengine
         ThreadConfig workers;[S]
     };
 
-    [J]
+    [J][B]
     struct EntryConfig 
     { 
         String name;[O]

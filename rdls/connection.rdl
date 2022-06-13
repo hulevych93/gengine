@@ -1,26 +1,26 @@
 [Dir(connection)]
 namespace Gengine
 {
-    [J]
+    [J][B]
     struct ExternalConnection 
     { 
         bool external;
     };
 
-    [J]
+    [J][B]
     struct PipeConnection 
     { 
         WString pipe;
     };
 
-    [J]
+    [J][B]
     struct TcpConnection 
     { 
         String ip;
         uint16 port;
     };
 
-    [J]
+    [J][B]
     struct SharedConnection 
     { 
         String path;

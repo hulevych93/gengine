@@ -1,6 +1,6 @@
 
 {
-  "appName": "Core",
+  "name": "Core",
   "consoleLogger": true,
   "workers": [],
   "inServices": [],

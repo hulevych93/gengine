@@ -228,20 +228,19 @@ sub print_data_includes
 {
     (my $hFile, my $struct)=@_;
     my $result = 0;
+    printf($hFile "#include <memory>\n");
     if(is_extension_data($struct))
     {
         printf($hFile "#include \"".$struct->{"annotations"}->{"Extends"}.".h\"\n");
         $result = 1;
     }
-    elsif(GengineGen::is_json_serializable($struct))
+    if(GengineGen::is_json_serializable($struct))
     {
-        printf($hFile "#include <memory>\n");
         printf($hFile "#include <json/JSON.h>\n");
         $result = 1;
     }
-    else
+    if(GengineGen::is_binary_serializable($struct))
     {
-        printf($hFile "#include <memory>\n");
         printf($hFile "#include <serialization/ISerializable.h>\n");
         $result = 1;
     }
@@ -498,13 +497,26 @@ sub print_data_declaration
     {
         printf($hFile ": ".get_extension_data($struct));
     }
-    elsif(GengineGen::is_json_serializable($struct))
-    {
-        printf($hFile ": Gengine::JSON::IJsonSerializable");
-    }
     else
     {
-        printf($hFile ": Gengine::Serialization::ISerializable");
+        my $im_first = 1;
+        if(GengineGen::is_json_serializable($struct))
+        {
+            printf($hFile ": Gengine::JSON::IJsonSerializable");
+            $im_first = 0;
+        }
+        if(GengineGen::is_binary_serializable($struct))
+        {
+            if($im_first)
+            {
+                printf($hFile ": ");
+            }
+            else
+            {
+                printf($hFile ", ");
+            }
+            printf($hFile "Gengine::Serialization::ISerializable");
+        }
     }
     printf($hFile "\n");
 }
@@ -517,7 +529,7 @@ sub print_data_serialization_methods_decl
         printf($hFile "    bool Serialize(Gengine::JSON::Object& serializer) const override;\n");
         printf($hFile "    bool Deserialize(const Gengine::JSON::Object& deserializer) override;\n");
     }
-    else
+    if(GengineGen::is_binary_serializable($struct))
     {
         printf($hFile "    bool Serialize(Gengine::Serialization::Serializer& serializer) const override;\n");
         printf($hFile "    bool Deserialize(const Gengine::Serialization::Deserializer& deserializer) override;\n");
@@ -529,8 +541,7 @@ sub print_data_serialization_methods_def
     (my $hFile, my $struct)=@_;
     my $struct_name=$struct->{"name"};
     my $isExtension = is_extension_data($struct);
-    my $isJsonSerializable = GengineGen::is_json_serializable($struct);
-    if($isJsonSerializable)
+    if(GengineGen::is_json_serializable($struct))
     {
         printf($hFile "bool ".$struct_name."::Serialize(JSON::Object& serializer) const\n");
         printf($hFile "{\n");
@@ -562,7 +573,7 @@ sub print_data_serialization_methods_def
         printf($hFile "    return result;\n");
         printf($hFile "}\n");
     }
-    else
+    if(GengineGen::is_binary_serializable($struct))
     {
         printf($hFile "bool ".$struct_name."::Serialize(Serialization::Serializer& serializer) const\n");
         printf($hFile "{\n");

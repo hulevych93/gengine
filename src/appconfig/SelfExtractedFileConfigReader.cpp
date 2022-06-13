@@ -11,7 +11,7 @@ namespace Gengine {
 namespace AppConfig {
 
 SelfExtractedFileConfigReader::SelfExtractedFileConfigReader(const config& conf)
-    : FileConfigReader(FilePath, conf) {}
+    : FileConfigReader(conf, FilePath) {}
 
 bool SelfExtractedFileConfigReader::Load() {
   const auto moduleFilePath = Filesystem::GetModuleFilePath(g_module_instance);

@@ -10,6 +10,7 @@ namespace Gengine
         Null;
     };
 
+    [B]
     struct ServiceInfo 
     { 
         String id;

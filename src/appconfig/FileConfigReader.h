@@ -8,7 +8,7 @@ namespace AppConfig {
 
 class FileConfigReader : public BufferConfigReader {
  public:
-  FileConfigReader(const std::wstring& path, const config& conf);
+  FileConfigReader(const config& conf, const std::wstring& path);
 
   bool Load() override;
   bool Save() const override;

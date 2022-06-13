@@ -6,8 +6,8 @@
 namespace Gengine {
 namespace AppConfig {
 
-BufferConfigReader::BufferConfigReader(const std::string& path,
-                                       const config& conf)
+BufferConfigReader::BufferConfigReader(const config& conf,
+                                       const std::string& path)
     : m_buffer(path), m_config(conf) {}
 
 BufferConfigReader::BufferConfigReader(const config& conf) : m_config(conf) {}

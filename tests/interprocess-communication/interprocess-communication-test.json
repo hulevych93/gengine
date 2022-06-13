@@ -1,6 +1,6 @@
 
 {
-  "appName": "ipc",
+  "name": "ipc",
   "consoleLogger": true,
   "workers": [],
   "inServices": [],

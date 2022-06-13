@@ -32,9 +32,9 @@ namespace {
 template <class ConfigType>
 std::string GetConfigurationImpl(const std::wstring& path) {
   ConfigType config;
-  FileConfigReader reader(path, config);
+  auto reader = makeJsonConfigReader<FileConfigReader>(config, path);
   if (reader.Load()) {
-    BufferConfigReader bufferReader(config);
+    auto bufferReader = makeBinaryConfigReader<BufferConfigReader>(config);
     bufferReader.Save();
     return bufferReader.GetBuffer();
   }

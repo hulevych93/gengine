@@ -76,7 +76,8 @@ bool EntryBase::GetConfig(void** config) {
 
   if (!m_config) {
     m_config = std::make_unique<EntryConfig>();
-    if (!SelfExtractedBufferedConfigReader(*m_config).Load())
+    if (!makeBinaryConfigReader<SelfExtractedBufferedConfigReader>(*m_config)
+             .Load())
       throw std::runtime_error("no service config loaded...");
   }
 

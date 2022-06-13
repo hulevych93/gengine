@@ -65,11 +65,12 @@ class TestEcho : public Entries::EntryBase, public Echo::IEcho {
 
     auto check = [&]() {
       std::lock_guard<std::mutex> lock(m_mutex);
-      return m_hello.find(L"hellohellohello") == std::wstring::npos;
+      return m_hello.size() < 10;
     };
 
+    m_echoClient->echo(L"hello");
+
     while (check()) {
-      m_echoClient->echo(L"hello");
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
@@ -103,6 +104,7 @@ class TestEcho : public Entries::EntryBase, public Echo::IEcho {
   bool echo(const std::wstring& hello) override {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_hello += hello;
+    m_echoClient->echo(L"hello");
     GLOG_INFO("responed");
     return true;
   }

@@ -284,7 +284,8 @@ std::unique_ptr<EntryConfig> GetOptionalConfig(args_type args) {
       GLOG_INFO_INTERNAL("Additional config parsed: %s", configBuffer);
 
       auto config = std::make_unique<EntryConfig>();
-      if (!BufferConfigReader(configBuffer, *config).Load())
+      if (!makeJsonConfigReader<BufferConfigReader>(*config, configBuffer)
+               .Load())
         throw std::runtime_error("no service config loaded...");
       return config;
     }

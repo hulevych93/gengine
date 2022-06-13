@@ -69,11 +69,11 @@ EntryConfig makeEntryConfig() {
 TEST_F(AppconfigTest, bufferConfigReader) {
   auto config = makeEntryConfig();
 
-  BufferConfigReader engine(config);
+  auto engine = makeBinaryConfigReader<BufferConfigReader>(config);
   engine.Save();
 
   EntryConfig test;
-  BufferConfigReader engine2(engine.GetBuffer(), test);
+  auto engine2 = makeBinaryConfigReader<BufferConfigReader>(test, engine.GetBuffer());
   EXPECT_TRUE(engine2.Load());
   EXPECT_TRUE(config == test);
 }

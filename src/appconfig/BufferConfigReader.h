@@ -9,7 +9,7 @@ namespace AppConfig {
 class BufferConfigReader : public IConfigReader {
  public:
   BufferConfigReader(const config& conf);
-  BufferConfigReader(const std::string& buffer, const config& conf);
+  BufferConfigReader(const config& conf, const std::string& buffer);
 
   bool Load() override;
   bool Save() const override;
