@@ -44,3 +44,7 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{ github.event.inputs.Configuration }}
       
+    - name: Tests
+      # Run ctests
+      run: cmake --build ${{github.workspace}}/build --target run_tests
+      
