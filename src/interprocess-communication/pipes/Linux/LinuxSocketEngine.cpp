@@ -159,7 +159,7 @@ void LinuxSocketEngine::UnregisterConnection(const IChannel& connection) {
 void LinuxSocketEngine::StartInternal() {
   if (m_loopId == Services::InvalidTimerID) {
     auto handler = [this] { Loop(); };
-    m_loopId = GENGINE_START_TIMER(handler, 0);
+    m_loopId = GENGINE_START_LOOP(handler);
   }
 }
 
