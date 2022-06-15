@@ -352,12 +352,7 @@ class LocalConcreteCreator
 };
 
 TFactories ServiceBroker::Factories = {
-    {ServiceType::Local,
-     TFactory{std::make_pair(
-         "ISessionQuery",
-         std::make_shared<LocalConcreteCreator<IMicroService,
-                                               SessionQuery,
-                                               const interface_key&>>())}},
+    {ServiceType::Local,  TFactory{}},
     {ServiceType::Remote, TFactory()},
     {ServiceType::Shared, TFactory()},
     {ServiceType::Composite, TFactory()},
@@ -396,15 +391,6 @@ ServiceBroker::ServiceBroker() : Worker(2) {
     auto serviceContext = std::make_shared<ServiceContext>();
     serviceContext->id = "3514D35D";
     serviceContext->key = "ISessionQuery";
-    serviceContext->type = ServiceType::Local;
-    signals.emplace(
-        std::make_pair(serviceContext->id, std::move(serviceContext)));
-  }
-
-  {
-    auto serviceContext = std::make_shared<ServiceContext>();
-    serviceContext->id = "48B156CF";
-    serviceContext->key = "IEnvironment";
     serviceContext->type = ServiceType::Local;
     signals.emplace(
         std::make_pair(serviceContext->id, std::move(serviceContext)));
@@ -468,6 +454,12 @@ void ServiceBroker::Configure(
   };
   GENGINE_POST_WAITED_TASK(task);
   GENGINE_ENABLE_SERVICES
+
+  Factories[ServiceType::Local] = TFactory{std::make_pair(
+      "ISessionQuery",
+      std::make_shared<LocalConcreteCreator<IMicroService,
+                                            SessionQuery,
+                                            const interface_key&>>())};
 }
 
 void ServiceBroker::Deconfigure() {
@@ -479,6 +471,7 @@ void ServiceBroker::Deconfigure() {
   };
   GENGINE_POST_DEINITIALIZATION_TASK(task)
   GENGINE_DISABLE_SERVICES
+  Factories.clear();
 }
 
 void ServiceBroker::Register(const std::string& key,
