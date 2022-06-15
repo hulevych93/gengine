@@ -1,17 +1,14 @@
 #include <entries/Unix/DaemonExecutor.h>
+#include <entries/diagnostic/Unix/LinuxCallstackDumper.h>
 
 #include <errno.h>
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <iostream>
 
-#include <execinfo.h>
-#include <boost/format.hpp>
+#include <iostream>
 
 #include <api/entries/ICmdProcessor.h>
 #include <api/entries/IEntry.h>
@@ -35,68 +32,34 @@ void DaemonExecutor::SignalHandler(int signum) {
 }
 
 void DaemonExecutor::OnSignal(int signum) {
-  if (!m_signalWorker) {
+  if (m_terminated.load()) {
     return;
   }
 
   switch (signum) {
     case SIGSEGV:
     case SIGABRT: {
-      auto crashBuffer = new void*[200];
-      auto crashAddressesNum = backtrace(crashBuffer, 200);
-
-      auto handler = [signum, crashAddressesNum, crashBuffer]() mutable {
-        char** strings;
-
-        strings = backtrace_symbols(crashBuffer, crashAddressesNum);
-        if (strings == NULL) {
-          GLOG_INFO("backtrace_symbols failed, error == %d", errno);
-        } else {
-          std::string debugString = "\n";
-          for (int j = 0; j < crashAddressesNum; j++) {
-            debugString += boost::str(boost::format("%s\n") % strings[j]);
-          }
-          GLOG_INFO("%s", debugString.c_str());
-          free(strings);
-        }
-
-        delete[] crashBuffer;
-
-        // 2 sec additional sleep. seems dumper async or smth.
-        usleep(2000 * 1000);
-
-        signal(signum, SIG_DFL);
-        raise(signum);
-      };
-
-      m_signalWorker->PostTask(std::move(handler));
-
-      // we do not want continue execution
-      exit(EXIT_FAILURE);
+      m_terminated.store(true);
+      Diagnostic::LinuxCallstackDumper::Backtrace();
+      _exit(1);
     } break;
     case SIGALRM:
-      exit(EXIT_FAILURE);
-      break;
     case SIGUSR1:
     case SIGCHLD:
       _exit(1);
+      break;
     case SIGTERM:
+      m_terminated.store(true);
       m_stopEvent.Set();
-      _exit(1);
       break;
   }
 }
 
 bool DaemonExecutor::Execute(void* args) {
-  pid_t pid, sid, parent;
-
-  /* already a daemon */
   if (getppid() == 1) {
-    // We're already a daemon. No actions performed
     return true;
   }
 
-  /* Trap signals that we expect to receive */
   signal(SIGCHLD, SignalHandler);
   signal(SIGUSR1, SignalHandler);
   signal(SIGALRM, SignalHandler);
@@ -104,9 +67,7 @@ bool DaemonExecutor::Execute(void* args) {
   signal(SIGSEGV, SignalHandler);
   signal(SIGABRT, SignalHandler);
 
-  /* Fork off the parent process */
-  pid = fork();
-
+  auto pid = fork();
   if (pid < 0) {
     std::cerr << "unable to fork daemon, code " << errno << strerror(errno)
               << std::endl;
@@ -122,11 +83,8 @@ bool DaemonExecutor::Execute(void* args) {
     return true;
   }
 
-  m_signalWorker =
-      std::make_unique<Multithreading::WorkerThread>("SignalHandlingThread");
-
   /* At this point we are executing as the child process */
-  parent = getppid();
+  auto parent = getppid();
 
   /* Cancel certain signals */
   signal(SIGCHLD, SIG_DFL); /* A child process dies */
@@ -139,7 +97,7 @@ bool DaemonExecutor::Execute(void* args) {
   umask(0);
 
   /* Create a new SID for the child process */
-  sid = setsid();
+  auto sid = setsid();
   if (sid < 0) {
     std::cerr << "unable to create a new session, code " << errno
               << strerror(errno) << std::endl;
@@ -161,13 +119,12 @@ bool DaemonExecutor::Execute(void* args) {
 
   kill(parent, SIGUSR1);
 
-  if (GetEntry().Initialize()) {
-    GetEntry().Execute(args);
+  auto& entry = GetEntry();
+  if (entry.Initialize()) {
+    entry.Execute(args);
     m_stopEvent.Wait(Multithreading::WaitInfinite);
-
-    std::int32_t code;
-    GetEntry().Exit(&code);
-    GetEntry().Finalize();
+    entry.Exit(&m_code);
+    entry.Finalize();
   }
 
   return true;

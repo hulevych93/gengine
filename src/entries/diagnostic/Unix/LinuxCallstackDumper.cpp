@@ -19,7 +19,7 @@ LinuxCallstackDumper::~LinuxCallstackDumper() {
   m_instance = nullptr;
 }
 
-void LinuxCallstackDumper::WriteDump() {
+void LinuxCallstackDumper::Backtrace() {
   int callStackSize = 0, callStackMaxSize = 256;
   void* callStackAddresses[callStackMaxSize];
   char** strings;

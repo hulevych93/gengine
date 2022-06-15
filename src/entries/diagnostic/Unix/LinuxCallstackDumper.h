@@ -12,7 +12,8 @@ class LinuxCallstackDumper : public IDumper {
   ~LinuxCallstackDumper();
 
  public:
-  void WriteDump() override;
+     void WriteDump() override { Backtrace(); }
+     static void Backtrace();
 
  private:
   static void ExitHandler();

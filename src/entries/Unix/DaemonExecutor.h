@@ -5,7 +5,6 @@
 #include <entries/SimpleExecutor.h>
 
 #include <multithreading/Event.h>
-#include <multithreading/WorkerThread.h>
 
 namespace Gengine {
 namespace Entries {
@@ -22,8 +21,6 @@ class DaemonExecutor : public SimpleExecutor {
 
  private:
   void OnSignal(int signum);
-
- private:
   static void SignalHandler(int signum);
 
  private:
@@ -31,7 +28,7 @@ class DaemonExecutor : public SimpleExecutor {
 
  private:
   Multithreading::Event m_stopEvent;
-  std::unique_ptr<Multithreading::WorkerThread> m_signalWorker;
+  std::atomic<bool> m_terminated{false};
 };
 }  // namespace Entries
 }  // namespace Gengine

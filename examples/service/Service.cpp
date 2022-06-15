@@ -22,7 +22,7 @@ class TestService final : public Entries::EntryBase, public Worker {
 
     auto handler = [&]() { ++m_ticks; };
 
-    GENGINE_START_TIMER(std::move(handler), std::chrono::seconds{5});
+    m_timerId = GENGINE_START_TIMER(std::move(handler), std::chrono::seconds{5});
 
     return true;
   }

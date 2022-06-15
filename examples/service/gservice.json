@@ -1,7 +1,6 @@
 
 {
   "name": "TestService",
-  "consoleLogger": false,
   "workers": [
     {
       "id": 0,
