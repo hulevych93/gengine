@@ -34,7 +34,7 @@ bool Event::Wait(const std::chrono::system_clock::duration timeout) {
   }
 
   if (!m_manualReset) {
-      m_signaled = false;
+    m_signaled = false;
   }
 
   return signaled;
