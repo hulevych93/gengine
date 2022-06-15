@@ -1,0 +1,8 @@
+
+{
+  "name": "synchronization",
+  "consoleLogger": false,
+  "workers": [],
+  "inServices": [],
+  "outServices": []
+}

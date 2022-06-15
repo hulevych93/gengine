@@ -1,12 +1,14 @@
 #pragma once
 
-#include <interprocess-syncronization/IAliveObject.h>
+#include <interprocess-synchronization/IAliveObject.h>
+
+#include <string>
 
 namespace Gengine {
 namespace InterprocessSynchronization {
 class DaemonAliveObject : public IAliveObject {
  public:
-  explicit DaemonAliveObject(const wchar_t* mappingFileName);
+  explicit DaemonAliveObject(const std::wstring& mappingFileName);
   ~DaemonAliveObject();
 
   void Free() override;

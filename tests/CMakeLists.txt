@@ -12,6 +12,7 @@ add_subdirectory(appconfig)
 add_subdirectory(core)
 add_subdirectory(serialization)
 add_subdirectory(interprocess-communication)
+add_subdirectory(interprocess-synchronization)
 add_subdirectory(multithreading)
 
 add_custom_target(run_tests

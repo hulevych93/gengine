@@ -6,8 +6,8 @@
 
 #include <api/entries/IEntry.h>
 #include <entries/diagnostic/IDumper.h>
-#include <interprocess-syncronization/IAliveObject.h>
-#include <interprocess-syncronization/ServiceTracker.h>
+#include <interprocess-synchronization/IAliveObject.h>
+#include <interprocess-synchronization/ServiceTracker.h>
 
 namespace Gengine {
 

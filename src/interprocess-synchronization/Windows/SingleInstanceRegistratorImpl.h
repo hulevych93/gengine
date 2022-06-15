@@ -1,6 +1,6 @@
 #pragma once
 
-#include <interprocess-syncronization/InstanceRegistratorInterface.h>
+#include <interprocess-synchronization/InstanceRegistratorInterface.h>
 
 namespace Gengine {
 namespace InterprocessSynchronization {

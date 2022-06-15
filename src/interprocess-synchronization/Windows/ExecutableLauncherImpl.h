@@ -2,7 +2,7 @@
 
 #include <api/core/IServiceControlListener.h>
 #include <brokers/ExecutorBroker.h>
-#include <interprocess-syncronization/ExecutableLauncher.h>
+#include <interprocess-synchronization/ExecutableLauncher.h>
 
 namespace Gengine {
 

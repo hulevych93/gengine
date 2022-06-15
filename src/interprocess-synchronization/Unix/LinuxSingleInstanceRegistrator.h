@@ -1,12 +1,15 @@
 #pragma once
 
-#include <interprocess-syncronization/InstanceRegistratorInterface.h>
+#include <interprocess-synchronization/InstanceRegistratorInterface.h>
 
 namespace Gengine {
 namespace InterprocessSynchronization {
 class LinuxSingleInstanceRegistrator : public InstanceRegistratorInterface {
  public:
   LinuxSingleInstanceRegistrator(std::wstring&& objectName);
+  LinuxSingleInstanceRegistrator(const LinuxSingleInstanceRegistrator&) =
+      delete;
+  LinuxSingleInstanceRegistrator(LinuxSingleInstanceRegistrator&&) = delete;
   virtual ~LinuxSingleInstanceRegistrator();
 
   bool RegisterInstance() override;
@@ -14,7 +17,7 @@ class LinuxSingleInstanceRegistrator : public InstanceRegistratorInterface {
   bool IsInstanceRegistered() const override;
 
  private:
-  int m_iSingleInstanceFile;
+  int m_file;
 };
 }  // namespace InterprocessSynchronization
 }  // namespace Gengine

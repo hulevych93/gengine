@@ -73,7 +73,8 @@ TEST_F(AppconfigTest, bufferConfigReader) {
   engine.Save();
 
   EntryConfig test;
-  auto engine2 = makeBinaryConfigReader<BufferConfigReader>(test, engine.GetBuffer());
+  auto engine2 =
+      makeBinaryConfigReader<BufferConfigReader>(test, engine.GetBuffer());
   EXPECT_TRUE(engine2.Load());
   EXPECT_TRUE(config == test);
 }

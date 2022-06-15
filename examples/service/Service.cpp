@@ -20,7 +20,7 @@ class TestService final : public Entries::EntryBase, public Worker {
   bool Execute(void* args) override {
     assert(args);
 
-    auto handler = [&]() { GLOG_INFO("I'm alive"); };
+    auto handler = [&]() { ++m_ticks; };
 
     GENGINE_START_TIMER(std::move(handler), std::chrono::seconds{5});
 
@@ -52,6 +52,7 @@ class TestService final : public Entries::EntryBase, public Worker {
   }
 
  private:
+  std::uint32_t m_ticks = 0u;
   std::int32_t m_timerId;
 };
 

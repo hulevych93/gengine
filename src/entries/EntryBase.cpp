@@ -3,8 +3,8 @@
 #include <appconfig/AppConfig.h>
 #include <appconfig/SelfExtractedBufferedConfigReader.h>
 #include <diagnostic/IDumper.h>
-#include <interprocess-syncronization/IAliveObject.h>
-#include <interprocess-syncronization/InstanceRegistratorInterface.h>
+#include <interprocess-synchronization/IAliveObject.h>
+#include <interprocess-synchronization/InstanceRegistratorInterface.h>
 
 #include <core/Encoding.h>
 #include <core/Logger.h>

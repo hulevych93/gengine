@@ -8,10 +8,10 @@
 #include <brokers/WorkerBroker.h>
 #include <core/Encoding.h>
 
-#include <interprocess-syncronization/ExecutableLauncher.h>
+#include <interprocess-synchronization/ExecutableLauncher.h>
 
 #if _WIN32
-#include <interprocess-syncronization/Windows/ServiceLauncher.h>
+#include <interprocess-synchronization/Windows/ServiceLauncher.h>
 #endif
 
 #include <shared-services/SharedServiceExport.h>

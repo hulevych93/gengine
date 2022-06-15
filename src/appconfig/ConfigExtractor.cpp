@@ -97,15 +97,14 @@ std::pair<size_t, size_t> ConfigExtractor::FindConfig() const {
 }
 
 size_t ConfigExtractor::Find(const std::string& pattern) const {
-    const auto offset = pattern.size() - 1;
-    auto search = [&]() {
-        auto patternPosition = m_buffer.find(pattern);
-        if (patternPosition != std::string::npos) {
-            return m_pos - offset + patternPosition;
-        }
-        return std::string::npos;
-    };
-
+  const auto offset = pattern.size() - 1;
+  auto search = [&]() {
+    auto patternPosition = m_buffer.find(pattern);
+    if (patternPosition != std::string::npos) {
+      return m_pos - offset + patternPosition;
+    }
+    return std::string::npos;
+  };
 
   auto foundPos = search();
   if (foundPos != std::string::npos) {
@@ -121,7 +120,7 @@ size_t ConfigExtractor::Find(const std::string& pattern) const {
 
     foundPos = search();
     if (foundPos != std::string::npos) {
-        return foundPos;
+      return foundPos;
     }
 
     memcpy(const_cast<char*>(m_buffer.c_str()),

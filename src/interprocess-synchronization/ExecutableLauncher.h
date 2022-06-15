@@ -4,8 +4,8 @@
 #include <brokers/ServiceBroker.h>
 #include <brokers/WorkerBroker.h>
 #include <core/Runnable.h>
-#include <interprocess-syncronization/Executable.h>
-#include <interprocess-syncronization/IExecutableLauncherListener.h>
+#include <interprocess-synchronization/Executable.h>
+#include <interprocess-synchronization/IExecutableLauncherListener.h>
 #include <unordered_map>
 
 namespace Gengine {

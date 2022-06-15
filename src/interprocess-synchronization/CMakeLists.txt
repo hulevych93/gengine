@@ -10,9 +10,9 @@ include_directories(
     ${GENGINE_BINARY_DIR}
 )
 
-gengine_add_library(interprocess-syncronization ${SRC})
+gengine_add_library(interprocess-synchronization ${SRC})
 
-set_target_properties (interprocess-syncronization PROPERTIES
+set_target_properties (interprocess-synchronization PROPERTIES
     FOLDER gengine/libs
 )
 

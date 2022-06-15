@@ -1,7 +1,7 @@
 #pragma once
 
 #include <api/core/SessionId.h>
-#include <interprocess-syncronization/InterprocessSynchronizationCommon.h>
+#include <interprocess-synchronization/InterprocessSynchronizationCommon.h>
 #include <cstdint>
 
 namespace Gengine {

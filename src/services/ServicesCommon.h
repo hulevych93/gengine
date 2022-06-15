@@ -3,7 +3,7 @@
 #include <api/connection/ExternalConnection.h>
 #include <api/connection/SharedConnection.h>
 #include <interprocess-communication/InterprocessCommonDefs.h>
-#include <interprocess-syncronization/InterprocessSynchronizationCommon.h>
+#include <interprocess-synchronization/InterprocessSynchronizationCommon.h>
 
 namespace Gengine {
 namespace Services {

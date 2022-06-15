@@ -2,9 +2,9 @@
 
 #include <entries/diagnostic/Unix/LinuxCallstackDumper.h>
 #include <entries/diagnostic/Unix/LinuxErrorsDumper.h>
-#include <interprocess-syncronization/Unix/DaemonAliveObject.h>
-#include <interprocess-syncronization/Unix/LinuxDaemonTracker.h>
-#include <interprocess-syncronization/Unix/LinuxSingleInstanceRegistrator.h>
+#include <interprocess-synchronization/Unix/DaemonAliveObject.h>
+#include <interprocess-synchronization/Unix/LinuxDaemonTracker.h>
+#include <interprocess-synchronization/Unix/LinuxSingleInstanceRegistrator.h>
 #include <boost/format.hpp>
 
 #include <core/Encoding.h>

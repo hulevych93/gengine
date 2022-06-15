@@ -1,15 +1,17 @@
 #pragma once
 
-#include <interprocess-syncronization/ServiceTracker.h>
+#include <interprocess-synchronization/ServiceTracker.h>
 #include <atomic>
 #include <string>
 #include <thread>
 
 namespace Gengine {
 namespace InterprocessSynchronization {
-class LinuxDaemonTracker : public ServiceTracker {
+class LinuxDaemonTracker final : public ServiceTracker {
  public:
   LinuxDaemonTracker(const std::string& fileName, terminate_handler handler);
+  LinuxDaemonTracker(const LinuxDaemonTracker&&) = delete;
+  LinuxDaemonTracker(LinuxDaemonTracker&&) = delete;
   ~LinuxDaemonTracker();
 
  protected:
@@ -19,12 +21,12 @@ class LinuxDaemonTracker : public ServiceTracker {
 
  private:
   std::thread m_thread;
-  std::atomic<bool> m_canRun;
-  void TrackerThreadProc();
+  void RunLoop();
 
  private:
   std::string m_mappingFileName;
-  int m_file;
+  int m_selfSignalPipe[2];
+  int m_aliveFile;
 };
 }  // namespace InterprocessSynchronization
 }  // namespace Gengine

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <interprocess-syncronization/IAliveObject.h>
+#include <interprocess-synchronization/IAliveObject.h>
 
 namespace Gengine {
 namespace InterprocessSynchronization {

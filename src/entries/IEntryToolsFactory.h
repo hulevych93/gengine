@@ -1,7 +1,7 @@
 #pragma once
 
-#include <interprocess-syncronization/InstanceRegistratorInterface.h>
-#include <interprocess-syncronization/ServiceTracker.h>
+#include <interprocess-synchronization/InstanceRegistratorInterface.h>
+#include <interprocess-synchronization/ServiceTracker.h>
 #include <memory>
 #include <string>
 #include <vector>

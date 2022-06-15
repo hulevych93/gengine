@@ -2,9 +2,9 @@
 
 #include <diagnostic\Windows/ProcessMemoryDumper.h>
 #include <diagnostic\Windows\MemoryLeaksDumper.h>
-#include <interprocess-syncronization\Windows/ServiceAliveObject.h>
-#include <interprocess-syncronization\Windows/ServiceTrackerImpl.h>
-#include <interprocess-syncronization\Windows/SingleInstanceRegistratorImpl.h>
+#include <interprocess-synchronization\Windows/ServiceAliveObject.h>
+#include <interprocess-synchronization\Windows/ServiceTrackerImpl.h>
+#include <interprocess-synchronization\Windows/SingleInstanceRegistratorImpl.h>
 #include <boost/format.hpp>
 //#include <core/ProcessHelper.h>
 #include <core/Encoding.h>

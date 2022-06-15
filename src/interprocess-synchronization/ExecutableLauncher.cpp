@@ -7,6 +7,8 @@
 
 #endif
 
+#include <boost/process.hpp>
+
 #include <api/core/SessionId.h>
 #include <core/Logger.h>
 

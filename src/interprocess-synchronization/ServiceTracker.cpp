@@ -1,4 +1,4 @@
-#include <interprocess-syncronization/ServiceTracker.h>
+#include <interprocess-synchronization/ServiceTracker.h>
 
 namespace Gengine {
 namespace InterprocessSynchronization {

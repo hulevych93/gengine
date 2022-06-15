@@ -92,7 +92,7 @@ void WorkerThread::RunLoop() {
         localTimerInfo->scheduledTime = now + localTimerInfo->interval;
       }
 
-      if (localTimerInfo->scheduledTime < nearestTimerTime) {
+      if (!nearestTimerTime.has_value() || localTimerInfo->scheduledTime < nearestTimerTime) {
         nearestTimerTime = localTimerInfo->scheduledTime;
       }
     }

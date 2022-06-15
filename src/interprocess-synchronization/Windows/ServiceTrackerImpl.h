@@ -1,6 +1,6 @@
 #pragma once
 
-#include <interprocess-syncronization/ServiceTracker.h>
+#include <interprocess-synchronization/ServiceTracker.h>
 #include <thread>
 
 namespace Gengine {

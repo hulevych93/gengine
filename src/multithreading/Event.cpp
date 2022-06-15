@@ -31,10 +31,10 @@ bool Event::Wait(const std::chrono::system_clock::duration timeout) {
     } else {
       m_cond.wait(lock, [&]() { return m_signaled; });
     }
+  }
 
-    if (!m_manualReset) {
+  if (!m_manualReset) {
       m_signaled = false;
-    }
   }
 
   return signaled;
