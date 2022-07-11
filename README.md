@@ -1,5 +1,5 @@
 # gengine
-This is a modern C++14 and scalable cross-platfrom application development framework
+This is a modern C++14 and scalable cross-platfrom application development framework 
 
 [![Windows](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/Windows.yml)
 [![Linux](https://github.com/hulevych93/gengine/actions/workflows/Linux.yml/badge.svg)](https://github.com/hulevych93/gengine/actions/workflows/Linux.yml)
